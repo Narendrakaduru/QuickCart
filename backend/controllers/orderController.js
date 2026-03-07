@@ -1,12 +1,13 @@
 const Order = require("../models/Order");
 const Cart = require("../models/Cart");
+const Coupon = require("../models/Coupon");
 
 // @desc    Create new order
 // @route   POST /api/orders
 // @access  Private
 exports.addOrderItems = async (req, res) => {
   try {
-    const { items, shippingDetails, totalAmount } = req.body;
+    const { items, shippingDetails, totalAmount, discountAmount, couponCode } = req.body;
 
     if (!items || items.length === 0) {
       return res.status(400).json({ success: false, error: "No order items" });
@@ -17,9 +18,19 @@ exports.addOrderItems = async (req, res) => {
       items,
       shippingDetails,
       totalAmount,
+      discountAmount,
+      couponCode,
     });
 
     const createdOrder = await order.save();
+
+    // If coupon was used, increment usedCount
+    if (couponCode) {
+      await Coupon.findOneAndUpdate(
+        { code: couponCode.trim().toUpperCase() },
+        { $inc: { usedCount: 1 } }
+      );
+    }
 
     // Clear cart after order is placed
     await Cart.findOneAndUpdate({ user: req.user._id }, { items: [] });

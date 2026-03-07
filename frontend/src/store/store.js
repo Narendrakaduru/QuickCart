@@ -7,17 +7,19 @@ import userReducer from '../slices/userSlice';
 import orderReducer from '../slices/orderSlice';
 import addressReducer from '../slices/addressSlice';
 import logReducer from '../slices/logSlice';
+import couponReducer from "../slices/couponSlice";
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
+    auth: authReducer,
     products: productReducer,
     cart: cartReducer,
     wishlist: wishlistReducer,
-    auth: authReducer,
     users: userReducer,
     orders: orderReducer,
-    address: addressReducer,
+    addresses: addressReducer,
     logs: logReducer,
+    coupons: couponReducer,
   },
 });
 

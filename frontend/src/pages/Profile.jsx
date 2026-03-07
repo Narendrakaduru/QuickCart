@@ -8,7 +8,7 @@ import AddressModal from '../components/AddressModal';
 
 const Profile = () => {
   const { user } = useSelector((state) => state.auth);
-  const { addresses, isLoading } = useSelector((state) => state.address);
+  const { addresses, isLoading } = useSelector((state) => state.addresses);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

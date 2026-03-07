@@ -19,6 +19,7 @@ import {
   updatePaymentStatus,
 } from "../slices/orderSlice";
 import { fetchLogs } from "../slices/logSlice";
+import { fetchCoupons, createCoupon, updateCoupon, deleteCoupon } from "../slices/couponSlice";
 import {
   Edit,
   Trash2,
@@ -38,9 +39,11 @@ import {
   Info,
   ChevronUp,
   ChevronDown,
+  Tag,
 } from "lucide-react";
 import ProductModal from "../components/ProductModal";
 import UserModal from "../components/UserModal";
+import CouponModal from "../components/CouponModal";
 import ConfirmModal from "../components/ConfirmModal";
 
 const AdminDashboard = () => {
@@ -71,6 +74,12 @@ const AdminDashboard = () => {
     isError: logsError,
     message: logsMessage,
   } = useSelector((state) => state.logs);
+  const {
+    coupons,
+    isLoading: couponsLoading,
+    isError: couponsError,
+    message: couponsMessage,
+  } = useSelector((state) => state.coupons);
 
   const [activeTab, setActiveTab] = useState("inventory");
   const [searchTerm, setSearchTerm] = useState("");
@@ -87,7 +96,11 @@ const AdminDashboard = () => {
   // Confirm Modal States
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
-  const [deleteType, setDeleteType] = useState(null); // 'product' or 'user'
+  const [deleteType, setDeleteType] = useState(null); // 'product' or 'user' or 'coupon'
+
+  // Coupon Modal States
+  const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
+  const [selectedCoupon, setSelectedCoupon] = useState(null);
 
   // Sorting Logic
   const handleSort = (key) => {
@@ -143,8 +156,10 @@ const AdminDashboard = () => {
         dispatch(fetchUsers());
       } else if (activeTab === "orders") {
         dispatch(getAllOrdersAdmin());
-      } else if (activeTab === "logs") {
+      } else if (activeTab === "logs" && user.role === "superadmin") {
         dispatch(fetchLogs());
+      } else if (activeTab === "coupons") {
+        dispatch(fetchCoupons());
       }
     }
   }, [dispatch, user, activeTab]);
@@ -201,6 +216,32 @@ const AdminDashboard = () => {
     setIsUserModalOpen(false);
   };
 
+  // Handle Coupons
+  const handleAddCoupon = () => {
+    setSelectedCoupon(null);
+    setIsCouponModalOpen(true);
+  };
+
+  const handleEditCoupon = (coupon) => {
+    setSelectedCoupon(coupon);
+    setIsCouponModalOpen(true);
+  };
+
+  const handleCouponSubmit = async (formData) => {
+    try {
+      if (selectedCoupon) {
+        await dispatch(
+          updateCoupon({ id: selectedCoupon._id, couponData: formData }),
+        ).unwrap();
+      } else {
+        await dispatch(createCoupon(formData)).unwrap();
+      }
+      setIsCouponModalOpen(false);
+    } catch (err) {
+      alert(err || "Failed to save coupon");
+    }
+  };
+
   // Handle Delete
   const handleDeleteRequest = (id, type) => {
     setItemToDelete(id);
@@ -213,6 +254,8 @@ const AdminDashboard = () => {
       dispatch(deleteProduct(itemToDelete));
     } else if (deleteType === "user") {
       dispatch(deleteUser(itemToDelete));
+    } else if (deleteType === "coupon") {
+      dispatch(deleteCoupon(itemToDelete));
     }
     setIsConfirmOpen(false);
   };
@@ -270,6 +313,15 @@ const AdminDashboard = () => {
               <Activity size={16} className="mr-2" /> Logs
             </button>
           )}
+          <button
+            onClick={() => {
+              setActiveTab("coupons");
+              setSearchTerm("");
+            }}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition flex items-center ${activeTab === "coupons" ? "bg-blue-600 text-white shadow-sm" : "text-gray-600 hover:bg-gray-50"}`}
+          >
+            <Tag size={16} className="mr-2" /> Coupons
+          </button>
         </div>
       </div>
 
@@ -817,7 +869,7 @@ const AdminDashboard = () => {
             </table>
           </div>
         </div>
-      ) : (
+      ) : activeTab === "logs" ? (
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-4 border-b bg-gray-50 flex flex-col sm:flex-row justify-between items-center gap-4">
             <h2 className="text-lg font-semibold text-gray-700">
@@ -991,7 +1043,147 @@ const AdminDashboard = () => {
             </table>
           </div>
         </div>
-      )}
+      ) : activeTab === "coupons" ? (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+          <div className="p-4 border-b bg-gray-50 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <h2 className="text-lg font-semibold text-gray-700">
+              Coupon Management
+            </h2>
+            <div className="relative flex-1 max-w-sm w-full">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search size={16} className="text-gray-400" />
+              </div>
+              <input
+                type="text"
+                placeholder="Search coupons (code, type)..."
+                className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg bg-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm("")}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                >
+                  <Plus size={14} className="rotate-45" />
+                </button>
+              )}
+            </div>
+            <button
+              onClick={handleAddCoupon}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow-sm text-sm font-medium flex items-center transition whitespace-nowrap"
+            >
+              <Plus size={18} className="mr-1" /> Add Coupon
+            </button>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-50 text-gray-600 text-[11px] uppercase tracking-wider border-b">
+                  <th onClick={() => handleSort("code")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Code {renderSortIcon("code")}
+                  </th>
+                  <th onClick={() => handleSort("discountType")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Type {renderSortIcon("discountType")}
+                  </th>
+                  <th onClick={() => handleSort("discountValue")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Value {renderSortIcon("discountValue")}
+                  </th>
+                  <th onClick={() => handleSort("usageLimit")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Usage {renderSortIcon("usageLimit")}
+                  </th>
+                  <th onClick={() => handleSort("expiryDate")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Expires {renderSortIcon("expiryDate")}
+                  </th>
+                  <th className="p-4 font-bold text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {couponsLoading ? (
+                  <tr>
+                    <td colSpan="6" className="p-8 text-center text-gray-400">
+                      Loading coupons...
+                    </td>
+                  </tr>
+                ) : couponsError ? (
+                  <tr>
+                    <td colSpan="6" className="p-8 text-center text-red-500">
+                      {couponsMessage}
+                    </td>
+                  </tr>
+                ) : (
+                  (() => {
+                    const filtered = coupons.filter((c) => {
+                      const search = searchTerm.toLowerCase();
+                      return (
+                        c.code.toLowerCase().includes(search) ||
+                        c.discountType.toLowerCase().includes(search) ||
+                        (c._id && c._id.toLowerCase().includes(search))
+                      );
+                    });
+
+                    if (filtered.length === 0) {
+                      return (
+                        <tr>
+                          <td
+                            colSpan="6"
+                            className="p-8 text-center text-gray-400 font-medium"
+                          >
+                            No coupons found matching "{searchTerm}"
+                          </td>
+                        </tr>
+                      );
+                    }
+
+                    return sortData(filtered).map((coupon) => (
+                      <tr
+                        key={coupon._id}
+                        className="hover:bg-gray-50/50 transition whitespace-nowrap"
+                      >
+                        <td className="p-4 font-bold text-gray-800 text-sm">
+                          {coupon.code}
+                        </td>
+                        <td className="p-4 text-sm text-gray-600 capitalize">
+                          {coupon.discountType}
+                        </td>
+                        <td className="p-4 font-bold text-gray-700">
+                          {coupon.discountType === "percentage"
+                            ? `${coupon.discountValue}%`
+                            : `₹${coupon.discountValue.toFixed(2)}`}
+                        </td>
+                        <td className="p-4 text-sm text-gray-600">
+                          {coupon.usedCount || 0} /{" "}
+                          {!coupon.usageLimit ? "Unlimited" : coupon.usageLimit}
+                        </td>
+                        <td className="p-4 text-xs text-gray-500 font-medium">
+                          {coupon.expiryDate ? new Date(coupon.expiryDate).toLocaleDateString() : "N/A"}
+                        </td>
+                        <td className="p-4 text-right">
+                          <button
+                            onClick={() => handleEditCoupon(coupon)}
+                            className="text-blue-600 hover:text-blue-800 mr-3 p-1 hover:bg-blue-50 rounded transition"
+                          >
+                            <Edit size={18} />
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleDeleteRequest(coupon._id, "coupon")
+                            }
+                            className="text-red-500 hover:text-red-700 p-1 hover:bg-red-50 rounded transition"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </td>
+                      </tr>
+                    ));
+                  })()
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : null}
 
       {/* Modals */}
       {isProductModalOpen && (
@@ -1013,6 +1205,16 @@ const AdminDashboard = () => {
           onSubmit={handleUserSubmit}
           userItem={selectedUser}
           title={selectedUser ? "Edit User Role" : "Create New User"}
+        />
+      )}
+
+      {isCouponModalOpen && (
+        <CouponModal
+          key={selectedCoupon?._id || "new-coupon"}
+          isOpen={isCouponModalOpen}
+          onClose={() => setIsCouponModalOpen(false)}
+          onSave={handleCouponSubmit}
+          coupon={selectedCoupon}
         />
       )}
 

@@ -8,18 +8,20 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 const analyzeDB = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI);
-        const total = await Product.countDocuments();
-        console.log(`Total Products: ${total}`);
+        const Coupon = require('./models/Coupon');
+        const Order = require('./models/Order');
 
-        const categories = await Product.aggregate([
-            { $group: { _id: "$category", count: { $sum: 1 } } }
-        ]);
-        console.log('Products per Category:');
-        console.log(JSON.stringify(categories, null, 2));
+        const coupons = await Coupon.find({});
+        console.log('Coupons:');
+        coupons.forEach(c => {
+            console.log(`Code: ${c.code}, UsedCount: ${c.usedCount}, UsageLimit: ${c.usageLimit}`);
+        });
 
-        const first10 = await Product.find().sort("-createdAt").limit(10);
-        console.log('First 10 products (by -createdAt):');
-        console.log(first10.map(p => ({ title: p.title, category: p.category })));
+        const orders = await Order.find({ couponCode: { $ne: null, $ne: "" } });
+        console.log('\nOrders with Coupons:');
+        orders.forEach(o => {
+            console.log(`Order ID: ${o._id}, Coupon: ${o.couponCode}, Discount: ${o.discountAmount}`);
+        });
 
         process.exit();
     } catch (error) {

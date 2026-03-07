@@ -9,6 +9,7 @@ dotenv.config({ path: path.join(__dirname, ".env") });
 // Load models
 const Product = require("./models/Product");
 const User = require("./models/User");
+const Coupon = require("./models/Coupon");
 
 // Connect to DB
 mongoose.connect(process.env.MONGO_URI);
@@ -46,6 +47,29 @@ const importData = async () => {
     // Import products
     await Product.insertMany(sampleProducts);
 
+    // Initial Coupons
+    const initialCoupons = [
+      {
+        code: "QUICK50",
+        discountType: "percentage",
+        discountValue: 50,
+        minPurchase: 1000,
+        expiryDate: new Date(new Date().getFullYear() + 1, 11, 31),
+        usageLimit: 100,
+        createdBy: adminId,
+      },
+      {
+        code: "FLAT200",
+        discountType: "fixed",
+        discountValue: 200,
+        minPurchase: 500,
+        expiryDate: new Date(new Date().getFullYear() + 1, 11, 31),
+        usageLimit: null,
+        createdBy: adminId,
+      }
+    ];
+    await Coupon.insertMany(initialCoupons);
+
     console.log("Data Imported successfully!");
     process.exit();
   } catch (err) {
@@ -58,6 +82,7 @@ const destroyData = async () => {
   try {
     await Product.deleteMany();
     await User.deleteMany();
+    await Coupon.deleteMany();
 
     console.log("Data Destroyed!");
     process.exit();

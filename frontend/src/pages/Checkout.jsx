@@ -3,7 +3,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { createOrder, reset } from "../slices/orderSlice";
 import { fetchAddresses } from "../slices/addressSlice";
+import { validateCoupon, clearAppliedCoupon, resetCouponStatus } from "../slices/couponSlice";
 import {
+  Tag,
+  Check,
+  X,
   Truck,
   CreditCard,
   ChevronRight,
@@ -18,10 +22,15 @@ const Checkout = () => {
   const navigate = useNavigate();
   const { cart, isLoading: isCartLoading } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.auth);
-  const { addresses } = useSelector((state) => state.address);
+  const { addresses } = useSelector((state) => state.addresses);
   const { isSuccess, isLoading, isError, message } = useSelector(
     (state) => state.orders,
   );
+  const { validCoupon, isLoading: isCouponLoading, isError: isCouponError, message: couponMessage } = useSelector(
+    (state) => state.coupons,
+  );
+
+  const [couponCode, setCouponCode] = useState("");
 
   const [shippingDetails, setShippingDetails] = useState({
     fullName: "",
@@ -55,13 +64,23 @@ const Checkout = () => {
   }
 
   const cartItems = cart?.items || [];
-  const totalAmount = cartItems.reduce(
+  const itemsTotal = cartItems.reduce(
     (acc, item) => acc + (item.product?.price || 0) * item.quantity,
     0,
   );
 
+  const calculatedDiscount = validCoupon 
+    ? (validCoupon.discountType === "percentage" 
+        ? (itemsTotal * validCoupon.discountValue) / 100 
+        : validCoupon.discountValue)
+    : 0;
+
+  const finalTotal = itemsTotal + 20 - calculatedDiscount;
+
   useEffect(() => {
     dispatch(reset());
+    dispatch(clearAppliedCoupon());
+    dispatch(resetCouponStatus());
     if (user) {
       dispatch(fetchAddresses());
     }
@@ -105,6 +124,16 @@ const Checkout = () => {
     });
   };
 
+  const handleApplyCoupon = () => {
+    if (!couponCode) return;
+    dispatch(validateCoupon({ code: couponCode, purchaseAmount: itemsTotal }));
+  };
+
+  const handleRemoveCoupon = () => {
+    dispatch(clearAppliedCoupon());
+    setCouponCode("");
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const orderData = {
@@ -114,7 +143,9 @@ const Checkout = () => {
         price: item.product.price,
       })),
       shippingDetails,
-      totalAmount,
+      totalAmount: finalTotal,
+      discountAmount: calculatedDiscount,
+      couponCode: validCoupon ? validCoupon.code : "",
     };
     dispatch(createOrder(orderData));
   };
@@ -415,9 +446,17 @@ const Checkout = () => {
                     <div className="flex justify-between items-center text-gray-600">
                       <span className="text-sm font-bold">Item Total</span>
                       <span className="text-sm font-black text-gray-900 tracking-tight">
-                        ₹{totalAmount.toFixed(2)}
+                        ₹{itemsTotal.toFixed(2)}
                       </span>
                     </div>
+                    {calculatedDiscount > 0 && (
+                      <div className="flex justify-between items-center text-green-600 font-bold italic">
+                        <span className="text-sm">Coupon Discount</span>
+                        <span className="text-sm">
+                          -₹{calculatedDiscount.toFixed(2)}
+                        </span>
+                      </div>
+                    )}
                     <div className="flex justify-between items-center text-gray-600">
                       <span className="text-sm font-bold">Shipping Fee</span>
                       <span className="text-sm font-black text-green-600 uppercase tracking-wider">
@@ -432,12 +471,55 @@ const Checkout = () => {
                     </div>
                   </div>
 
+                  {/* Coupon Application Box */}
+                  <div className="mb-6 p-4 bg-gray-50 rounded-2xl border border-gray-100 italic font-medium">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 block">
+                      Apply Coupon
+                    </label>
+                    {validCoupon ? (
+                      <div className="flex items-center justify-between bg-green-50 p-2 rounded-xl border border-green-100">
+                        <div className="flex items-center">
+                          <Check size={16} className="text-green-600 mr-2" />
+                          <span className="text-sm font-bold text-green-700">{validCoupon.code} Applied</span>
+                        </div>
+                        <button onClick={handleRemoveCoupon} className="text-red-500 hover:text-red-700">
+                          <X size={16} />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex gap-2">
+                        <div className="relative flex-1">
+                          <Tag className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                          <input
+                            type="text"
+                            placeholder="Enter Code"
+                            className="w-full pl-10 pr-3 py-2 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none uppercase tracking-widest font-bold"
+                            value={couponCode}
+                            onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                          />
+                        </div>
+                        <button
+                          onClick={handleApplyCoupon}
+                          disabled={isCouponLoading || !couponCode}
+                          className="px-4 py-2 bg-blue-600 text-white text-xs font-black uppercase rounded-xl hover:bg-blue-700 disabled:opacity-50 transition-all"
+                        >
+                          {isCouponLoading ? "..." : "Apply"}
+                        </button>
+                      </div>
+                    )}
+                    {isCouponError && (
+                      <p className="text-[10px] text-red-500 font-bold mt-2 ml-1">
+                        {couponMessage}
+                      </p>
+                    )}
+                  </div>
+
                   <div className="pt-6 border-t border-gray-100 flex justify-between items-center">
                     <span className="text-lg font-black uppercase text-gray-900 tracking-tight">
                       Total Payable
                     </span>
                     <span className="text-2xl font-black text-blue-600 tracking-tight">
-                      ₹{(totalAmount + 20).toFixed(2)}
+                      ₹{finalTotal.toFixed(2)}
                     </span>
                   </div>
                 </div>
