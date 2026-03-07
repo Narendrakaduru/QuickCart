@@ -90,15 +90,15 @@ The project comes with pre-configured data to get you started:
 ## ✨ Key Features
 
 - **User Authentication**: Secure Login/Register with JWT and **password visibility toggles**.
-- **Role-Based Access**: Specialized dashboards for Users, Admins, and Superadmins.
+- **Role-Based Access**: Specialized dashboards for Admins, and Superadmins.
 - **System Activity Monitoring**: Advanced log viewer for **Superadmins** to track system actions, errors, and logins with detailed metadata (IP, Method, Path).
 - **Enhanced Admin Controls**: **Dynamic sorting** and searching across all administrative tables (Products, Orders, Users, Logs).
 - **Product Management**: Complete CRUD for products with image upload support and interactive carousels.
-- **Coupon Management & Logic**: 
+- **Coupon Management & Logic**:
   - Admins can create/edit/delete coupons via the dashboard.
   - Supports **Percentage** (%) and **Fixed** (₹) discounts.
   - Configurable **Minimum Purchase** and **Expiry Dates**.
-  - **Usage Limits & Tracking**: 
+  - **Usage Limits & Tracking**:
     - Restrict how many times a code can be used globally.
     - **Usage Counting**: Every successful order placement automatically increments the `usedCount` for the applied coupon.
     - **Real-time Checkout Integration**: Validation for availability, expiry, minimum purchase, and usage limits with instant price recalculation.
@@ -116,13 +116,3 @@ The project comes with pre-configured data to get you started:
 - **Coupons**: `/api/coupons` (creation, validation, management)
 
 - **Logs**: `/api/logs` (system activity monitoring - Superadmin only)
-
-## 🛠️ Maintenance & Recent Fixes
-
-### Coupon Usage Counting (March 2026)
-- **Issue**: Coupon usage count remained at 0 in the Admin Dashboard despite successful orders.
-- **Root Cause**: Discrepancy between backend field name (`usedCount`) and frontend reference (`usageCount`).
-- **Resolution**: 
-  - Unified field naming to `usedCount` in `AdminDashboard.jsx`.
-  - Optimized `orderController.js` to trim whitespaces from coupon codes before matching.
-  - Verified increment logic via direct database analysis.
