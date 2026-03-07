@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Super Admin",
+    "email": "superadmin@quickcart.com",
+    "password": "sa123",
+    "role": "superadmin"
+  },
+  {
+    "name": "Admin User",
+    "email": "admin@quickcart.com",
+    "password": "admin123",
+    "role": "admin"
+  }
+]

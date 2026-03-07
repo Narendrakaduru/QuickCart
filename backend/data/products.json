@@ -1,0 +1,827 @@
+[
+  {
+    "title": "Nexus Quantum X1 Crystal Smartphone",
+    "brand": "Nexus",
+    "description": "Revolutionary transparent display with quantum-dot technology and 72-hour battery life.",
+    "price": 9999.99,
+    "discountPercentage": 10,
+    "category": "Mobiles",
+    "stockCount": 50,
+    "images": [
+      "/products/nexus-quantum-x1-crystal-smartphone-transparent.png",
+      "/products/nexus-quantum-x1-crystal-smartphone-side-profile.png"
+    ],
+    "rating": 4.5,
+    "numReviews": 10
+  },
+  {
+    "title": "AudioTech Sonic Wave Pro Earbuds",
+    "brand": "AudioTech",
+    "description": "Studio-quality audio in your pocket with active spatial awareness and adaptive noise cancellation.",
+    "price": 2299.99,
+    "discountPercentage": 15,
+    "category": "Electronics",
+    "stockCount": 100,
+    "images": [
+      "/products/audiotech-sonic-wave-pro-earbuds-white.png",
+      "/products/audiotech-sonic-wave-pro-earbuds-charging-case.png"
+    ],
+    "rating": 4.8,
+    "numReviews": 25
+  },
+  {
+    "title": "UrbanStyle Urban Nomad Techwear Jacket",
+    "brand": "UrbanStyle",
+    "description": "Weather-resistant techwear with integrated heating panels and multiple concealed compartments.",
+    "price": 1999.99,
+    "discountPercentage": 0,
+    "category": "Fashion",
+    "stockCount": 200,
+    "images": [
+      "/products/urbanstyle-urban-nomad-techwear-jacket-front-model.png",
+      "/products/urbanstyle-urban-nomad-techwear-jacket-pocket-details.png"
+    ],
+    "rating": 4.2,
+    "numReviews": 50
+  },
+  {
+    "title": "WoodWork Nordic Oak Minimalist Desk",
+    "brand": "WoodWork",
+    "description": "Minimalist workspace crafted from sustainable solid oak with hidden cable management.",
+    "price": 8999.99,
+    "discountPercentage": 5,
+    "category": "Furniture",
+    "stockCount": 30,
+    "images": [
+      "/products/woodwork-nordic-oak-minimalist-desk-lifestyle.png",
+      "/products/woodwork-nordic-oak-minimalist-desk-top-view.png"
+    ],
+    "rating": 4.6,
+    "numReviews": 12
+  },
+  {
+    "title": "ViewMaster Onyx 8K Smart OLED TV",
+    "brand": "ViewMaster",
+    "description": "Breathtaking 8K resolution with deep blacks and infinite contrast powered by OLED technology.",
+    "price": 49999.99,
+    "discountPercentage": 20,
+    "category": "Electronics",
+    "stockCount": 15,
+    "images": [
+      "/products/viewmaster-onyx-8k-smart-oled-tv-front.png",
+      "/products/viewmaster-onyx-8k-smart-oled-tv-wall-mount.png"
+    ],
+    "rating": 4.7,
+    "numReviews": 18
+  },
+  {
+    "title": "CoolBreeze Arctic Freeze Smart Fridge",
+    "brand": "CoolBreeze",
+    "description": "Smart refrigeration with internal cameras and intelligent freshness zones for every food type.",
+    "price": 98999.99,
+    "discountPercentage": 12,
+    "category": "Appliances",
+    "stockCount": 48,
+    "images": [
+      "/products/coolbreeze-arctic-freeze-smart-fridge-smart-panel.png",
+      "/products/coolbreeze-arctic-freeze-smart-fridge-internal-camera.png"
+    ],
+    "rating": 4.6,
+    "numReviews": 293
+  },
+  {
+    "title": "HeatMax Vortex Steam Convection Oven",
+    "brand": "HeatMax",
+    "description": "Combined steam and convection cooking for juicy inside and perfectly crisp outside results.",
+    "price": 9836.87,
+    "discountPercentage": 25,
+    "category": "Appliances",
+    "stockCount": 45,
+    "images": [
+      "/products/heatmax-vortex-steam-convection-oven-roast-chicken.png",
+      "/products/heatmax-vortex-steam-convection-oven-digital-display.png"
+    ],
+    "rating": 3.7,
+    "numReviews": 57
+  },
+  {
+    "title": "ChefHat Culinary Pro High-Power Blender",
+    "brand": "ChefHat",
+    "description": "Professional-grade power capable of milling grains and making piping hot soups in minutes.",
+    "price": 5524.71,
+    "discountPercentage": 5,
+    "category": "Home",
+    "stockCount": 14,
+    "images": [
+      "/products/chefhat-culinary-pro-highpower-blender-smoothie-action.png",
+      "/products/chefhat-culinary-pro-highpower-blender-blade-detail.png"
+    ],
+    "rating": 3.8,
+    "numReviews": 459
+  },
+  {
+    "title": "OrganicLife Premium Quinoa Blend",
+    "brand": "OrganicLife",
+    "description": "Premium superfood blend rich in protein and fiber, sourced from sustainable high-altitude farms.",
+    "price": 370.48,
+    "discountPercentage": 21,
+    "category": "Grocery",
+    "stockCount": 36,
+    "images": [
+      "/products/organiclife-premium-quinoa-blend-bowl.png",
+      "/products/organiclife-premium-quinoa-blend-package-display.png"
+    ],
+    "rating": 4.7,
+    "numReviews": 253
+  },
+  {
+    "title": "FashionHub Silk Road Patterned Scarf",
+    "brand": "FashionHub",
+    "description": "Exquisite hand-woven silk in a vibrant traditional pattern, adding elegance to any outfit.",
+    "price": 882.93,
+    "discountPercentage": 10,
+    "category": "Fashion",
+    "stockCount": 86,
+    "images": [
+      "/products/fashionhub-silk-road-patterned-scarf-draped.png",
+      "/products/fashionhub-silk-road-patterned-scarf-fabric-texture.png"
+    ],
+    "rating": 3.6,
+    "numReviews": 431
+  },
+  {
+    "title": "SoftRest Cloud Recliner Massage Sofa",
+    "brand": "SoftRest",
+    "description": "Zero-gravity reclining position with integrated massage and heating for ultimate luxury relaxation.",
+    "price": 55555.55,
+    "discountPercentage": 10,
+    "category": "Furniture",
+    "stockCount": 10,
+    "images": [
+      "/products/softrest-cloud-recliner-massage-sofa-extended.png",
+      "/products/softrest-cloud-recliner-massage-sofa-remote-control.png"
+    ],
+    "rating": 4.7,
+    "numReviews": 496
+  },
+  {
+    "title": "MegaBlocks Galactic Explorer Space Rig",
+    "brand": "MegaBlocks",
+    "description": "Build a massive space station with motorized parts and interactive LED lighting circuits.",
+    "price": 3225.17,
+    "discountPercentage": 25,
+    "category": "Toys",
+    "stockCount": 23,
+    "images": [
+      "/products/megablocks-galactic-explorer-space-rig-station-complete.png",
+      "/products/megablocks-galactic-explorer-space-rig-motorized-gears.png"
+    ],
+    "rating": 4.7,
+    "numReviews": 85
+  },
+  {
+    "title": "Pulse Air Console Next Gen Gaming",
+    "brand": "Pulse",
+    "description": "The ultimate gaming machine with 120FPS 4k support and haptic feedback throughout the controller.",
+    "price": 89599.99,
+    "discountPercentage": 28,
+    "category": "Electronics",
+    "stockCount": 94,
+    "images": [
+      "/products/pulse-air-console-next-gen-gaming-vertical-stand.png",
+      "/products/pulse-air-console-next-gen-gaming-wireless-controller.png"
+    ],
+    "rating": 4.2,
+    "numReviews": 242
+  },
+  {
+    "title": "NatureBest Golden Wildflower Honey",
+    "brand": "NatureBest",
+    "description": "Raw, unfiltered wildflower honey harvested from protected alpine meadows in traditional jars.",
+    "price": 374.25,
+    "discountPercentage": 0,
+    "category": "Grocery",
+    "stockCount": 55,
+    "images": [
+      "/products/naturebest-golden-wildflower-honey-jar-golden.png",
+      "/products/naturebest-golden-wildflower-honey-honeycomb.png"
+    ],
+    "rating": 3.7,
+    "numReviews": 287
+  },
+  {
+    "title": "PureLiving PureMist Ultrasonic Humidifier",
+    "brand": "PureLiving",
+    "description": "Whisper-quiet ultrasonic mist technology with integrated air purification and essential oil tray.",
+    "price": 77.2,
+    "discountPercentage": 1,
+    "category": "Home",
+    "stockCount": 13,
+    "images": [
+      "/products/pureliving-puremist-ultrasonic-humidifier-mist-flow.png",
+      "/products/pureliving-puremist-ultrasonic-humidifier-night-light.png"
+    ],
+    "rating": 4.4,
+    "numReviews": 166
+  },
+  {
+    "title": "ViewMaster Vista Pro 4K Laser Projector",
+    "brand": "ViewMaster",
+    "description": "Cinema-grade laser projection in a compact design, capable of 200-inch HDR10+ displays.",
+    "price": 15999.99,
+    "discountPercentage": 20,
+    "category": "Electronics",
+    "stockCount": 65,
+    "images": [
+      "/products/viewmaster-vista-pro-4k-laser-projector-lens-detail.png",
+      "/products/viewmaster-vista-pro-4k-laser-projector-lifestyle-setup.png"
+    ],
+    "rating": 4.2,
+    "numReviews": 246
+  },
+  {
+    "title": "Vibe Horizon Edge V Infinity Phone",
+    "brand": "Vibe",
+    "description": "Seamless wrap-around display offering a truly immersive viewing experience with under-screen camera.",
+    "price": 19999.99,
+    "discountPercentage": 10,
+    "category": "Mobiles",
+    "stockCount": 45,
+    "images": [
+      "/products/vibe-horizon-edge-v-infinity-phone-wrap-around-display.png",
+      "/products/vibe-horizon-edge-v-infinity-phone-under-screen-camera.png"
+    ],
+    "rating": 4.4,
+    "numReviews": 406
+  },
+  {
+    "title": "ModernNest Metro Loft Steel Bookcase",
+    "brand": "ModernNest",
+    "description": "Industrial-chic design with adjustable powder-coated steel shelving and solid wood accents.",
+    "price": 6999.99,
+    "discountPercentage": 11,
+    "category": "Furniture",
+    "stockCount": 23,
+    "images": [
+      "/products/modernnest-metro-loft-steel-bookcase-shelf-books.png",
+      "/products/modernnest-metro-loft-steel-bookcase-industrial-detail.png"
+    ],
+    "rating": 3.7,
+    "numReviews": 349
+  },
+  {
+    "title": "HomeEase SafeGuard Biometric Smart Lock",
+    "brand": "HomeEase",
+    "description": "Biometric access with remote monitoring and temporary key sharing for ultimate home security.",
+    "price": 2999.99,
+    "discountPercentage": 10,
+    "category": "Home",
+    "stockCount": 53,
+    "images": [
+      "/products/homeease-safeguard-biometric-smart-lock-fingerprint-scan.png",
+      "/products/homeease-safeguard-biometric-smart-lock-door-mounted.png"
+    ],
+    "rating": 4.4,
+    "numReviews": 295
+  },
+  {
+    "title": "DailyNeed Artisan Single Origin Roast",
+    "brand": "DailyNeed",
+    "description": "Single-origin Arabica coffee beans slowly roasted to bring out chocolate and cherry notes.",
+    "price": 345.56,
+    "discountPercentage": 4,
+    "category": "Grocery",
+    "stockCount": 21,
+    "images": [
+      "/products/dailyneed-artisan-single-origin-roast-roasted-beans.png",
+      "/products/dailyneed-artisan-single-origin-roast-brewed-cup.png"
+    ],
+    "rating": 4.9,
+    "numReviews": 185
+  },
+  {
+    "title": "CleanSweep Hydro Clean Smart Washer",
+    "brand": "CleanSweep",
+    "description": "Ozone-enhanced cleaning technology that removes stains and bacteria using 50% less water.",
+    "price": 179.65,
+    "discountPercentage": 6,
+    "category": "Appliances",
+    "stockCount": 101,
+    "images": [
+      "/products/cleansweep-hydro-clean-smart-washer-drum-rotation.png",
+      "/products/cleansweep-hydro-clean-smart-washer-energy-label.png"
+    ],
+    "rating": 3.5,
+    "numReviews": 332
+  },
+  {
+    "title": "TechBrand Titan G7 Rugged Mobile",
+    "brand": "TechBrand",
+    "description": "Military-grade durability meet high-end performance. Built for the most extreme environments.",
+    "price": 914.94,
+    "discountPercentage": 20,
+    "category": "Mobiles",
+    "stockCount": 14,
+    "images": [
+      "/products/techbrand-titan-g7-rugged-mobile-rugged-exterior.png",
+      "/products/techbrand-titan-g7-rugged-mobile-waterproof-test.png"
+    ],
+    "rating": 4.5,
+    "numReviews": 421
+  },
+  {
+    "title": "AudioTech Echo Master 360 Speaker",
+    "brand": "AudioTech",
+    "description": "360-degree high-fidelity sound that automatically tunes itself to your room's acoustics.",
+    "price": 1599.99,
+    "discountPercentage": 19,
+    "category": "Electronics",
+    "stockCount": 102,
+    "images": [
+      "/products/audiotech-echo-master-360-speaker-top-controls.png",
+      "/products/audiotech-echo-master-360-speaker-living-room.png"
+    ],
+    "rating": 4.9,
+    "numReviews": 39
+  },
+  {
+    "title": "Pulse Volt Charge Hub 100W",
+    "brand": "Pulse",
+    "description": "Universal fast-charging station for all your devices with smart power distribution and thermal safety.",
+    "price": 1464.63,
+    "discountPercentage": 25,
+    "category": "Electronics",
+    "stockCount": 41,
+    "images": [
+      "/products/pulse-volt-charge-hub-100w-ports-view.png",
+      "/products/pulse-volt-charge-hub-100w-compact-design.png"
+    ],
+    "rating": 3.7,
+    "numReviews": 108
+  },
+  {
+    "title": "PureAir PureStream Eco Dishwasher",
+    "brand": "PureAir",
+    "description": "Ultra-efficient cleaning with a dedicated steam sanitize cycle and crystal-dry technology.",
+    "price": 55335.55,
+    "discountPercentage": 10,
+    "category": "Appliances",
+    "stockCount": 60,
+    "images": [
+      "/products/pureair-purestream-eco-dishwasher-loaded-racks.png",
+      "/products/pureair-purestream-eco-dishwasher-steam-jets.png"
+    ],
+    "rating": 4.4,
+    "numReviews": 5
+  },
+  {
+    "title": "OrganicLife First Press Virgin Olive Oil",
+    "brand": "OrganicLife",
+    "description": "First-press extra virgin olive oil with a peppery finish, perfect for dressings and dipping.",
+    "price": 446.71,
+    "discountPercentage": 9,
+    "category": "Grocery",
+    "stockCount": 25,
+    "images": [
+      "/products/organiclife-first-press-virgin-olive-oil-bottle-oil.png",
+      "/products/organiclife-first-press-virgin-olive-oil-serving.png"
+    ],
+    "rating": 5,
+    "numReviews": 438
+  },
+  {
+    "title": "UrbanSpace Luxe Velvet Tufted Armchair",
+    "brand": "UrbanSpace",
+    "description": "A statement piece for any room, featuring deep-tufted velvet upholstery and gold-finished legs.",
+    "price": 5249.69,
+    "discountPercentage": 0,
+    "category": "Furniture",
+    "stockCount": 38,
+    "images": [
+      "/products/urbanspace-luxe-velvet-tufted-armchair-velvet-close-up.png",
+      "/products/urbanspace-luxe-velvet-tufted-armchair-room-corner.png"
+    ],
+    "rating": 3.6,
+    "numReviews": 10
+  },
+  {
+    "title": "DenimCo Indigo Selvedge Raw Denim",
+    "brand": "DenimCo",
+    "description": "Premium Japanese denim that ages uniquely with every wear, featuring a timeless straight cut.",
+    "price": 2510.14,
+    "discountPercentage": 20,
+    "category": "Fashion",
+    "stockCount": 83,
+    "images": [
+      "/products/denimco-indigo-selvedge-raw-denim-folded-jean.png",
+      "/products/denimco-indigo-selvedge-raw-denim-selvedge-line.png"
+    ],
+    "rating": 4.1,
+    "numReviews": 494
+  },
+  {
+    "title": "PlayJoy CyberBot AI Robotics Kit",
+    "brand": "PlayJoy",
+    "description": "A programmable robot that learns from its environment and can be controlled via smartphone apps.",
+    "price": 1311.54,
+    "discountPercentage": 9,
+    "category": "Toys",
+    "stockCount": 26,
+    "images": [
+      "/products/playjoy-cyberbot-ai-robotics-kit-arm-movement.png",
+      "/products/playjoy-cyberbot-ai-robotics-kit-coding-interface.png"
+    ],
+    "rating": 4.1,
+    "numReviews": 377
+  },
+  {
+    "title": "KidQuest Fantasy Multi-Level Dollhouse",
+    "brand": "KidQuest",
+    "description": "Multilevel wooden dollhouse with realistic furniture and working drawbridge mechanism.",
+    "price": 2220.65,
+    "discountPercentage": 15,
+    "category": "Toys",
+    "stockCount": 35,
+    "images": [
+      "/products/kidquest-fantasy-multilevel-dollhouse-furnished-rooms.png",
+      "/products/kidquest-fantasy-multilevel-dollhouse-working-bridge.png"
+    ],
+    "rating": 4,
+    "numReviews": 423
+  },
+  {
+    "title": "HeatMax AeroFryer Dual Basket Stack",
+    "brand": "HeatMax",
+    "description": "Dual-basket air frying allowing you to cook two different foods at once with perfect sync.",
+    "price": 9774.85,
+    "discountPercentage": 21,
+    "category": "Appliances",
+    "stockCount": 37,
+    "images": [
+      "/products/heatmax-aerofryer-dual-basket-stack-crispy-fries.png",
+      "/products/heatmax-aerofryer-dual-basket-stack-dual-controls.png"
+    ],
+    "rating": 5,
+    "numReviews": 113
+  },
+  {
+    "title": "Connect Aura Slim Pro Titanium Phone",
+    "brand": "Connect",
+    "description": "The world's thinnest high-performance smartphone, crafted from aerospace-grade titanium.",
+    "price": 77795.55,
+    "discountPercentage": 5,
+    "category": "Mobiles",
+    "stockCount": 61,
+    "images": [
+      "/products/connect-aura-slim-pro-titanium-phone-slim-profile.png",
+      "/products/connect-aura-slim-pro-titanium-phone-titanium-finish.png"
+    ],
+    "rating": 3.9,
+    "numReviews": 24
+  },
+  {
+    "title": "HomeEase Lumina Smart Mood Lamp",
+    "brand": "HomeEase",
+    "description": "Dynamic lighting that mimics natural sunlight cycles to prevent sleep issues and improve productivity.",
+    "price": 922.74,
+    "discountPercentage": 25,
+    "category": "Home",
+    "stockCount": 62,
+    "images": [
+      "/products/homeease-lumina-smart-mood-lamp-warm-glow.png",
+      "/products/homeease-lumina-smart-mood-lamp-color-cycling.png"
+    ],
+    "rating": 3.6,
+    "numReviews": 182
+  },
+  {
+    "title": "CoolBreeze FrostEdge AI AC Unit",
+    "brand": "CoolBreeze",
+    "description": "Energy-efficient cooling with AI-driven temperature sensing and whisper-quiet operation.",
+    "price": 47999.99,
+    "discountPercentage": 12,
+    "category": "Appliances",
+    "stockCount": 31,
+    "images": [
+      "/products/coolbreeze-frostedge-ai-ac-unit-wall-mounted.png",
+      "/products/coolbreeze-frostedge-ai-ac-unit-remote-app.png"
+    ],
+    "rating": 4.9,
+    "numReviews": 346
+  },
+  {
+    "title": "FunZone Nitro RC Extreme Racer",
+    "brand": "FunZone",
+    "description": "High-speed remote-controlled car capable of 40mph with long-range 2.4GHz control system.",
+    "price": 1710.79,
+    "discountPercentage": 28,
+    "category": "Toys",
+    "stockCount": 12,
+    "images": [
+      "/products/funzone-nitro-rc-extreme-racer-drift-action.png",
+      "/products/funzone-nitro-rc-extreme-racer-remote-controller.png"
+    ],
+    "rating": 4.1,
+    "numReviews": 1
+  },
+  {
+    "title": "DailyNeed Himalayan Pink Savory Salt",
+    "brand": "DailyNeed",
+    "description": "Mineral-rich salt crystals mined from ancient sea beds, providing a subtle savory depth.",
+    "price": 466.84,
+    "discountPercentage": 11,
+    "category": "Grocery",
+    "stockCount": 23,
+    "images": [
+      "/products/dailyneed-himalayan-pink-savory-salt-salt-crystals.png",
+      "/products/dailyneed-himalayan-pink-savory-salt-grinder.png"
+    ],
+    "rating": 4.2,
+    "numReviews": 305
+  },
+  {
+    "title": "CleanSweep DuraCycle Advanced Dryer",
+    "brand": "CleanSweep",
+    "description": "Advanced sensor drying that prevents over-drying and protects delicate fabric fibers.",
+    "price": 55999.99,
+    "discountPercentage": 11,
+    "category": "Appliances",
+    "stockCount": 101,
+    "images": [
+      "/products/cleansweep-duracycle-advanced-dryer-lint-filter.png",
+      "/products/cleansweep-duracycle-advanced-dryer-dryer-interior.png"
+    ],
+    "rating": 3.5,
+    "numReviews": 424
+  },
+  {
+    "title": "TrendSetter Lunar Mesh Athletic Sneakers",
+    "brand": "TrendSetter",
+    "description": "Ultra-breathable sports footwear with carbon-fiber energy return soles for peak agility.",
+    "price": 3535.84,
+    "discountPercentage": 29,
+    "category": "Fashion",
+    "stockCount": 46,
+    "images": [
+      "/products/trendsetter-lunar-mesh-athletic-sneakers-side-view.png",
+      "/products/trendsetter-lunar-mesh-athletic-sneakers-sole-traction.png"
+    ],
+    "rating": 3.6,
+    "numReviews": 262
+  },
+  {
+    "title": "ChefHat Grio Automatic Coffee Station",
+    "brand": "ChefHat",
+    "description": "Barista-quality espresso at home with a built-in ceramic burr grinder and milk frothing system.",
+    "price": 95418.55,
+    "discountPercentage": 1,
+    "category": "Home",
+    "stockCount": 42,
+    "images": [
+      "/products/chefhat-grio-automatic-coffee-station-latte-art.png",
+      "/products/chefhat-grio-automatic-coffee-station-bean-grinder.png"
+    ],
+    "rating": 4.4,
+    "numReviews": 67
+  },
+  {
+    "title": "WoodWork Zen Teak Platform Bed",
+    "brand": "WoodWork",
+    "description": "Low-profile Japanese-inspired bed frame made from reclaimed teak with built-in artisan nightstands.",
+    "price": 15997.69,
+    "discountPercentage": 1,
+    "category": "Furniture",
+    "stockCount": 104,
+    "images": [
+      "/products/woodwork-zen-teak-platform-bed-nightstand-view.png",
+      "/products/woodwork-zen-teak-platform-bed-minimalist-frame.png"
+    ],
+    "rating": 4.3,
+    "numReviews": 283
+  },
+  {
+    "title": "FreshPick Wild Berry Nut Granola",
+    "brand": "FreshPick",
+    "description": "Crunchy clusters of oats, nuts, and freeze-dried berries with no added refined sugars.",
+    "price": 537.76,
+    "discountPercentage": 17,
+    "category": "Grocery",
+    "stockCount": 77,
+    "images": [
+      "/products/freshpick-wild-berry-nut-granola-granola-milk.png",
+      "/products/freshpick-wild-berry-nut-granola-berry-mix.png"
+    ],
+    "rating": 4.6,
+    "numReviews": 11
+  },
+  {
+    "title": "FashionHub Ethereal Gala Satin Dress",
+    "brand": "FashionHub",
+    "description": "Flowing evening wear crafted from shimmering satin, designed for unforgettable impressions.",
+    "price": 2353.97,
+    "discountPercentage": 27,
+    "category": "Fashion",
+    "stockCount": 67,
+    "images": [
+      "/products/fashionhub-ethereal-gala-satin-dress-model-pose.png",
+      "/products/fashionhub-ethereal-gala-satin-dress-satin-shimmer.png"
+    ],
+    "rating": 3.5,
+    "numReviews": 467
+  },
+  {
+    "title": "ComfortSeat Velvet Cloud Bedding Set",
+    "brand": "ComfortSeat",
+    "description": "Sleep on a cloud with 1000-thread-count Egyptian cotton featuring advanced temperature regulation.",
+    "price": 55440.57,
+    "discountPercentage": 5,
+    "category": "Home",
+    "stockCount": 16,
+    "images": [
+      "/products/comfortseat-velvet-cloud-bedding-set-bedroom-lifestyle.png",
+      "/products/comfortseat-velvet-cloud-bedding-set-fabric-softness.png"
+    ],
+    "rating": 3.9,
+    "numReviews": 229
+  },
+  {
+    "title": "Nexus Nebula Fold 3 Duo Display",
+    "brand": "Nexus",
+    "description": "The next generation of foldable technology with a virtually invisible hinge and ultra-thin glass.",
+    "price": 123796.08,
+    "discountPercentage": 23,
+    "category": "Mobiles",
+    "stockCount": 31,
+    "images": [
+      "/products/nexus-nebula-fold-3-duo-display-folded.png",
+      "/products/nexus-nebula-fold-3-duo-display-unfolded-display.png"
+    ],
+    "rating": 4.9,
+    "numReviews": 331
+  },
+  {
+    "title": "Sonic Glide Pro Wireless Gaming Mouse",
+    "brand": "Sonic",
+    "description": "Precision engineering with a 30,000 DPI optical sensor and customizable ergonomic weight system.",
+    "price": 934.22,
+    "discountPercentage": 27,
+    "category": "Electronics",
+    "stockCount": 99,
+    "images": [
+      "/products/sonic-glide-pro-wireless-gaming-mouse-sensor-bottom.png",
+      "/products/sonic-glide-pro-wireless-gaming-mouse-ergonomic-grip.png"
+    ],
+    "rating": 4.8,
+    "numReviews": 336
+  },
+  {
+    "title": "FreshPick Pure Alphonso Mango Pulp",
+    "brand": "FreshPick",
+    "description": "100% pure Alphonso mango puree, perfect for smoothies, desserts, and authentic lassis.",
+    "price": 619.5,
+    "discountPercentage": 30,
+    "category": "Grocery",
+    "stockCount": 87,
+    "images": [
+      "/products/freshpick-pure-alphonso-mango-pulp-pulp-glass.png",
+      "/products/freshpick-pure-alphonso-mango-pulp-mango-slices.png"
+    ],
+    "rating": 4,
+    "numReviews": 60
+  },
+  {
+    "title": "PureLiving Ariel HEPA Air Purifier",
+    "brand": "PureLiving",
+    "description": "Medical-grade HEPA filtration that removes 99.9% of allergens and odors in rooms up to 500 sq ft.",
+    "price": 14999.99,
+    "discountPercentage": 20,
+    "category": "Home",
+    "stockCount": 15,
+    "images": [
+      "/products/pureliving-ariel-hepa-air-purifier-filter-layers.png",
+      "/products/pureliving-ariel-hepa-air-purifier-modern-setup.png"
+    ],
+    "rating": 3.6,
+    "numReviews": 460
+  },
+  {
+    "title": "ModernNest Gravity Electric Standing Desk",
+    "brand": "ModernNest",
+    "description": "Smooth electric height adjustment with memory presets and built-in wireless charging pad.",
+    "price": 59999.99,
+    "discountPercentage": 27,
+    "category": "Furniture",
+    "stockCount": 52,
+    "images": [
+      "/products/modernnest-gravity-electric-standing-desk-height-adjustment.png",
+      "/products/modernnest-gravity-electric-standing-desk-wireless-charging.png"
+    ],
+    "rating": 4.7,
+    "numReviews": 447
+  },
+  {
+    "title": "UrbanStyle Summit Peak Winter Parka",
+    "brand": "UrbanStyle",
+    "description": "Heavy-duty insulation meets modern aesthetics, keeping you warm in sub-zero temperatures.",
+    "price": 6786.63,
+    "discountPercentage": 23,
+    "category": "Fashion",
+    "stockCount": 39,
+    "images": [
+      "/products/urbanstyle-summit-peak-winter-parka-insulated-hood.png",
+      "/products/urbanstyle-summit-peak-winter-parka-extreme-cold-test.png"
+    ],
+    "rating": 4.9,
+    "numReviews": 228
+  },
+  {
+    "title": "SoftRest Siesta Woven Hammock Stand",
+    "brand": "SoftRest",
+    "description": "Portable and sturdy frame with a hand-woven cotton hammock for indoor or outdoor garden bliss.",
+    "price": 6599.99,
+    "discountPercentage": 9,
+    "category": "Furniture",
+    "stockCount": 52,
+    "images": [
+      "/products/softrest-siesta-woven-hammock-stand-garden-setup.png",
+      "/products/softrest-siesta-woven-hammock-stand-fabric-weave.png"
+    ],
+    "rating": 3.8,
+    "numReviews": 21
+  },
+  {
+    "title": "NatureBest Slow Milled Ancient Flour",
+    "brand": "NatureBest",
+    "description": "Slow-milled blend of Spelt, Einkorn, and Emmer for superior baking flavor and nutrition.",
+    "price": 578.88,
+    "discountPercentage": 22,
+    "category": "Grocery",
+    "stockCount": 91,
+    "images": [
+      "/products/naturebest-slow-milled-ancient-flour-flour-dust.png",
+      "/products/naturebest-slow-milled-ancient-flour-baked-bread.png"
+    ],
+    "rating": 5,
+    "numReviews": 498
+  },
+  {
+    "title": "Connect Sync Photon S 6G Smartphone",
+    "brand": "Connect",
+    "description": "Experience lightning-fast speeds with advanced photonic processing and 6G readiness.",
+    "price": 259999.99,
+    "discountPercentage": 0,
+    "category": "Mobiles",
+    "stockCount": 5,
+    "images": [
+      "/products/connect-sync-photon-s-6g-smartphone-photon-processor.png",
+      "/products/connect-sync-photon-s-6g-smartphone-6g-connectivity.png"
+    ],
+    "rating": 3.7,
+    "numReviews": 135
+  },
+  {
+    "title": "Vibe Zenith Core Max AI Phone",
+    "brand": "Vibe",
+    "description": "Unmatched processing power with an octa-core AI neural engine for professional creators.",
+    "price": 45999.99,
+    "discountPercentage": 1,
+    "category": "Mobiles",
+    "stockCount": 93,
+    "images": [
+      "/products/vibe-zenith-core-max-ai-phone-neural-engine.png",
+      "/products/vibe-zenith-core-max-ai-phone-professional-camera.png"
+    ],
+    "rating": 3.7,
+    "numReviews": 68
+  },
+  {
+    "title": "Sonic Spectral RGB Mechanical Keyboard",
+    "brand": "Sonic",
+    "description": "Mechanical switches with ultra-low latency and per-key RGB lighting for peak performance.",
+    "price": 1999.99,
+    "discountPercentage": 18,
+    "category": "Electronics",
+    "stockCount": 92,
+    "images": [
+      "/products/sonic-spectral-rgb-mechanical-keyboard-switches-close-up.png",
+      "/products/sonic-spectral-rgb-mechanical-keyboard-rgb-lighting-dark.png"
+    ],
+    "rating": 4.1,
+    "numReviews": 13
+  },
+  {
+    "title": "DenimCo Revive Eco-Friendly Tee",
+    "brand": "DenimCo",
+    "description": "Sustainable fashion made entirely from recycled ocean plastics and organic cotton.",
+    "price": 6299.99,
+    "discountPercentage": 14,
+    "category": "Fashion",
+    "stockCount": 51,
+    "images": [
+      "/products/denimco-revive-ecofriendly-tee-on-hanger.png",
+      "/products/denimco-revive-ecofriendly-tee-recycled-label.png"
+    ],
+    "rating": 5,
+    "numReviews": 84
+  }
+]
