@@ -34,11 +34,11 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
-      <div className="min-h-screen flex flex-col bg-[#f1f3f6]">
+      <div className="min-h-screen flex flex-col bg-slate-50 transition-colors duration-500">
         <Navbar />
         <MegaMenu />
 
-        <main className="flex-1 py-4">
+        <main className="flex-1 py-6">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<ProductList />} />

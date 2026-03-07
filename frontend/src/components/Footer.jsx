@@ -19,9 +19,9 @@ const Footer = () => {
           <div className="lg:col-span-4">
             <Link
               to="/"
-              className="text-3xl font-black italic tracking-wider flex items-center text-white mb-6"
+              className="text-2xl font-bold italic tracking-tight flex items-center text-white mb-6"
             >
-              Quick<span className="text-yellow-400">Cart</span>
+              Quick<span className="text-blue-400">Cart</span>
             </Link>
             <p className="text-gray-400 leading-relaxed mb-8 max-w-sm">
               Experience the future of shopping with QuickCart. We bring the
@@ -56,9 +56,9 @@ const Footer = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-6 pr-16 text-white text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all placeholder:text-gray-500"
+                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-6 pr-16 text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all placeholder:text-gray-500"
               />
-              <button className="absolute right-2 top-2 bottom-2 bg-yellow-400 text-blue-900 px-4 rounded-xl hover:bg-yellow-300 transition-colors flex items-center justify-center group/btn">
+              <button className="absolute right-2 top-2 bottom-2 bg-blue-600 text-white px-4 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center group/btn">
                 <Send
                   size={18}
                   className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
@@ -78,7 +78,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/about"
-                  className="hover:text-yellow-400 transition-colors inline-block"
+                  className="hover:text-blue-400 transition-colors inline-block"
                 >
                   About Us
                 </Link>
@@ -86,7 +86,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/careers"
-                  className="hover:text-yellow-400 transition-colors inline-block"
+                  className="hover:text-blue-400 transition-colors inline-block"
                 >
                   Careers
                 </Link>
@@ -94,7 +94,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/press"
-                  className="hover:text-yellow-400 transition-colors inline-block"
+                  className="hover:text-blue-400 transition-colors inline-block"
                 >
                   Press & Media
                 </Link>
@@ -102,7 +102,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/blog"
-                  className="hover:text-yellow-400 transition-colors inline-block"
+                  className="hover:text-blue-400 transition-colors inline-block"
                 >
                   QuickCart Stories
                 </Link>
@@ -117,7 +117,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/help"
-                  className="hover:text-yellow-400 transition-colors inline-block"
+                  className="hover:text-blue-400 transition-colors inline-block"
                 >
                   Help Center
                 </Link>
@@ -125,7 +125,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/returns"
-                  className="hover:text-yellow-400 transition-colors inline-block"
+                  className="hover:text-blue-400 transition-colors inline-block"
                 >
                   Returns & Refunds
                 </Link>
@@ -133,7 +133,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/shipping"
-                  className="hover:text-yellow-400 transition-colors inline-block"
+                  className="hover:text-blue-400 transition-colors inline-block"
                 >
                   Track Orders
                 </Link>
@@ -141,7 +141,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/faq"
-                  className="hover:text-yellow-400 transition-colors inline-block"
+                  className="hover:text-blue-400 transition-colors inline-block"
                 >
                   FAQs
                 </Link>
@@ -156,7 +156,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/privacy"
-                  className="hover:text-yellow-400 transition-colors inline-block"
+                  className="hover:text-blue-400 transition-colors inline-block"
                 >
                   Privacy Policy
                 </Link>
@@ -164,7 +164,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/terms"
-                  className="hover:text-yellow-400 transition-colors inline-block"
+                  className="hover:text-blue-400 transition-colors inline-block"
                 >
                   Terms of Service
                 </Link>
@@ -172,7 +172,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/security"
-                  className="hover:text-yellow-400 transition-colors inline-block"
+                  className="hover:text-blue-400 transition-colors inline-block"
                 >
                   Security
                 </Link>
@@ -180,7 +180,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/ethics"
-                  className="hover:text-yellow-400 transition-colors inline-block"
+                  className="hover:text-blue-400 transition-colors inline-block"
                 >
                   Ethics
                 </Link>
@@ -193,15 +193,15 @@ const Footer = () => {
             </h3>
             <ul className="space-y-4 text-sm">
               <li className="flex items-start gap-3">
-                <MapPin size={18} className="text-yellow-400 shrink-0" />
+                <MapPin size={18} className="text-blue-400 shrink-0" />
                 <span>Begonia Tech Village, ORR, Bengaluru, 560103</span>
               </li>
               <li className="flex items-center gap-3">
-                <Mail size={18} className="text-yellow-400 shrink-0" />
+                <Mail size={18} className="text-blue-400 shrink-0" />
                 <span>support@quickcart.com</span>
               </li>
               <li className="flex items-center gap-3">
-                <Phone size={18} className="text-yellow-400 shrink-0" />
+                <Phone size={18} className="text-blue-400 shrink-0" />
                 <span>+91 800-QUICK-CART</span>
               </li>
             </ul>
@@ -216,11 +216,6 @@ const Footer = () => {
           </p>
           <div className="flex items-center gap-8">
             <div className="flex gap-4 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all">
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg"
-                alt="Visa"
-                className="h-4"
-              />
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
                 alt="Mastercard"

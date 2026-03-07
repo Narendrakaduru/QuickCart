@@ -117,8 +117,8 @@ const ProductDetail = () => {
   if (!product) return null;
 
   return (
-    <div className="container mx-auto px-4 py-4 max-w-7xl">
-      <div className="bg-white rounded-sm shadow-sm p-4 flex flex-col md:flex-row gap-8">
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/50 p-6 md:p-10 border border-gray-100 flex flex-col md:flex-row gap-12">
         {/* Left Side: Images */}
         <div className="w-full md:w-2/5 flex flex-col-reverse md:flex-row gap-4 sticky top-20 self-start">
           {/* Thumbnail Strip */}
@@ -206,18 +206,18 @@ const ProductDetail = () => {
             )}
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-100">
+          <div className="flex flex-col sm:flex-row gap-4 pt-6 mt-2">
             <button
               onClick={handleAddToCart}
-              className="flex-1 bg-[#ff9f00] hover:bg-[#ff9000] text-white font-bold py-3.5 px-4 rounded-sm shadow-sm flex items-center justify-center transition uppercase"
+              className="flex-1 bg-white border-2 border-orange-500 text-orange-500 hover:bg-orange-50 font-bold py-4 px-6 rounded-xl shadow-lg shadow-orange-100 flex items-center justify-center transition-all hover:scale-[1.03] active:scale-[0.97] uppercase tracking-wider text-xs"
             >
-              <ShoppingCart size={18} className="mr-2" /> Add to Cart
+              <ShoppingCart size={18} strokeWidth={2.5} className="mr-2" /> Add to Cart
             </button>
             <button
               onClick={handleBuyNow}
-              className="flex-1 bg-[#fb641b] hover:bg-[#f35910] text-white font-bold py-3.5 px-4 rounded-sm shadow-sm flex items-center justify-center transition uppercase"
+              className="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 px-6 rounded-xl shadow-xl shadow-orange-200 flex items-center justify-center transition-all hover:scale-[1.03] active:scale-[0.97] uppercase tracking-widest text-xs"
             >
-              <Zap size={18} className="mr-2 fill-current" /> Buy Now
+              <Zap size={18} strokeWidth={2.5} className="mr-2 fill-current" /> Buy Now
             </button>
           </div>
 
@@ -335,7 +335,7 @@ const ProductDetail = () => {
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-sm transition shadow-md ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+                    className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-blue-100 hover:scale-[1.02] active:scale-[0.98] uppercase tracking-wider text-xs ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
                   >
                     {isLoading ? "Submitting..." : "Submit Review"}
                   </button>
@@ -353,7 +353,7 @@ const ProductDetail = () => {
                 </p>
                 <button
                   onClick={() => navigate("/login")}
-                  className="bg-blue-600 text-white px-8 py-2.5 rounded-sm font-bold shadow-sm hover:shadow-md transition"
+                  className="bg-blue-600 text-white px-10 py-3.5 rounded-xl font-bold shadow-lg shadow-blue-100 hover:bg-blue-700 transition-all hover:scale-105 active:scale-95 uppercase tracking-widest text-xs"
                 >
                   Login to Review
                 </button>

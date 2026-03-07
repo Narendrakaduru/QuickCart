@@ -641,7 +641,7 @@ const AdminDashboard = () => {
                       <td className="p-4">
                         <div className="flex flex-col gap-1">
                           <span
-                            className={`px-2 py-0.5 rounded text-[9px] font-black uppercase w-fit ${
+                            className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase w-fit ${
                               order.paymentStatus === "completed"
                                 ? "bg-blue-100 text-blue-700"
                                 : "bg-red-100 text-red-700"
@@ -672,7 +672,7 @@ const AdminDashboard = () => {
                       <td className="p-4">
                         <div className="flex flex-col gap-1">
                           <span
-                            className={`px-2 py-0.5 rounded text-[9px] font-black uppercase w-fit ${
+                            className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase w-fit ${
                               order.orderStatus === "delivered"
                                 ? "bg-green-100 text-green-700"
                                 : order.orderStatus === "shipped"
@@ -976,7 +976,7 @@ const AdminDashboard = () => {
                               </div>
                             )}
                             <span
-                              className={`text-[10px] font-black uppercase ${
+                              className={`text-[10px] font-bold uppercase ${
                                 log.status === "error"
                                   ? "text-red-700"
                                   : log.status === "success"
@@ -1015,7 +1015,7 @@ const AdminDashboard = () => {
                         </td>
                         <td className="p-4">
                           <div className="flex items-center gap-2">
-                            <span className="bg-gray-800 text-white text-[9px] font-black px-1.5 py-0.5 rounded">
+                            <span className="bg-gray-800 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
                               {log.method}
                             </span>
                             <span className="text-xs font-mono text-gray-400 truncate max-w-[120px]">

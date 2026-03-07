@@ -39,7 +39,7 @@ const MegaMenu = () => {
                 <div className="w-12 h-12 md:w-14 md:h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-500 group-hover:bg-blue-50 group-hover:text-blue-600 group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500 shadow-sm border border-gray-100 group-hover:border-blue-100 group-hover:shadow-md">
                   <Icon size={22} className="stroke-[1.5]" />
                 </div>
-                <span className="mt-3 text-[10px] md:text-[11px] font-black uppercase tracking-widest text-gray-400 group-hover:text-blue-600 transition-colors flex items-center whitespace-nowrap">
+                <span className="mt-3 text-[10px] md:text-[11px] font-semibold uppercase tracking-widest text-gray-500 group-hover:text-blue-600 transition-colors flex items-center whitespace-nowrap">
                   {category.name}{" "}
                   <ChevronDown
                     size={10}

@@ -43,21 +43,21 @@ const Orders = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] py-12">
+    <div className="min-h-screen bg-slate-50 py-12">
       <div className="container mx-auto px-4 max-w-5xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
           <div>
-            <span className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] mb-2 block">
+            <span className="text-[10px] font-bold text-blue-500 uppercase tracking-[0.2em] mb-2 block">
               Your Account
             </span>
-            <h1 className="text-4xl font-black text-gray-900 flex items-center tracking-tight">
+            <h1 className="text-4xl font-bold text-gray-900 flex items-center tracking-tight">
               Purchase History{" "}
               <div className="ml-4 w-2 h-2 bg-blue-600 rounded-full hidden md:block"></div>
             </h1>
           </div>
           <Link
             to="/"
-            className="inline-flex items-center text-xs font-black text-blue-600 border-2 border-blue-600 px-6 py-2.5 rounded-xl hover:bg-blue-600 hover:text-white transition-all uppercase tracking-widest"
+            className="inline-flex items-center text-xs font-bold text-blue-600 border-2 border-blue-600/20 px-6 py-2.5 rounded-xl hover:bg-blue-600 hover:text-white transition-all uppercase tracking-widest shadow-md hover:shadow-blue-100 hover:border-blue-600"
           >
             <ShoppingBag size={16} className="mr-2" /> Back to Store
           </Link>
@@ -74,7 +74,7 @@ const Orders = () => {
                 <div className="p-6 md:p-8 bg-gray-50/50 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
                     <div>
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
                         Order Placed
                       </p>
                       <p className="text-sm font-bold text-gray-900 flex items-center">
@@ -86,10 +86,10 @@ const Orders = () => {
                       </p>
                     </div>
                     <div>
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
                         Total Amount
                       </p>
-                      <p className="text-sm font-black text-blue-600 tracking-tight">
+                      <p className="text-sm font-bold text-blue-600 tracking-tight">
                         ₹
                         {order.totalAmount.toLocaleString("en-IN", {
                           minimumFractionDigits: 2,
@@ -97,7 +97,7 @@ const Orders = () => {
                       </p>
                     </div>
                     <div className="col-span-2 md:col-span-1 border-t md:border-t-0 pt-4 md:pt-0">
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
                         Ship To
                       </p>
                       <p className="text-sm font-bold text-gray-900 flex items-center group-hover:text-blue-600 transition-colors uppercase truncate max-w-[150px]">
@@ -108,12 +108,12 @@ const Orders = () => {
                   </div>
 
                   <div className="text-right flex flex-col items-start md:items-end gap-3 w-full md:w-auto mt-4 md:mt-0 pt-6 md:pt-0 border-t md:border-t-0 border-gray-100">
-                    <p className="text-[9px] text-gray-400 font-black uppercase tracking-[0.15em]">
+                    <p className="text-[9px] text-gray-400 font-bold uppercase tracking-[0.15em]">
                       ID: {order._id.toUpperCase()}
                     </p>
                     <div className="flex flex-wrap gap-2 md:justify-end">
                       <span
-                        className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm ${
+                        className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-sm ${
                           order.orderStatus === "delivered"
                             ? "bg-green-100 text-green-700"
                             : order.orderStatus === "cancelled"
@@ -128,7 +128,7 @@ const Orders = () => {
                         {order.orderStatus}
                       </span>
                       {order.paymentStatus === "completed" && (
-                        <span className="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-blue-50 text-blue-600 border border-blue-100 shadow-sm">
+                        <span className="px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-blue-50 text-blue-600 border border-blue-100 shadow-sm">
                           Verified Payment
                         </span>
                       )}
@@ -139,7 +139,7 @@ const Orders = () => {
                         onClick={() => {
                           setOrderToCancel(order._id);
                         }}
-                        className="mt-1 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-50 text-red-600 border border-red-100 shadow-sm hover:bg-red-600 hover:text-white transition-all duration-300"
+                        className="mt-1 px-5 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest bg-red-50 text-red-600 border border-red-100 shadow-sm hover:bg-red-600 hover:text-white transition-all duration-300 hover:scale-[1.05] active:scale-95"
                       >
                         Cancel Order
                       </button>
@@ -172,26 +172,26 @@ const Orders = () => {
                             )}
                           </div>
                           <div>
-                            <p className="text-base font-black text-gray-900 group-hover/item:text-blue-600 transition-colors uppercase tracking-tight">
+                            <p className="text-base font-bold text-gray-900 group-hover/item:text-blue-600 transition-colors uppercase tracking-tight">
                               {item.product?.title || "Archive Item"}
                             </p>
                             <div className="flex items-center gap-3 mt-2">
-                              <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
                                 Qty: {item.quantity}
                               </span>
                               <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-                              <span className="text-sm font-black text-gray-900">
+                              <span className="text-sm font-bold text-gray-900">
                                 ₹{item.price.toFixed(2)}
                               </span>
                             </div>
-                            <div className="mt-3 inline-flex items-center text-[10px] font-black text-blue-500 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-lg">
+                            <div className="mt-3 inline-flex items-center text-[10px] font-bold text-blue-500 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-lg">
                               Delivered by QuickCart Logistics
                             </div>
                           </div>
                         </div>
 
                         <div className="flex items-center bg-white border border-gray-100 px-6 py-3 rounded-xl shadow-sm group-hover/item:border-blue-200 group-hover/item:shadow-md transition-all relative z-10 ml-auto md:ml-0">
-                          <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 group-hover/item:text-blue-600 transition-colors mr-3">
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover/item:text-blue-600 transition-colors mr-3">
                             Track Package
                           </span>
                           <ChevronRight
@@ -212,7 +212,7 @@ const Orders = () => {
             <div className="w-24 h-24 bg-blue-50 rounded-3xl flex items-center justify-center mx-auto mb-8 text-blue-400 rotate-6 shadow-lg shadow-blue-50">
               <ShoppingBag size={48} />
             </div>
-            <h2 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4 tracking-tight">
               Your history is a blank canvas.
             </h2>
             <p className="text-gray-500 mb-10 text-lg font-medium max-w-md mx-auto leading-relaxed">
@@ -221,7 +221,7 @@ const Orders = () => {
             </p>
             <Link
               to="/"
-              className="inline-flex items-center bg-blue-600 text-white px-10 py-5 rounded-2xl font-black hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all uppercase shadow-xl shadow-blue-200 tracking-[0.2em] text-xs"
+              className="inline-flex items-center bg-blue-600 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-blue-700 hover:scale-[1.05] active:scale-95 transition-all uppercase shadow-lg shadow-blue-200 tracking-wider text-[11px]"
             >
               Start Shopping Now
             </Link>
@@ -247,7 +247,7 @@ const Orders = () => {
               <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mb-6 text-red-500 shadow-sm">
                 <AlertCircle size={32} />
               </div>
-              <h3 className="text-xl font-black text-gray-900 mb-2 tracking-tight">
+              <h3 className="text-xl font-bold text-gray-900 mb-2 tracking-tight">
                 Cancel Order?
               </h3>
               <p className="text-sm font-medium text-gray-500 mb-8 leading-relaxed">

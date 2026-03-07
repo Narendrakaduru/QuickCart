@@ -151,21 +151,21 @@ const Checkout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] py-8 md:py-12">
+    <div className="min-h-screen bg-slate-50 py-12">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
           <div>
-            <span className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] mb-2 block">
+            <span className="text-[10px] font-bold text-blue-500 uppercase tracking-[0.2em] mb-2 block">
               Secure Checkout
             </span>
-            <h1 className="text-4xl font-black text-gray-900 flex items-center tracking-tight">
+            <h1 className="text-4xl font-bold text-gray-900 flex items-center tracking-tight">
               Checkout{" "}
               <div className="ml-4 w-2 h-2 bg-blue-600 rounded-full hidden md:block"></div>
             </h1>
           </div>
           <Link
             to="/cart"
-            className="inline-flex items-center text-xs font-black text-blue-600 border-2 border-blue-600 px-6 py-2.5 rounded-xl hover:bg-blue-600 hover:text-white transition-all uppercase tracking-widest"
+            className="inline-flex items-center text-xs font-bold text-blue-600 border-2 border-blue-600/20 px-6 py-2.5 rounded-xl hover:bg-blue-600 hover:text-white transition-all uppercase tracking-widest shadow-md hover:shadow-blue-100 hover:border-blue-600"
           >
             <ShoppingBag size={16} className="mr-2" /> Back to Cart
           </Link>
@@ -176,7 +176,7 @@ const Checkout = () => {
           <div className="lg:w-2/3 space-y-8">
             <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100">
               <div className="mb-8 border-b border-gray-100 pb-6 flex items-center justify-between">
-                <h2 className="text-2xl font-black text-gray-900 flex items-center uppercase tracking-tight">
+                <h2 className="text-2xl font-bold text-gray-900 flex items-center uppercase tracking-tight">
                   <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mr-4 text-blue-600">
                     <Truck size={24} strokeWidth={2.5} />
                   </div>
@@ -186,7 +186,7 @@ const Checkout = () => {
 
               {addresses && addresses.length > 0 && (
                 <div className="mb-8">
-                  <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 block">
+                  <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 block">
                     Select from saved addresses
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
@@ -218,7 +218,7 @@ const Checkout = () => {
                   </div>
                   <div className="flex items-center mt-6 mb-2">
                     <div className="h-px bg-gray-200 flex-1"></div>
-                    <span className="px-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Or enter manually</span>
+                    <span className="px-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Or enter manually</span>
                     <div className="h-px bg-gray-200 flex-1"></div>
                   </div>
                 </div>
@@ -227,7 +227,7 @@ const Checkout = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 block">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 block">
                       Full Name
                     </label>
                     <input
@@ -236,19 +236,19 @@ const Checkout = () => {
                       value={shippingDetails.fullName}
                       onChange={handleChange}
                       required
-                      className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-800 font-medium transition-all"
+                      className="w-full py-3 px-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-800 text-sm font-medium transition-all"
                       placeholder="John Doe"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 block">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 block">
                       Address Type
                     </label>
                     <select
                       name="addressType"
                       value={shippingDetails.addressType}
                       onChange={handleChange}
-                      className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-800 font-medium transition-all"
+                      className="w-full py-3 px-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-800 text-sm font-medium transition-all"
                     >
                       <option value="Home">Home</option>
                       <option value="Office">Office</option>
@@ -257,7 +257,7 @@ const Checkout = () => {
                   </div>
 
                   <div className="md:col-span-2">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 block">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 block">
                       Phone Number
                     </label>
                     <input
@@ -266,13 +266,13 @@ const Checkout = () => {
                       value={shippingDetails.phone}
                       onChange={handleChange}
                       required
-                      className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-800 font-medium transition-all"
+                      className="w-full py-3 px-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-800 text-sm font-medium transition-all"
                       placeholder="+1 (555) 000-0000"
                     />
                   </div>
 
                   <div className="md:col-span-2">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 block">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 block">
                       Street Address
                     </label>
                     <input
@@ -281,12 +281,12 @@ const Checkout = () => {
                       value={shippingDetails.address}
                       onChange={handleChange}
                       required
-                      className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-800 font-medium transition-all"
+                      className="w-full py-3 px-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-800 text-sm font-medium transition-all"
                       placeholder="Area, Street, Sector, Village"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 block">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 block">
                       City
                     </label>
                     <input
@@ -295,12 +295,12 @@ const Checkout = () => {
                       value={shippingDetails.city}
                       onChange={handleChange}
                       required
-                      className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-800 font-medium transition-all"
+                      className="w-full py-3 px-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-800 text-sm font-medium transition-all"
                       placeholder="Town/City"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 block">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 block">
                       State / Province
                     </label>
                     <input
@@ -309,12 +309,12 @@ const Checkout = () => {
                       value={shippingDetails.state}
                       onChange={handleChange}
                       required
-                      className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-800 font-medium transition-all"
+                      className="w-full py-3 px-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-800 text-sm font-medium transition-all"
                       placeholder="NY"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 block">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 block">
                       Pincode
                     </label>
                     <input
@@ -323,12 +323,12 @@ const Checkout = () => {
                       value={shippingDetails.postalCode}
                       onChange={handleChange}
                       required
-                      className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-800 font-medium transition-all"
+                      className="w-full py-3 px-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-800 text-sm font-medium transition-all"
                       placeholder="6-digit Pincode"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 block">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 block">
                       Country
                     </label>
                     <input
@@ -337,7 +337,7 @@ const Checkout = () => {
                       value={shippingDetails.country}
                       onChange={handleChange}
                       required
-                      className="w-full p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-800 font-medium transition-all"
+                      className="w-full py-3 px-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-gray-50 text-gray-800 text-sm font-medium transition-all"
                       placeholder="United States"
                     />
                   </div>
@@ -345,7 +345,7 @@ const Checkout = () => {
 
                 <div className="pt-8 mt-4 border-t border-gray-100">
                   <div className="mb-8 pb-4 flex items-center justify-between">
-                    <h2 className="text-2xl font-black text-gray-900 flex items-center uppercase tracking-tight">
+                    <h2 className="text-2xl font-bold text-gray-900 flex items-center uppercase tracking-tight">
                       <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mr-4 text-blue-600">
                         <CreditCard size={24} strokeWidth={2.5} />
                       </div>
@@ -353,14 +353,14 @@ const Checkout = () => {
                     </h2>
                   </div>
 
-                  <div className="bg-blue-50/50 p-5 border-2 border-blue-100 rounded-2xl flex items-center justify-between hover:border-blue-300 transition-colors cursor-pointer group">
+                  <div className="bg-blue-50/50 p-4 border-2 border-blue-100 rounded-xl flex items-center justify-between hover:border-blue-300 transition-colors cursor-pointer group">
                     <div className="flex items-center">
-                      <div className="w-6 h-6 rounded-full border-[6px] border-blue-600 bg-white mr-4 shadow-sm group-hover:scale-110 transition-transform"></div>
-                      <span className="font-black text-blue-900 tracking-tight text-lg">
+                      <div className="w-5 h-5 rounded-full border-[5px] border-blue-600 bg-white mr-3 shadow-sm group-hover:scale-110 transition-transform"></div>
+                      <span className="font-bold text-blue-900 tracking-tight text-base">
                         Cash on Delivery (COD)
                       </span>
                     </div>
-                    <span className="text-[10px] bg-blue-600 text-white px-3 py-1 rounded-full font-black uppercase tracking-[0.1em] shadow-md shadow-blue-200">
+                    <span className="text-[9px] bg-blue-600 text-white px-2.5 py-1 rounded-full font-bold uppercase tracking-wider shadow-md shadow-blue-200">
                       Default
                     </span>
                   </div>
@@ -368,7 +368,7 @@ const Checkout = () => {
 
                 {isError && (
                   <div className="p-4 bg-red-50 text-red-600 rounded-2xl border border-red-100 font-medium flex items-center mt-6 shadow-sm">
-                    <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-red-500 mr-3 shrink-0 uppercase tracking-widest font-black text-[10px]">
+                    <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-red-500 mr-3 shrink-0 uppercase tracking-widest font-bold text-[10px]">
                       Error
                     </div>
                     {message}
@@ -378,7 +378,7 @@ const Checkout = () => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-2xl font-black uppercase tracking-[0.1em] transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl shadow-blue-200 flex items-center justify-center text-sm mt-10 ${isLoading ? "opacity-70 cursor-not-allowed transform-none hover:bg-blue-600" : ""}`}
+                  className={`w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold uppercase tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-100 flex items-center justify-center text-sm mt-8 ${isLoading ? "opacity-70 cursor-not-allowed transform-none hover:bg-blue-600" : ""}`}
                 >
                   {isLoading ? "Processing Order..." : "Confirm & Place Order"}
                   {!isLoading && (
@@ -394,42 +394,42 @@ const Checkout = () => {
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden sticky top-6">
               <div className="p-6 lg:p-8 bg-white">
                 <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
-                  <h2 className="text-xs font-black text-gray-400 uppercase tracking-widest">
+                  <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest">
                     Order Summary
                   </h2>
-                  <span className="text-[10px] font-black bg-blue-50 text-blue-600 px-3 py-1 rounded-lg uppercase tracking-wider">
+                  <span className="text-[10px] font-bold bg-blue-50 text-blue-600 px-3 py-1 rounded-lg uppercase tracking-wider">
                     {cartItems.length} Items
                   </span>
                 </div>
 
-                <div className="max-h-[320px] overflow-y-auto pr-2 space-y-4 scrollbar-thin scrollbar-thumb-gray-200 hover:scrollbar-thumb-blue-400 transition-colors">
+                <div className="max-h-[400px] overflow-y-auto overflow-x-hidden pr-2 space-y-3 scrollbar-thin scrollbar-thumb-gray-200 hover:scrollbar-thumb-blue-400 transition-colors">
                   {cartItems.map((item) => (
                     <div
                       key={item.product._id}
-                      className="flex gap-4 p-3 bg-gray-50/50 rounded-2xl border border-gray-50 hover:bg-blue-50/50 hover:border-blue-100 transition-colors"
+                      className="flex gap-4 p-3 bg-gray-50/50 rounded-2xl border border-gray-100 hover:bg-blue-50 hover:border-blue-200 transition-all duration-300 group/item"
                     >
-                      <div className="w-16 h-16 shrink-0 bg-white border border-gray-100 rounded-xl p-2 flex justify-center items-center shadow-sm">
+                      <div className="w-16 h-16 shrink-0 bg-white border border-gray-100 rounded-xl p-2 flex justify-center items-center shadow-sm group-hover/item:scale-105 transition-transform">
                         <img
                           src={item.product?.images?.[0]}
                           alt={item.product?.title}
                           className="w-full h-full object-contain mix-blend-multiply"
                         />
                       </div>
-                      <div className="flex-1 flex flex-col justify-center">
+                      <div className="flex-1 min-w-0 flex flex-col justify-center">
                         <p
-                          className="text-sm font-black text-gray-900 truncate uppercase tracking-tight"
+                          className="text-xs font-bold text-gray-900 truncate uppercase tracking-tight group-hover/item:text-blue-600 transition-colors"
                           title={item.product?.title}
                         >
                           {item.product?.title}
                         </p>
                         <div className="flex justify-between items-center mt-2">
-                          <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest">
+                          <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
                             Qty:{" "}
-                            <span className="text-blue-500">
+                            <span className="text-blue-600 font-bold">
                               {item.quantity}
                             </span>
                           </p>
-                          <p className="text-sm font-black text-gray-900 tracking-tight">
+                          <p className="text-xs font-bold text-gray-900 tracking-tight">
                             ₹
                             {(
                               (item.product?.price || 0) * item.quantity
@@ -501,7 +501,7 @@ const Checkout = () => {
                         <button
                           onClick={handleApplyCoupon}
                           disabled={isCouponLoading || !couponCode}
-                          className="px-4 py-2 bg-blue-600 text-white text-xs font-black uppercase rounded-xl hover:bg-blue-700 disabled:opacity-50 transition-all"
+                          className="px-6 py-2 bg-blue-600 text-white text-xs font-bold uppercase rounded-xl hover:bg-blue-700 disabled:opacity-50 transition-all hover:scale-[1.05] shadow-lg shadow-blue-100"
                         >
                           {isCouponLoading ? "..." : "Apply"}
                         </button>
