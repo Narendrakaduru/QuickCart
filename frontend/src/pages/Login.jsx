@@ -63,7 +63,7 @@ const Login = () => {
 
   return (
     <div className="container mx-auto px-4 py-20 flex items-center justify-center">
-      <div className="bg-white w-full max-w-md p-10 shadow-2xl shadow-gray-200 rounded-[2.5rem] border border-gray-100">
+      <div className="bg-white w-full max-w-md p-8 md:p-10 shadow-2xl shadow-gray-200 rounded-[2.5rem] border border-gray-100">
         <h1 className="text-2xl font-bold text-center mb-2 tracking-tight">
           Welcome Back
         </h1>
@@ -93,7 +93,7 @@ const Login = () => {
               value={email}
               placeholder="name@example.com"
               onChange={onChange}
-              className={`w-full px-6 py-3.5 bg-gray-50 border ${isNoUser ? "border-red-500" : "border-gray-100"} rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:bg-white transition-all text-sm font-medium`}
+              className={`w-full px-5 py-3 bg-gray-50 border ${isNoUser ? "border-red-500" : "border-gray-100"} rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:bg-white transition-all text-sm font-medium`}
               required
             />
           </div>
@@ -112,7 +112,7 @@ const Login = () => {
                 value={password}
                 placeholder="••••••••"
                 onChange={onChange}
-                className={`w-full px-6 py-3.5 bg-gray-50 border ${isWrongPass ? "border-red-500" : "border-gray-100"} rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:bg-white transition-all text-sm font-medium pr-14`}
+                className={`w-full px-5 py-3 bg-gray-50 border ${isWrongPass ? "border-red-500" : "border-gray-100"} rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:bg-white transition-all text-sm font-medium pr-14`}
                 required
               />
               <button
@@ -127,7 +127,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-2xl transition-all shadow-lg shadow-blue-100 uppercase tracking-widest text-xs disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] mt-4"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-blue-100 uppercase tracking-widest text-xs disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] mt-4"
           >
             {isLoading ? "Authenticating..." : "Sign In to Account"}
           </button>
