@@ -5,8 +5,8 @@ import wishlistReducer from '../slices/wishlistSlice';
 import authReducer from '../slices/authSlice';
 import userReducer from '../slices/userSlice';
 import orderReducer from '../slices/orderSlice';
-
 import addressReducer from '../slices/addressSlice';
+import logReducer from '../slices/logSlice';
 
 const store = configureStore({
   reducer: {
@@ -17,6 +17,7 @@ const store = configureStore({
     users: userReducer,
     orders: orderReducer,
     address: addressReducer,
+    logs: logReducer,
   },
 });
 

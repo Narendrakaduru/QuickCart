@@ -86,18 +86,20 @@ The project comes with pre-configured data to get you started:
 
 ## ✨ Key Features
 
-- **User Authentication**: Secure Login/Register with JWT.
+- **User Authentication**: Secure Login/Register with JWT and **password visibility toggles**.
 - **Role-Based Access**: Specialized dashboards for Users, Admins, and Superadmins.
-- **Product Management**: Complete CRUD for products with image upload support.
+- **System Activity Monitoring**: Advanced log viewer for **Superadmins** to track system actions, errors, and logins with detailed metadata (IP, Method, Path).
+- **Enhanced Admin Controls**: **Dynamic sorting** and searching across all administrative tables (Products, Orders, Users, Logs).
+- **Product Management**: Complete CRUD for products with image upload support and interactive carousels.
 - **Shopping Cart & Wishlist**: Persistent state management for user selections.
 - **Order Tracking**: Real-time status updates and order history.
-- **Responsive Design**: optimized for both desktop and mobile devices.
+- **Responsive Design**: Optimized for all devices, featuring a **single product per row** layout on small screens for better visibility.
 
 ## 🔗 API Endpoints
 
-- **Auth**: `/api/auth` (login, register)
+- **Auth**: `/api/auth` (login, register, logout)
 - **Users**: `/api/users` (profile, address management)
 - **Products**: `/api/products` (listing, search, details)
 - **Cart**: `/api/cart` (add, remove, update)
 - **Orders**: `/api/orders` (checkout, tracking)
-- **Logs**: `/api/logs` (system activity monitoring)
+- **Logs**: `/api/logs` (system activity monitoring - Superadmin only)

@@ -18,6 +18,7 @@ import {
   updateOrderStatus,
   updatePaymentStatus,
 } from "../slices/orderSlice";
+import { fetchLogs } from "../slices/logSlice";
 import {
   Edit,
   Trash2,
@@ -30,6 +31,13 @@ import {
   Truck,
   Clock,
   Search,
+  Activity,
+  User as UserIcon,
+  Server,
+  AlertTriangle,
+  Info,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 import ProductModal from "../components/ProductModal";
 import UserModal from "../components/UserModal";
@@ -57,9 +65,16 @@ const AdminDashboard = () => {
     isError: ordersError,
     message: ordersMessage,
   } = useSelector((state) => state.orders);
+  const {
+    logs,
+    isLoading: logsLoading,
+    isError: logsError,
+    message: logsMessage,
+  } = useSelector((state) => state.logs);
 
   const [activeTab, setActiveTab] = useState("inventory");
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortConfig, setSortConfig] = useState({ key: "createdAt", direction: "desc" });
 
   // Product Modal States
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
@@ -73,6 +88,46 @@ const AdminDashboard = () => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [deleteType, setDeleteType] = useState(null); // 'product' or 'user'
+
+  // Sorting Logic
+  const handleSort = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortData = (data) => {
+    if (!data) return [];
+    const sorted = [...data].sort((a, b) => {
+      let aVal, bVal;
+      
+      if (sortConfig.key.includes(".")) {
+        const [obj, field] = sortConfig.key.split(".");
+        aVal = a[obj]?.[field] ?? "";
+        bVal = b[obj]?.[field] ?? "";
+      } else {
+        aVal = a[sortConfig.key];
+        bVal = b[sortConfig.key];
+      }
+
+      if (typeof aVal === "string") aVal = aVal.toLowerCase();
+      if (typeof bVal === "string") bVal = bVal.toLowerCase();
+
+      if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
+      if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
+      return 0;
+    });
+    return sorted;
+  };
+
+  const renderSortIcon = (column) => {
+    if (sortConfig.key !== column) return <ChevronDown size={12} className="ml-1 text-gray-300 opacity-50 inline" />;
+    return sortConfig.direction === "asc" ? 
+      <ChevronUp size={12} className="ml-2 text-blue-600 inline" /> : 
+      <ChevronDown size={12} className="ml-2 text-blue-600 inline" />;
+  };
 
   useEffect(() => {
     if (!user || (user.role !== "admin" && user.role !== "superadmin")) {
@@ -88,6 +143,8 @@ const AdminDashboard = () => {
         dispatch(fetchUsers());
       } else if (activeTab === "orders") {
         dispatch(getAllOrdersAdmin());
+      } else if (activeTab === "logs") {
+        dispatch(fetchLogs());
       }
     }
   }, [dispatch, user, activeTab]);
@@ -202,6 +259,17 @@ const AdminDashboard = () => {
               <Users size={16} className="mr-2" /> Users
             </button>
           )}
+          {user.role === "superadmin" && (
+            <button
+              onClick={() => {
+                setActiveTab("logs");
+                setSearchTerm("");
+              }}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition flex items-center ${activeTab === "logs" ? "bg-blue-600 text-white shadow-sm" : "text-gray-600 hover:bg-gray-50"}`}
+            >
+              <Activity size={16} className="mr-2" /> Logs
+            </button>
+          )}
         </div>
       </div>
 
@@ -246,11 +314,21 @@ const AdminDashboard = () => {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50 text-gray-600 text-[11px] uppercase tracking-wider border-b">
-                  <th className="p-4 font-bold">Product</th>
-                  <th className="p-4 font-bold">Created By</th>
-                  <th className="p-4 font-bold">Price</th>
-                  <th className="p-4 font-bold">Category</th>
-                  <th className="p-4 font-bold">Stock</th>
+                  <th onClick={() => handleSort("title")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Product {renderSortIcon("title")}
+                  </th>
+                  <th onClick={() => handleSort("user.name")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    By {renderSortIcon("user.name")}
+                  </th>
+                  <th onClick={() => handleSort("price")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Price {renderSortIcon("price")}
+                  </th>
+                  <th onClick={() => handleSort("category")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Cat {renderSortIcon("category")}
+                  </th>
+                  <th onClick={() => handleSort("stockCount")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Stock {renderSortIcon("stockCount")}
+                  </th>
                   <th className="p-4 font-bold text-right">Actions</th>
                 </tr>
               </thead>
@@ -294,7 +372,7 @@ const AdminDashboard = () => {
                       );
                     }
 
-                    return filtered.map((product) => (
+                    return sortData(filtered).map((product) => (
                       <tr
                         key={product._id}
                         className="hover:bg-gray-50/50 transition whitespace-nowrap"
@@ -395,11 +473,19 @@ const AdminDashboard = () => {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50 text-gray-600 text-[11px] uppercase tracking-wider border-b">
-                  <th className="p-4 font-bold">Order ID</th>
-                  <th className="p-4 font-bold">Customer</th>
+                  <th onClick={() => handleSort("_id")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Order ID {renderSortIcon("_id")}
+                  </th>
+                  <th onClick={() => handleSort("user.name")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Customer {renderSortIcon("user.name")}
+                  </th>
                   <th className="p-4 font-bold">Items</th>
-                  <th className="p-4 font-bold">Total</th>
-                  <th className="p-4 font-bold">Status</th>
+                  <th onClick={() => handleSort("totalAmount")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Total {renderSortIcon("totalAmount")}
+                  </th>
+                  <th onClick={() => handleSort("paymentStatus")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Status {renderSortIcon("paymentStatus")}
+                  </th>
                   <th className="p-4 font-bold text-right">Actions</th>
                 </tr>
               </thead>
@@ -444,7 +530,7 @@ const AdminDashboard = () => {
                       );
                     }
 
-                    return filtered.map((order) => (
+                    return sortData(filtered).map((order) => (
                       <tr
                         key={order._id}
                         className="hover:bg-gray-50/50 transition border-b border-gray-100 last:border-0"
@@ -587,7 +673,7 @@ const AdminDashboard = () => {
             </table>
           </div>
         </div>
-      ) : (
+      ) : activeTab === "users" ? (
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-4 border-b bg-gray-50 flex flex-col sm:flex-row justify-between items-center gap-4">
             <h2 className="text-lg font-semibold text-gray-700">
@@ -625,10 +711,18 @@ const AdminDashboard = () => {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50 text-gray-600 text-[11px] uppercase tracking-wider border-b">
-                  <th className="p-4 font-bold">User</th>
-                  <th className="p-4 font-bold">Email</th>
-                  <th className="p-4 font-bold">Role</th>
-                  <th className="p-4 font-bold">Joined</th>
+                  <th onClick={() => handleSort("name")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    User {renderSortIcon("name")}
+                  </th>
+                  <th onClick={() => handleSort("email")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Email {renderSortIcon("email")}
+                  </th>
+                  <th onClick={() => handleSort("role")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Role {renderSortIcon("role")}
+                  </th>
+                  <th onClick={() => handleSort("createdAt")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Joined {renderSortIcon("createdAt")}
+                  </th>
                   <th className="p-4 font-bold text-right">Actions</th>
                 </tr>
               </thead>
@@ -669,7 +763,7 @@ const AdminDashboard = () => {
                       );
                     }
 
-                    return filtered.map((userItem) => (
+                    return sortData(filtered).map((userItem) => (
                       <tr
                         key={userItem._id}
                         className="hover:bg-gray-50/50 transition whitespace-nowrap"
@@ -718,6 +812,180 @@ const AdminDashboard = () => {
                     </tr>
                     ));
                   })()
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+          <div className="p-4 border-b bg-gray-50 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <h2 className="text-lg font-semibold text-gray-700">
+              System Activity Logs
+            </h2>
+            <div className="relative flex-1 max-w-sm w-full">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search size={16} className="text-gray-400" />
+              </div>
+              <input
+                type="text"
+                placeholder="Search logs (action, description)..."
+                className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg bg-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm("")}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                >
+                  <Plus size={14} className="rotate-45" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-50 text-gray-600 text-[11px] uppercase tracking-wider border-b">
+                  <th onClick={() => handleSort("status")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Status {renderSortIcon("status")}
+                  </th>
+                  <th onClick={() => handleSort("action")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Action {renderSortIcon("action")}
+                  </th>
+                  <th onClick={() => handleSort("user.name")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Account {renderSortIcon("user.name")}
+                  </th>
+                  <th onClick={() => handleSort("method")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Method {renderSortIcon("method")}
+                  </th>
+                  <th onClick={() => handleSort("createdAt")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                    Date {renderSortIcon("createdAt")}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {logsLoading ? (
+                  <tr>
+                    <td colSpan="5" className="p-8 text-center text-gray-400">
+                      Loading activity logs...
+                    </td>
+                  </tr>
+                ) : logsError ? (
+                  <tr>
+                    <td colSpan="5" className="p-8 text-center text-red-500">
+                      {logsMessage}
+                    </td>
+                  </tr>
+                ) : logs && logs.length > 0 ? (
+                  (() => {
+                    const filtered = logs.filter((log) => {
+                      const search = searchTerm.toLowerCase();
+                      return (
+                        log.action.toLowerCase().includes(search) ||
+                        log.description.toLowerCase().includes(search) ||
+                        (log.user?.name || "").toLowerCase().includes(search)
+                      );
+                    });
+
+                    if (filtered.length === 0) {
+                      return (
+                        <tr>
+                          <td
+                            colSpan="5"
+                            className="p-8 text-center text-gray-400 font-medium"
+                          >
+                            No logs found matching "{searchTerm}"
+                          </td>
+                        </tr>
+                      );
+                    }
+
+                    return sortData(filtered).map((log) => (
+                      <tr
+                        key={log._id}
+                        className="hover:bg-gray-50/50 transition whitespace-nowrap group"
+                      >
+                        <td className="p-4">
+                          <div className="flex items-center">
+                            {log.status === "error" ? (
+                              <div className="bg-red-100 text-red-600 p-1.5 rounded-full mr-2">
+                                <AlertTriangle size={14} />
+                              </div>
+                            ) : log.status === "success" ? (
+                              <div className="bg-green-100 text-green-600 p-1.5 rounded-full mr-2">
+                                <CheckCircle size={14} />
+                              </div>
+                            ) : (
+                              <div className="bg-blue-100 text-blue-600 p-1.5 rounded-full mr-2">
+                                <Info size={14} />
+                              </div>
+                            )}
+                            <span
+                              className={`text-[10px] font-black uppercase ${
+                                log.status === "error"
+                                  ? "text-red-700"
+                                  : log.status === "success"
+                                    ? "text-green-700"
+                                    : "text-blue-700"
+                              }`}
+                            >
+                              {log.status}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex flex-col">
+                            <span className="text-sm font-bold text-gray-800">
+                              {log.action}
+                            </span>
+                            <span className="text-[10px] text-gray-500 max-w-[200px] truncate">
+                              {log.description}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex items-center">
+                            <div className="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center mr-2 text-gray-400 border border-gray-200">
+                              <UserIcon size={14} />
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="text-xs font-bold text-gray-700">
+                                {log.user?.name || "Anonymous"}
+                              </span>
+                              <span className="text-[9px] text-gray-400">
+                                {log.ipAddress || "No IP recorded"}
+                              </span>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex items-center gap-2">
+                            <span className="bg-gray-800 text-white text-[9px] font-black px-1.5 py-0.5 rounded">
+                              {log.method}
+                            </span>
+                            <span className="text-xs font-mono text-gray-400 truncate max-w-[120px]">
+                              {log.endpoint}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="p-4 text-[10px] font-bold text-gray-400">
+                          {new Date(log.createdAt).toLocaleString()}
+                        </td>
+                      </tr>
+                    ));
+                  })()
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="p-12 text-center">
+                      <div className="flex flex-col items-center">
+                        <Server size={32} className="text-gray-200 mb-2" />
+                        <span className="text-gray-400 font-medium">No logs recorded yet.</span>
+                      </div>
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>
