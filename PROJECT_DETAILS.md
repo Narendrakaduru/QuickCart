@@ -89,7 +89,7 @@ The project comes with pre-configured data to get you started:
 
 ## ✨ Key Features
 
-- **User Authentication**: Secure Login/Register with JWT and **password visibility toggles**.
+- **User Authentication**: Secure Login/Register with JWT, **password visibility toggles**, **email verification**, and **forgot/reset password** flows.
 - **Role-Based Access**: Specialized dashboards for Admins, and Superadmins.
 - **System Activity Monitoring**: Advanced log viewer for **Superadmins** to track system actions, errors, and logins with detailed metadata (IP, Method, Path).
 - **Enhanced Admin Controls**: **Dynamic sorting** and searching across all administrative tables (Products, Orders, Users, Logs).
@@ -106,13 +106,68 @@ The project comes with pre-configured data to get you started:
 - **Order Tracking**: Real-time status updates and order history.
 - **Responsive Design**: Optimized for all devices, featuring a **single product per row** layout on small screens for better visibility.
 
+## 📧 Email Verification & Password Reset
+
+QuickCart includes a complete email-based authentication flow powered by **Nodemailer** with branded HTML email templates.
+
+### How It Works
+
+1. **Registration → Email Verification**
+   - User registers → receives a branded verification email → clicks "Verify My Email" → account activated.
+   - Unverified users cannot log in. Re-registration with the same email resends the verification link.
+
+2. **Forgot Password → Reset Password**
+   - User submits email on the Forgot Password page → receives a branded reset email → clicks "Reset My Password" → sets a new password.
+   - Reset links expire after **10 minutes** for security.
+
+### Email Templates
+
+Templates are defined in `backend/utils/emailTemplates.js` and share a common branded shell:
+
+| Element | Style |
+|---|---|
+| Logo | Dark `#111827` pill — italic bold **Quick**Cart (`#60a5fa`) — matches the Navbar |
+| Card | White, rounded, with a subtle shadow |
+| Footer | Copyright + disclaimer in muted text |
+
+| Template | Function | Accent | CTA |
+|---|---|---|---|
+| Verify Email | `verifyEmailTemplate(name, url)` | Blue-400 → Teal | Green button |
+| Reset Password | `resetPasswordEmail(name, url)` | Gray-900 → Blue-400 | Dark button with blue text |
+
+All templates use **inline CSS** for maximum compatibility across Gmail, Outlook, Apple Mail, etc. A plain-text fallback is always included.
+
+### Frontend Pages
+
+| Page | Route | Component |
+|---|---|---|
+| Forgot Password | `/forgot-password` | `ForgotPassword.jsx` |
+| Reset Password | `/reset-password/:token` | `ResetPassword.jsx` |
+| Email Verification | `/verify-email/:token` | `VerifyEmail.jsx` |
+
+All pages show success modals on completion and handle error states from the API.
+
+### Required Environment Variables
+
+```env
+SMTP_HOST=          # SMTP server host
+SMTP_PORT=          # SMTP port (465 for SSL)
+SMTP_EMAIL=         # SMTP username
+SMTP_PASSWORD=      # SMTP password
+FROM_NAME=QuickCart  # Sender display name
+FROM_EMAIL=         # Sender email address
+FRONTEND_URL=       # Frontend base URL for email links
+```
+
+> [!NOTE]
+> In **development mode**, if SMTP sending fails, emails are logged to the server console instead of throwing an error — so you can still test the flow without a real mail server.
+
 ## 🔗 API Endpoints
 
-- **Auth**: `/api/auth` (login, register, logout)
+- **Auth**: `/api/auth` (login, register, logout, verify email, forgot password, reset password)
 - **Users**: `/api/users` (profile, address management)
 - **Products**: `/api/products` (listing, search, details)
 - **Cart**: `/api/cart` (add, remove, update)
 - **Orders**: `/api/orders` (checkout, tracking)
 - **Coupons**: `/api/coupons` (creation, validation, management)
-
 - **Logs**: `/api/logs` (system activity monitoring - Superadmin only)

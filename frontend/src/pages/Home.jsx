@@ -23,13 +23,13 @@ const ProductSection = ({ title, filter, products, category }) => {
   return (
     <section className="bg-white p-6 md:p-8 shadow-sm rounded-3xl border border-gray-100 flex flex-col">
       <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4 relative z-10">
-        <h2 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight flex items-center">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight flex items-center">
           {title}
-          <div className="ml-4 w-2 h-2 bg-blue-600 rounded-full hidden md:block"></div>
+          <div className="ml-3 w-1.5 h-1.5 bg-blue-600 rounded-full hidden md:block"></div>
         </h2>
         <button 
           onClick={handleViewAll}
-          className="flex items-center text-[10px] md:text-xs font-black text-white bg-blue-600 px-5 py-2 md:py-2.5 rounded-xl hover:bg-blue-700 transition-all uppercase tracking-[0.2em] shadow-lg shadow-blue-200 group"
+          className="flex items-center text-[10px] md:text-xs font-bold text-white bg-blue-600 px-4 py-2 rounded-xl hover:bg-blue-700 transition-all uppercase tracking-wider shadow-md shadow-blue-100 group"
         >
           View All{" "}
           <ChevronRight
@@ -64,8 +64,8 @@ const Home = () => {
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="animate-pulse bg-gray-200 h-64 w-full rounded-3xl mb-12"></div>
 
-          <h2 className="text-2xl font-black mb-6 uppercase tracking-tight text-gray-900">
-            Loading Offers
+          <h2 className="text-xl font-bold mb-6 uppercase tracking-tight text-gray-900">
+            Scanning Offers
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {[...Array(10)].map((_, i) => (
@@ -88,8 +88,8 @@ const Home = () => {
   if (isError) {
     return (
       <div className="min-h-screen bg-[#f8f9fa] flex items-center justify-center p-8">
-        <div className="bg-red-50 text-red-600 p-6 rounded-3xl font-black uppercase tracking-widest shadow-sm border border-red-100 flex flex-col items-center">
-          <span className="text-3xl mb-2">Oops!</span>
+        <div className="bg-red-50 text-red-600 p-6 rounded-3xl font-bold uppercase tracking-widest shadow-sm border border-red-100 flex flex-col items-center">
+          <span className="text-2xl mb-2">Oops!</span>
           <span>{message}</span>
         </div>
       </div>

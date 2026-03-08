@@ -26,13 +26,16 @@ const Cart = () => {
 
   if (!user) {
     return (
-      <div className="container mx-auto px-4 py-16 text-center">
-        <h2 className="text-2xl font-bold mb-4 font-heading-flipkart">
+      <div className="container mx-auto px-4 py-20 text-center">
+        <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6 text-blue-600">
+           <ShoppingBag size={40} />
+        </div>
+        <h2 className="text-2xl font-bold mb-4 text-gray-800 tracking-tight">
           Please login to view your cart
         </h2>
         <Link
           to="/login"
-          className="bg-blue-600 text-white px-6 py-2 rounded-sm font-medium"
+          className="inline-block bg-blue-600 text-white px-10 py-3.5 rounded-2xl font-bold uppercase tracking-widest text-xs shadow-lg shadow-blue-200 hover:scale-105 active:scale-95 transition-all"
         >
           Login Now
         </Link>
@@ -63,21 +66,21 @@ const Cart = () => {
   const totalDiscount = basePrice - totalPrice;
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] py-8 md:py-12">
+    <div className="min-h-screen bg-slate-50 py-12">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
           <div>
-            <span className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] mb-2 block">
+            <span className="text-[10px] font-bold text-blue-500 uppercase tracking-[0.2em] mb-2 block">
               Your Bag
             </span>
-            <h1 className="text-4xl font-black text-gray-900 flex items-center tracking-tight">
+            <h1 className="text-4xl font-bold text-gray-900 flex items-center tracking-tight">
               Shopping Cart{" "}
               <div className="ml-4 w-2 h-2 bg-blue-600 rounded-full hidden md:block"></div>
             </h1>
           </div>
           <Link
             to="/"
-            className="inline-flex items-center text-xs font-black text-blue-600 border-2 border-blue-600 px-6 py-2.5 rounded-xl hover:bg-blue-600 hover:text-white transition-all uppercase tracking-widest"
+            className="inline-flex items-center text-xs font-bold text-blue-600 border-2 border-blue-600/20 px-6 py-2.5 rounded-xl hover:bg-blue-600 hover:text-white transition-all uppercase tracking-widest shadow-md hover:shadow-blue-100 hover:border-blue-600"
           >
             <ShoppingBag size={16} className="mr-2" /> Continue Shopping
           </Link>
@@ -108,7 +111,7 @@ const Cart = () => {
                           <div className="flex justify-between items-start gap-4">
                             <Link
                               to={`/product/${item.product._id}`}
-                              className="text-lg font-black text-gray-900 group-hover/item:text-blue-600 transition-colors uppercase tracking-tight line-clamp-2"
+                              className="text-lg font-bold text-gray-900 group-hover/item:text-blue-600 transition-colors uppercase tracking-tight line-clamp-2"
                             >
                               {item.product.title}
                             </Link>
@@ -121,12 +124,12 @@ const Cart = () => {
                             </button>
                           </div>
 
-                          <div className="mt-3 inline-flex items-center text-[10px] font-black text-blue-500 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-lg">
+                          <div className="mt-3 inline-flex items-center text-[10px] font-bold text-blue-500 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-lg">
                             QuickCart Assured
                           </div>
 
                           <div className="mt-4 flex items-center space-x-3">
-                            <span className="text-xl font-black text-gray-900 tracking-tight">
+                            <span className="text-xl font-bold text-gray-900 tracking-tight">
                               ₹{(item.product.price * item.quantity).toFixed(2)}
                             </span>
                             {item.product.discountPercentage > 0 && (
@@ -141,7 +144,7 @@ const Cart = () => {
                                     item.quantity
                                   ).toFixed(2)}
                                 </span>
-                                <span className="text-[10px] font-black text-green-600 bg-green-50 px-2 py-1 rounded uppercase tracking-wider">
+                                <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded uppercase tracking-wider">
                                   {item.product.discountPercentage}% Off
                                 </span>
                               </div>
@@ -150,7 +153,7 @@ const Cart = () => {
                         </div>
 
                         <div className="mt-6 flex items-center gap-4">
-                          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
                             Quantity
                           </p>
                           <div className="flex items-center bg-gray-50 border border-gray-100 rounded-xl p-1">
@@ -172,7 +175,7 @@ const Cart = () => {
                             </button>
 
                             <div className="w-10 text-center">
-                              <span className="text-sm font-black text-gray-900">
+                              <span className="text-sm font-bold text-gray-900">
                                 {item.quantity}
                               </span>
                             </div>
@@ -199,7 +202,7 @@ const Cart = () => {
                   <div className="w-24 h-24 bg-blue-50 rounded-3xl flex items-center justify-center mx-auto mb-8 text-blue-400 rotate-6 shadow-lg shadow-blue-50">
                     <ShoppingBag size={48} />
                   </div>
-                  <h2 className="text-3xl font-black text-gray-900 mb-4 tracking-tight">
+                  <h2 className="text-3xl font-bold text-gray-900 mb-4 tracking-tight">
                     Your cart feels light!
                   </h2>
                   <p className="text-gray-500 mb-10 text-lg font-medium max-w-md mx-auto leading-relaxed">
@@ -207,7 +210,7 @@ const Cart = () => {
                   </p>
                   <Link
                     to="/"
-                    className="inline-flex items-center bg-blue-600 text-white px-10 py-5 rounded-2xl font-black hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all uppercase shadow-xl shadow-blue-200 tracking-[0.2em] text-xs"
+                    className="inline-flex items-center bg-blue-600 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all uppercase shadow-lg shadow-blue-200 tracking-wider text-[11px]"
                   >
                     Start Shopping Now
                   </Link>
@@ -220,32 +223,32 @@ const Cart = () => {
           {cartItems.length > 0 && (
             <div className="lg:w-1/3 mt-8 lg:mt-0">
               <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 lg:p-8 sticky top-6">
-                <h2 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-6 border-b border-gray-100 pb-4">
+                <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6 border-b border-gray-100 pb-4">
                   Price Details ({cartItems.length} items)
                 </h2>
 
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between items-center text-gray-600">
                     <span className="text-sm font-bold">Total MRP</span>
-                    <span className="text-sm font-black text-gray-900">
+                    <span className="text-sm font-bold text-gray-900">
                       ₹{basePrice.toFixed(2)}
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-gray-600">
                     <span className="text-sm font-bold">Discount on MRP</span>
-                    <span className="text-sm font-black text-green-600">
+                    <span className="text-sm font-bold text-green-600">
                       -₹{totalDiscount.toFixed(2)}
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-gray-600">
                     <span className="text-sm font-bold">Platform Fee</span>
-                    <span className="text-sm font-black text-gray-900">
+                    <span className="text-sm font-bold text-gray-900">
                       ₹20.00
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-gray-600">
                     <span className="text-sm font-bold">Shipping Fee</span>
-                    <span className="text-sm font-black text-green-600">
+                    <span className="text-sm font-bold text-green-600">
                       FREE
                     </span>
                   </div>
@@ -253,10 +256,10 @@ const Cart = () => {
 
                 <div className="border-t border-gray-100 pt-6 pb-6">
                   <div className="flex justify-between items-center">
-                    <span className="text-lg font-black uppercase text-gray-900 tracking-tight">
+                    <span className="text-lg font-bold uppercase text-gray-900 tracking-tight">
                       Total Amount
                     </span>
-                    <span className="text-2xl font-black text-blue-600 tracking-tight">
+                    <span className="text-2xl font-bold text-blue-600 tracking-tight">
                       ₹{(totalPrice + 20).toFixed(2)}
                     </span>
                   </div>
@@ -264,14 +267,14 @@ const Cart = () => {
 
                 <Link
                   to="/checkout"
-                  className="w-full flex justify-center items-center bg-blue-600 text-white py-4 rounded-2xl font-black uppercase tracking-[0.1em] hover:bg-blue-700 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-blue-200"
+                  className="w-full flex justify-center items-center bg-blue-600 text-white py-4 rounded-xl font-bold uppercase tracking-wider hover:bg-blue-700 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-blue-100 text-sm mb-4"
                 >
                   Proceed to Checkout
                 </Link>
 
                 {totalDiscount > 0 && (
                   <div className="mt-4 p-3 bg-green-50 rounded-xl text-center">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-green-600">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-green-600">
                       You save ₹{totalDiscount.toFixed(2)} on this order
                     </span>
                   </div>
@@ -297,7 +300,7 @@ const Cart = () => {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-xs font-black uppercase tracking-wider text-gray-900">
+                    <p className="text-xs font-bold uppercase tracking-wider text-gray-900">
                       Safe Payment
                     </p>
                     <p className="text-[10px] text-gray-500 font-bold mt-1">

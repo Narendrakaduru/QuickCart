@@ -54,7 +54,7 @@ const BannerCarousel = () => {
   };
 
   return (
-    <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden group">
+    <div className="relative w-full h-[260px] md:h-[340px] overflow-hidden group rounded-[2rem] shadow-lg">
       {/* Slides */}
       <div
         className="flex transition-transform duration-700 ease-in-out h-full"
@@ -77,13 +77,13 @@ const BannerCarousel = () => {
               <div className="relative z-10 max-w-2xl transform transition-all duration-700 translate-y-0 opacity-100">
                 {banner.tag && (
                   <div className="mb-6 inline-block">
-                    <span className="bg-white/20 backdrop-blur-md text-white border border-white/30 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-xl shadow-lg">
+                    <span className="bg-white/20 backdrop-blur-md text-white border border-white/30 text-[8px] md:text-[10px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-lg shadow-lg">
                       {banner.tag}
                     </span>
                   </div>
                 )}
 
-                <h2 className="text-4xl md:text-6xl font-black mb-4 tracking-tight leading-none drop-shadow-xl flex flex-col">
+                <h2 className="text-2xl md:text-4xl font-bold mb-3 tracking-tight leading-none drop-shadow-xl flex flex-col">
                   {banner.title.split(" ").map((word, i) => (
                     <span
                       key={i}
@@ -94,17 +94,17 @@ const BannerCarousel = () => {
                   ))}
                 </h2>
 
-                <p className="text-lg md:text-xl text-white/90 mb-8 font-medium tracking-wide drop-shadow-md border-l-4 border-white/50 pl-4 py-1">
+                <p className="text-sm md:text-base text-white/90 mb-6 font-medium tracking-wide drop-shadow-md border-l-3 border-white/50 pl-4 py-0.5">
                   {banner.subtitle}
                 </p>
 
                 <Link
                   to={banner.link}
-                  className="group/btn bg-white text-gray-900 px-8 py-3.5 rounded-2xl font-black text-sm hover:bg-gray-50 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-black/10 uppercase tracking-[0.1em] flex items-center w-fit"
+                  className="group/btn bg-white text-gray-900 px-6 py-2.5 rounded-xl font-bold text-[11px] hover:bg-gray-50 hover:scale-105 active:scale-95 transition-all shadow-xl shadow-black/10 uppercase tracking-widest flex items-center w-fit"
                 >
                   {banner.cta}
                   <ArrowRight
-                    size={18}
+                    size={14}
                     strokeWidth={3}
                     className="ml-2 group-hover/btn:translate-x-1 transition-transform text-blue-600"
                   />

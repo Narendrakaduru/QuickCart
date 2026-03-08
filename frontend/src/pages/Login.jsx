@@ -62,94 +62,93 @@ const Login = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-16 flex items-center justify-center">
-      <div className="bg-white w-full max-w-md p-8 shadow-md rounded-sm">
-        <h1 className="text-2xl font-bold text-center mb-6">
-          Login to QuickCart
+    <div className="container mx-auto px-4 py-20 flex items-center justify-center">
+      <div className="bg-white w-full max-w-md p-8 md:p-10 shadow-2xl shadow-gray-200 rounded-[2.5rem] border border-gray-100">
+        <h1 className="text-2xl font-bold text-center mb-2 tracking-tight">
+          Welcome Back
         </h1>
+        <p className="text-gray-500 text-center mb-10 text-sm font-medium">Please enter your details to sign in</p>
 
         {isError && (
           <div
-            className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative mb-4 text-sm"
+            className="bg-red-50 border border-red-100 text-red-600 px-5 py-3 rounded-2xl relative mb-8 text-xs font-semibold flex items-center shadow-sm"
             role="alert"
           >
-            <span className="block sm:inline">{message}</span>
+            <span className="block">{message}</span>
           </div>
         )}
 
-        <form onSubmit={onSubmit} className="space-y-4">
-          <div className="space-y-1">
+        <form onSubmit={onSubmit} className="space-y-6">
+          <div className="space-y-2">
             <label
-              className="text-sm font-medium text-gray-700"
+              className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1"
               htmlFor="email"
             >
-              Email
+              Email Address
             </label>
             <input
               type="email"
               id="email"
               name="email"
               value={email}
-              placeholder="Enter your email"
+              placeholder="name@example.com"
               onChange={onChange}
-              className={`w-full px-4 py-2 border ${isNoUser ? "border-red-500" : "border-gray-300"} rounded-sm focus:outline-none focus:border-blue-500`}
+              className={`w-full px-5 py-3 bg-gray-50 border ${isNoUser ? "border-red-500" : "border-gray-100"} rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:bg-white transition-all text-sm font-medium`}
               required
             />
-            {isNoUser && (
-              <p className="text-red-500 text-xs mt-1 lowercase font-medium">
-                {message}
-              </p>
-            )}
           </div>
-          <div className="space-y-1">
-            <label
-              className="text-sm font-medium text-gray-700"
-              htmlFor="password"
-            >
-              Password
-            </label>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center pl-1">
+              <label
+                className="text-[10px] font-bold text-gray-400 uppercase tracking-widest"
+                htmlFor="password"
+              >
+                Security Password
+              </label>
+              <Link
+                to="/forgot-password"
+                className="text-[10px] font-bold text-blue-600 uppercase tracking-widest hover:text-blue-700 transition-colors"
+              >
+                Forgot Password?
+              </Link>
+            </div>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
                 value={password}
-                placeholder="Enter your password"
+                placeholder="••••••••"
                 onChange={onChange}
-                className={`w-full px-4 py-2 border ${isWrongPass ? "border-red-500" : "border-gray-300"} rounded-sm focus:outline-none focus:border-blue-500 pr-10`}
+                className={`w-full px-5 py-3 bg-gray-50 border ${isWrongPass ? "border-red-500" : "border-gray-100"} rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:bg-white transition-all text-sm font-medium pr-14`}
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors focus:outline-none p-1"
               >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
-            {isWrongPass && (
-              <p className="text-red-500 text-xs mt-1 lowercase font-medium">
-                {message}
-              </p>
-            )}
           </div>
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-[#fb641b] hover:bg-[#f35910] text-white font-bold py-2 px-4 rounded-sm transition uppercase tracking-wide disabled:opacity-50"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-blue-100 uppercase tracking-widest text-xs disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] mt-2"
           >
-            {isLoading ? "Logging in..." : "Login"}
+            {isLoading ? "Authenticating..." : "Sign In to Account"}
           </button>
         </form>
 
-        <div className="mt-6 text-center text-sm">
-          <p className="text-gray-600">
+        <div className="mt-8 text-center">
+          <p className="text-gray-500 text-sm font-medium">
             New to QuickCart?{" "}
             <Link
               to="/register"
-              className="text-blue-600 font-medium hover:underline"
+              className="text-blue-600 font-bold hover:text-blue-700 transition-colors ml-1"
             >
-              Create an account
+              Create Account
             </Link>
           </p>
         </div>

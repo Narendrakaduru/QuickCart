@@ -52,7 +52,7 @@ const ProductCard = ({ product }) => {
 
         {/* Assured Badge Overlay */}
         <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm border border-gray-100 shadow-sm px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
-          <span className="text-[8px] font-black text-blue-600 uppercase tracking-widest flex items-center">
+          <span className="text-[8px] font-bold text-blue-600 uppercase tracking-widest flex items-center">
             QC Assured{" "}
             <div className="ml-1 w-1 h-1 bg-blue-600 rounded-full"></div>
           </span>
@@ -79,7 +79,7 @@ const ProductCard = ({ product }) => {
       <div className="p-5 flex flex-col flex-grow bg-white relative z-10">
         <Link to={`/product/${product._id}`}>
           <h3
-            className="text-sm font-black text-gray-900 group-hover:text-blue-600 truncate mb-2 uppercase tracking-tight transition-colors"
+            className="text-[13px] font-bold text-gray-800 group-hover:text-blue-600 truncate mb-2 uppercase tracking-tight transition-colors"
             title={product.title}
           >
             {product.title}
@@ -89,7 +89,7 @@ const ProductCard = ({ product }) => {
         {/* Rating */}
         {product.numReviews > 0 ? (
           <div className="flex items-center space-x-2 mb-3">
-            <div className="bg-green-50 border border-green-100 text-green-700 text-[10px] font-black px-2 py-0.5 rounded-md flex items-center shadow-sm">
+            <div className="bg-green-50 border border-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center shadow-sm">
               {product.rating.toFixed(1)}{" "}
               <svg
                 className="w-2.5 h-2.5 ml-1"
@@ -116,7 +116,7 @@ const ProductCard = ({ product }) => {
         <div className="mt-auto flex items-end justify-between border-t border-gray-50 pt-4 gap-2 flex-wrap sm:flex-nowrap relative">
           <div className="flex flex-col flex-1 min-w-[60%] overflow-hidden">
             <div className="flex items-baseline space-x-2 mb-1 flex-wrap">
-              <span className="text-xl font-black text-gray-900 tracking-tight whitespace-nowrap">
+              <span className="text-lg font-bold text-gray-900 tracking-tight whitespace-nowrap">
                 ₹{product.price.toFixed(2)}
               </span>
               {product.discountPercentage > 0 && (
@@ -131,7 +131,7 @@ const ProductCard = ({ product }) => {
             </div>
             {product.discountPercentage > 0 && (
               <div className="mt-1">
-                <span className="text-[10px] font-black text-green-600 bg-green-50 px-2 py-0.5 rounded uppercase tracking-wider inline-block">
+                <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded uppercase tracking-wider inline-block">
                   {product.discountPercentage}% off
                 </span>
               </div>
@@ -140,7 +140,7 @@ const ProductCard = ({ product }) => {
 
           <button
             onClick={handleAddToCart}
-            className="w-10 h-10 sm:w-11 sm:h-11 bg-gray-50 text-gray-900 rounded-2xl flex items-center justify-center transition-all duration-300 hover:bg-blue-600 hover:text-white hover:scale-110 active:scale-95 hover:shadow-xl hover:shadow-blue-200 flex-shrink-0 group-hover:bg-blue-50 group-hover:text-blue-600 self-end z-20"
+            className="w-9 h-9 sm:w-10 sm:h-10 bg-gray-50 text-gray-900 rounded-xl flex items-center justify-center transition-all duration-300 hover:bg-blue-600 hover:text-white hover:scale-110 active:scale-95 hover:shadow-lg hover:shadow-blue-100 flex-shrink-0 group-hover:bg-blue-50 group-hover:text-blue-600 self-end z-20"
             title="Add to Cart"
           >
             <ShoppingBag

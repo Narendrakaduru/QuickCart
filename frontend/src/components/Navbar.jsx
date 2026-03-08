@@ -55,17 +55,14 @@ const Navbar = () => {
       : 0;
 
   return (
-    <header className="bg-blue-600 text-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] sticky top-0 z-50">
+    <header className="bg-gray-900 text-white shadow-[0_4px_12px_rgba(0,0,0,0.1)] sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3.5 flex items-center justify-between gap-4 md:gap-8 max-w-7xl">
         {/* Logo */}
         <Link
           to="/"
-          className="text-2xl font-black italic tracking-tighter flex items-center shrink-0"
+          className="text-2xl font-bold italic tracking-tight flex items-center shrink-0"
         >
-          Quick
-          <span className="text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.4)]">
-            Cart
-          </span>
+          Quick<span className="text-blue-400">Cart</span>
         </Link>
 
         {/* Search Bar */}
@@ -76,13 +73,13 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="Search for products, brands and more..."
-            className="w-full py-2.5 px-6 pr-12 rounded-lg text-gray-800 bg-white border-2 border-transparent focus:outline-none focus:border-yellow-400 focus:ring-4 focus:ring-yellow-400/20 shadow-sm placeholder:text-gray-400 text-sm font-medium transition-all duration-300"
+            className="w-full py-2.5 px-6 pr-12 rounded-lg text-gray-800 bg-white border-2 border-transparent focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-400/20 shadow-sm placeholder:text-gray-400 text-sm font-medium transition-all duration-300"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <button
             type="submit"
-            className="absolute right-0 top-0 h-full px-5 text-gray-400 hover:text-blue-600 transition-colors"
+            className="absolute right-0 top-0 h-full px-5 text-gray-400 hover:text-blue-400 transition-colors"
           >
             <Search size={18} className="stroke-[3]" />
           </button>
@@ -94,9 +91,9 @@ const Navbar = () => {
             <div className="relative flex items-center h-full" ref={profileRef}>
               <button
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
-                className="cursor-pointer flex items-center hover:text-yellow-400 transition-colors font-bold py-2 focus:outline-none"
+                className="cursor-pointer flex items-center hover:text-blue-400 transition-colors font-semibold py-2 focus:outline-none"
               >
-                <div className="w-8 h-8 rounded-full bg-blue-500/50 border border-white/20 flex items-center justify-center mr-2 shadow-inner">
+                <div className="w-8 h-8 rounded-full bg-gray-700/50 border border-white/20 flex items-center justify-center mr-2 shadow-inner">
                   <User size={18} />
                 </div>
                 <span className="hidden lg:inline text-sm tracking-tight">
@@ -115,10 +112,10 @@ const Navbar = () => {
                 <div className="bg-white text-gray-800 shadow-2xl rounded-2xl border border-gray-100 overflow-hidden ring-1 ring-black/5 relative z-20">
                   {/* Greeting Header */}
                   <div className="bg-gray-50/80 backdrop-blur-sm px-5 py-4 border-b border-gray-100">
-                    <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-1">
+                    <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-widest mb-1">
                       Authenticated Account
                     </p>
-                    <p className="text-sm font-black text-blue-600 truncate">
+                    <p className="text-sm font-bold text-gray-900 truncate">
                       {user.name}
                     </p>
                   </div>
@@ -127,42 +124,42 @@ const Navbar = () => {
                     <Link
                       to="/profile"
                       onClick={() => setShowProfileMenu(false)}
-                      className="flex items-center px-4 py-3 text-sm rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all group/item"
+                      className="flex items-center px-4 py-3 text-sm rounded-xl hover:bg-gray-50 hover:text-gray-900 transition-all group/item"
                     >
                       <User
                         size={16}
-                        className="mr-3 text-gray-400 group-hover/item:text-blue-500 transition-colors"
+                        className="mr-3 text-gray-400 group-hover/item:text-gray-700 transition-colors"
                       />
-                      <span className="font-bold">My Profile</span>
+                      <span className="font-semibold">My Profile</span>
                     </Link>
                     <Link
                       to="/orders"
                       onClick={() => setShowProfileMenu(false)}
-                      className="flex items-center px-4 py-3 text-sm rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all group/item"
+                      className="flex items-center px-4 py-3 text-sm rounded-xl hover:bg-gray-50 hover:text-gray-900 transition-all group/item"
                     >
                       <Package
                         size={16}
-                        className="mr-3 text-gray-400 group-hover/item:text-blue-500 transition-colors"
+                        className="mr-3 text-gray-400 group-hover/item:text-gray-700 transition-colors"
                       />
-                      <span className="font-bold">My Orders</span>
+                      <span className="font-semibold">My Orders</span>
                     </Link>
                     <Link
                       to="/wishlist"
                       onClick={() => setShowProfileMenu(false)}
-                      className="flex items-center px-4 py-3 text-sm md:hidden rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all group/item"
+                      className="flex items-center px-4 py-3 text-sm md:hidden rounded-xl hover:bg-gray-50 hover:text-gray-900 transition-all group/item"
                     >
                       <Heart
                         size={16}
-                        className="mr-3 text-gray-400 group-hover/item:text-blue-500 transition-colors"
+                        className="mr-3 text-gray-400 group-hover/item:text-gray-700 transition-colors"
                       />
-                      <span className="font-bold">Wishlist</span>
+                      <span className="font-semibold">Wishlist</span>
                     </Link>
 
                     {(user.role === "admin" || user.role === "superadmin") && (
                       <Link
                         to="/admin"
                         onClick={() => setShowProfileMenu(false)}
-                        className="mt-1 flex items-center px-4 py-3 text-sm bg-blue-600 text-white rounded-xl font-black shadow-lg shadow-blue-200 hover:bg-blue-700 hover:scale-[1.02] transition-all"
+                        className="mt-1 flex items-center px-4 py-3 text-sm bg-blue-600 text-white rounded-xl font-bold shadow-md shadow-blue-100 hover:bg-blue-700 hover:scale-[1.02] transition-all"
                       >
                         <ShieldCheck size={16} className="mr-3" /> Admin
                         Dashboard
@@ -184,7 +181,7 @@ const Navbar = () => {
           ) : (
             <Link
               to="/login"
-              className="hover:text-yellow-400 transition-colors flex items-center font-bold text-sm uppercase tracking-wider"
+              className="hover:text-blue-400 transition-colors flex items-center font-bold text-sm uppercase tracking-wider"
             >
               <User size={18} className="mr-1.5" /> Login
             </Link>
@@ -192,7 +189,7 @@ const Navbar = () => {
 
           <Link
             to="/wishlist"
-            className="hover:text-yellow-400 transition-colors flex items-center group"
+            className="hover:text-blue-400 transition-colors flex items-center group"
           >
             <Heart
               size={20}
@@ -205,7 +202,7 @@ const Navbar = () => {
 
           <Link
             to="/cart"
-            className="hover:text-yellow-400 transition-colors flex items-center relative group"
+            className="hover:text-blue-400 transition-colors flex items-center relative group"
           >
             <div className="relative">
               <ShoppingCart
@@ -213,7 +210,7 @@ const Navbar = () => {
                 className="mr-1.5 transition-transform group-hover:scale-110"
               />
               {cartItemsCount > 0 && (
-                <span className="absolute -top-2.5 -right-1 bg-yellow-400 text-blue-900 text-[10px] font-black rounded-full h-5 w-5 flex items-center justify-center border-2 border-blue-600 shadow-md transform group-hover:scale-110 transition-transform">
+                <span className="absolute -top-2.5 -right-1 bg-blue-400 text-gray-900 text-[10px] font-black rounded-full h-5 w-5 flex items-center justify-center border-2 border-gray-900 shadow-md transform group-hover:scale-110 transition-transform">
                   {cartItemsCount}
                 </span>
               )}

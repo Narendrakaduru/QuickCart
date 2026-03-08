@@ -19,6 +19,9 @@ import Profile from "./pages/Profile";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import TrackOrder from "./pages/TrackOrder";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
   const dispatch = useDispatch();
@@ -34,11 +37,11 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
-      <div className="min-h-screen flex flex-col bg-[#f1f3f6]">
+      <div className="min-h-screen flex flex-col bg-slate-50 transition-colors duration-500">
         <Navbar />
         <MegaMenu />
 
-        <main className="flex-1 py-4">
+        <main className="flex-1 py-6">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<ProductList />} />
@@ -52,6 +55,9 @@ function App() {
             <Route path="/order/:id/track" element={<TrackOrder />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/verify-email/:token" element={<VerifyEmail />} />
           </Routes>
         </main>
 

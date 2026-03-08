@@ -85,7 +85,7 @@ const TrackOrder = () => {
       <div className="container mx-auto px-4 max-w-5xl">
         <Link
           to="/orders"
-          className="inline-flex items-center text-xs font-black text-gray-400 hover:text-blue-600 mb-8 transition-all group uppercase tracking-widest"
+          className="inline-flex items-center text-xs font-bold text-gray-400 hover:text-blue-600 mb-8 transition-all group uppercase tracking-widest"
         >
           <ChevronLeft
             size={16}
@@ -101,7 +101,7 @@ const TrackOrder = () => {
               <ShoppingBag size={24} />
             </div>
             <div>
-              <h1 className="text-xl font-black text-gray-900 tracking-tight">
+              <h1 className="text-xl font-bold text-gray-900 tracking-tight">
                 Order #{order._id.substring(order._id.length - 8).toUpperCase()}
               </h1>
               <div className="flex items-center gap-2 mt-1">
@@ -115,7 +115,7 @@ const TrackOrder = () => {
                 </span>
                 <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
                 <span
-                  className={`text-[10px] font-black uppercase tracking-widest ${order.paymentStatus === "completed" ? "text-green-600" : "text-orange-600"}`}
+                  className={`text-[10px] font-bold uppercase tracking-widest ${order.paymentStatus === "completed" ? "text-green-600" : "text-orange-600"}`}
                 >
                   {order.paymentStatus} Payment
                 </span>
@@ -125,10 +125,10 @@ const TrackOrder = () => {
 
           <div className="flex gap-3">
             <div className="text-right">
-              <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-1">
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">
                 Total Amount
               </p>
-              <p className="text-xl font-black text-gray-900">
+              <p className="text-xl font-bold text-gray-900">
                 ₹
                 {order.totalAmount.toLocaleString("en-IN", {
                   minimumFractionDigits: 2,
@@ -143,7 +143,7 @@ const TrackOrder = () => {
           <div className="lg:col-span-2 space-y-6">
             {order.orderStatus === "cancelled" && (
               <div className="bg-red-50 border border-red-100 rounded-2xl p-6 text-red-700 shadow-sm text-center">
-                <h2 className="text-xl font-black uppercase tracking-widest mb-2">
+                <h2 className="text-xl font-bold uppercase tracking-widest mb-2">
                   Order Cancelled
                 </h2>
                 <p className="text-sm font-medium opacity-80">
@@ -152,7 +152,7 @@ const TrackOrder = () => {
               </div>
             )}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-              <h2 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-10 flex items-center">
+              <h2 className="text-sm font-bold text-gray-900 uppercase tracking-widest mb-10 flex items-center">
                 <div className="w-1.5 h-6 bg-blue-600 rounded-full mr-3"></div>
                 Delivery Journey
               </h2>
@@ -199,12 +199,12 @@ const TrackOrder = () => {
                         <div className="flex-1">
                           <div className="flex justify-between items-center mb-1">
                             <h3
-                              className={`text-sm font-black uppercase tracking-wider ${isCurrent ? "text-blue-600" : "text-gray-900"}`}
+                              className={`text-sm font-bold uppercase tracking-wider ${isCurrent ? "text-blue-600" : "text-gray-900"}`}
                             >
                               {step.label}
                             </h3>
                             {isCurrent && (
-                              <span className="text-[9px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-black animate-pulse uppercase tracking-tight">
+                              <span className="text-[9px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-bold animate-pulse uppercase tracking-tight">
                                 Active Milestone
                               </span>
                             )}
@@ -241,7 +241,7 @@ const TrackOrder = () => {
                   </p>
                 </div>
               </div>
-              <button className="px-4 py-2 bg-white text-blue-900 rounded-lg text-xs font-black uppercase tracking-wider hover:bg-blue-50 transition-colors">
+              <button className="px-4 py-2 bg-white text-blue-900 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-blue-50 transition-colors">
                 Contact Logostics
               </button>
             </div>
@@ -251,7 +251,7 @@ const TrackOrder = () => {
           <div className="space-y-6">
             {/* Delivery Details */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-              <h2 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-6 flex items-center">
+              <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6 flex items-center">
                 <MapPin size={14} className="mr-2" /> Shipping Details
               </h2>
               <div className="space-y-4">
@@ -259,7 +259,7 @@ const TrackOrder = () => {
                   <div className="absolute top-3 right-3 text-blue-500 bg-blue-50 p-1.5 rounded-lg">
                     {order.shippingDetails.addressType === 'Office' ? <Building size={16} /> : <Home size={16} />}
                   </div>
-                  <p className="text-xs font-black text-gray-400 uppercase tracking-tighter mb-1">
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-tighter mb-1">
                     Shipping To
                   </p>
                   <p className="text-sm font-bold text-gray-900 uppercase pr-8">
@@ -286,7 +286,7 @@ const TrackOrder = () => {
                   )}
                 </div>
                 <div className="p-3 bg-blue-50/50 rounded-xl border border-blue-100">
-                  <p className="text-xs font-black text-blue-400 uppercase tracking-tighter mb-1">
+                  <p className="text-xs font-bold text-blue-400 uppercase tracking-tighter mb-1">
                     Status Estimate
                   </p>
                   <p className="text-sm font-bold text-blue-900 italic">
@@ -298,7 +298,7 @@ const TrackOrder = () => {
 
             {/* Package Contents */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-              <h2 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-6 flex items-center">
+              <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6 flex items-center">
                 <Package size={14} className="mr-2" /> Package Contents (
                 {order.items.length})
               </h2>
@@ -320,7 +320,7 @@ const TrackOrder = () => {
                         <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
                           Qty: {item.quantity}
                         </p>
-                        <p className="text-xs font-black text-gray-900">
+                        <p className="text-xs font-bold text-gray-900">
                           ₹{item.price.toFixed(2)}
                         </p>
                       </div>
@@ -329,10 +329,10 @@ const TrackOrder = () => {
                 ))}
               </div>
               <div className="mt-6 pt-6 border-t border-gray-50 flex justify-between items-center">
-                <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest">
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
                   Grand Total
                 </p>
-                <p className="text-lg font-black text-blue-600">
+                <p className="text-lg font-bold text-blue-600">
                   ₹{order.totalAmount.toFixed(2)}
                 </p>
               </div>
