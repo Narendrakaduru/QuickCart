@@ -10,6 +10,7 @@ const ProductList = () => {
   const searchParams = new URLSearchParams(location.search);
   const categoryParam = searchParams.get("category");
   const searchParam = searchParams.get("search");
+  const featuredParam = searchParams.get("featured");
 
   const { products, isLoading, isError, message } = useSelector(
     (state) => state.products,
@@ -64,6 +65,11 @@ const ProductList = () => {
             if (!title.includes(query) && !description.includes(query)) {
               return false;
             }
+          }
+
+          // Apply featured filter from URL if present
+          if (featuredParam === "true" && !p.isFeatured) {
+            return false;
           }
 
           // Apply dynamic category filters
@@ -156,6 +162,8 @@ const ProductList = () => {
               </>
             ) : categoryParam ? (
               `${categoryParam} Products`
+            ) : featuredParam === "true" ? (
+              "Featured Products"
             ) : (
               "All Products"
             )}

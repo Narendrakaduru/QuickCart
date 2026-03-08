@@ -40,6 +40,7 @@ import {
   ChevronUp,
   ChevronDown,
   Tag,
+  Star,
 } from "lucide-react";
 import ProductModal from "../components/ProductModal";
 import UserModal from "../components/UserModal";
@@ -191,6 +192,19 @@ const AdminDashboard = () => {
       setIsProductModalOpen(false);
     } catch (err) {
       alert(err || "Failed to save product");
+    }
+  };
+
+  const handleToggleFeatured = async (product) => {
+    try {
+      await dispatch(
+        updateProduct({
+          id: product._id,
+          productData: { ...product, isFeatured: !product.isFeatured },
+        })
+      ).unwrap();
+    } catch (err) {
+      alert(err || "Failed to update featured status");
     }
   };
 
@@ -439,8 +453,11 @@ const AdminDashboard = () => {
                           alt=""
                           className="w-10 h-10 object-contain rounded border bg-white"
                         />
-                        <span className="font-medium text-gray-800 text-sm max-w-[200px] truncate">
+                        <span className="font-medium text-gray-800 text-sm max-w-[200px] truncate flex items-center gap-1">
                           {product.title}
+                          {product.isFeatured && (
+                            <Star size={14} className="text-yellow-400 fill-yellow-400 inline-block flex-shrink-0" />
+                          )}
                         </span>
                       </td>
                       <td className="p-4">
@@ -467,6 +484,13 @@ const AdminDashboard = () => {
                         </span>
                       </td>
                       <td className="p-4 text-right">
+                        <button
+                          onClick={() => handleToggleFeatured(product)}
+                          className={`mr-3 p-1 rounded transition ${product.isFeatured ? "text-yellow-500 hover:text-yellow-600 hover:bg-yellow-50" : "text-gray-300 hover:text-yellow-500 hover:bg-gray-50"}`}
+                          title={product.isFeatured ? "Remove from Featured" : "Mark as Featured"}
+                        >
+                          <Star size={18} className={product.isFeatured ? "fill-yellow-500" : ""} />
+                        </button>
                         <button
                           onClick={() => handleEditProduct(product)}
                           className="text-blue-600 hover:text-blue-800 mr-3 p-1 hover:bg-blue-50 rounded transition"

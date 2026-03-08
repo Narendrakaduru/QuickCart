@@ -244,13 +244,37 @@ const ProductDetail = () => {
 
           {/* Description Section */}
           <div className="pt-6 border-t border-gray-100 mt-6">
-            <div className="text-base font-medium mb-3">
+            <div className="text-base font-medium mb-3 text-gray-900">
               Product Description
             </div>
             <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
               {product.description}
             </p>
           </div>
+
+          {/* Specifications Section */}
+          {product.specifications && product.specifications.length > 0 && (
+            <div className="pt-6 border-t border-gray-100 mt-6">
+              <div className="text-base font-medium mb-4 text-gray-900">
+                Key Specifications
+              </div>
+              <div className="bg-gray-50/50 rounded-xl border border-gray-100 p-1">
+                {product.specifications.map((spec, index) => (
+                  <div 
+                    key={index} 
+                    className="flex flex-col sm:flex-row sm:items-center p-3 border-b border-gray-100 last:border-0 hover:bg-white transition-colors rounded-lg"
+                  >
+                    <span className="sm:w-1/3 text-xs font-bold text-gray-500 uppercase tracking-widest mb-1 sm:mb-0">
+                      {spec.key}
+                    </span>
+                    <span className="sm:w-2/3 text-sm font-medium text-gray-800">
+                      {spec.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
