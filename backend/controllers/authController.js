@@ -1,6 +1,9 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const sendEmail = require('../utils/sendEmail');
+const { resetPasswordEmail, verifyEmailTemplate } = require('../utils/emailTemplates');
 
 // @desc    Register user
 // @route   POST /api/auth/register
@@ -10,9 +13,30 @@ exports.register = async (req, res, next) => {
     const { name, email, password, role } = req.body;
 
     // Check if user exists
-    const userExists = await User.findOne({ email });
-    if (userExists) {
-      return res.status(400).json({ success: false, error: 'User already exists' });
+    let user = await User.findOne({ email });
+    if (user) {
+      if (user.isVerified) {
+        return res.status(400).json({ success: false, error: 'User already exists' });
+      } else {
+        // User exists but not verified - resend verification
+        user.verificationToken = crypto.randomBytes(20).toString('hex');
+        await user.save({ validateBeforeSave: false });
+        
+        const verificationUrl = `${process.env.FRONTEND_URL}/verify-email/${user.verificationToken}`;
+        console.log('Verification URL (Resent):', verificationUrl);
+        
+        try {
+          await sendEmail({
+            email: user.email,
+            subject: 'Verify Your Email – QuickCart',
+            message: `Please verify your email by visiting: ${verificationUrl}`,
+            html: verifyEmailTemplate(user.name, verificationUrl),
+          });
+          return res.status(200).json({ success: true, data: 'Verification email resent' });
+        } catch (err) {
+          return res.status(500).json({ success: false, error: 'Email could not be sent' });
+        }
+      }
     }
 
     // Encrypt password
@@ -20,14 +44,63 @@ exports.register = async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create user
-    const user = await User.create({
+    user = await User.create({
       name,
       email,
       password: hashedPassword,
-      role
+      role,
+      verificationToken: crypto.randomBytes(20).toString('hex'),
     });
 
-    sendTokenResponse(user, 201, res);
+    // Send verification email
+    const verificationUrl = `${process.env.FRONTEND_URL}/verify-email/${user.verificationToken}`;
+    console.log('Verification URL:', verificationUrl);
+    const message = `Please verify your email by visiting: ${verificationUrl}`;
+
+    try {
+      await sendEmail({
+        email: user.email,
+        subject: 'Verify Your Email – QuickCart',
+        message,
+        html: verifyEmailTemplate(user.name, verificationUrl),
+      });
+
+      res.status(201).json({
+        success: true,
+        data: 'Verification email sent'
+      });
+    } catch (err) {
+      console.error(err);
+      user.verificationToken = undefined;
+      await user.save({ validateBeforeSave: false });
+      return res.status(500).json({ success: false, error: 'Email could not be sent' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+// @desc    Verify email
+// @route   GET /api/auth/verifyemail/:token
+// @access  Public
+exports.verifyEmail = async (req, res, next) => {
+  try {
+    const user = await User.findOne({
+      verificationToken: req.params.token,
+    });
+
+    if (!user) {
+      return res.status(400).json({ success: false, error: 'Invalid verification token' });
+    }
+
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      data: 'Email verified'
+    });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -57,6 +130,10 @@ exports.login = async (req, res, next) => {
 
     if (!isMatch) {
       return res.status(401).json({ success: false, error: 'check password' });
+    }
+
+    if (!user.isVerified) {
+      return res.status(401).json({ success: false, error: 'Please verify your email first' });
     }
 
     sendTokenResponse(user, 200, res);
@@ -93,6 +170,93 @@ exports.logout = async (req, res, next) => {
     success: true,
     data: {}
   });
+};
+
+// @desc    Forgot password
+// @route   POST /api/auth/forgotpassword
+// @access  Public
+exports.forgotPassword = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'There is no user with that email' });
+    }
+
+    // Get reset token
+    const resetToken = crypto.randomBytes(20).toString('hex');
+
+    // Hash token and set to resetPasswordToken field
+    user.resetPasswordToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+
+    // Set expire
+    user.resetPasswordExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+    await user.save({ validateBeforeSave: false });
+
+    // Create reset url
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+    console.log('Reset URL:', resetUrl);
+
+    const message = `You requested a password reset. Visit this link to reset your password: ${resetUrl}`;
+
+    try {
+      await sendEmail({
+        email: user.email,
+        subject: 'Reset Your Password – QuickCart',
+        message,
+        html: resetPasswordEmail(user.name, resetUrl),
+      });
+
+      res.status(200).json({ success: true, data: 'Email sent' });
+    } catch (err) {
+      console.error(err);
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpires = undefined;
+
+      await user.save({ validateBeforeSave: false });
+
+      return res.status(500).json({ success: false, error: 'Email could not be sent' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+// @desc    Reset password
+// @route   PUT /api/auth/resetpassword/:resettoken
+// @access  Public
+exports.resetPassword = async (req, res, next) => {
+  try {
+    // Get hashed token
+    const resetPasswordToken = crypto
+      .createHash('sha256')
+      .update(req.params.resettoken)
+      .digest('hex');
+
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ success: false, error: 'Invalid token' });
+    }
+
+    // Set new password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(req.body.password, salt);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    sendTokenResponse(user, 200, res);
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
 };
 
 // Get token from model, create cookie and send response

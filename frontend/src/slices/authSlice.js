@@ -2,7 +2,18 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // Get user from localStorage
-const user = JSON.parse(localStorage.getItem('user'));
+const getUserFromStorage = () => {
+  try {
+    const rawUser = localStorage.getItem('user');
+    if (rawUser === 'undefined' || !rawUser) return null;
+    return JSON.parse(rawUser);
+  } catch {
+    localStorage.removeItem('user');
+    return null;
+  }
+};
+
+const user = getUserFromStorage();
 const token = localStorage.getItem('token');
 
 const initialState = {
@@ -20,7 +31,7 @@ export const register = createAsyncThunk(
   async (userData, thunkAPI) => {
     try {
       const response = await axios.post('/api/auth/register', userData);
-      if (response.data) {
+      if (response.data && response.data.user) {
         localStorage.setItem('user', JSON.stringify(response.data.user));
         localStorage.setItem('token', response.data.token);
       }
@@ -74,6 +85,65 @@ export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
   localStorage.removeItem('token');
 });
 
+// Verify email
+export const verifyEmail = createAsyncThunk(
+  'auth/verifyEmail',
+  async (token, thunkAPI) => {
+    try {
+      const response = await axios.get(`/api/auth/verifyemail/${token}`);
+      return response.data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.error) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Forgot password
+export const forgotPassword = createAsyncThunk(
+  'auth/forgotPassword',
+  async (email, thunkAPI) => {
+    try {
+      const response = await axios.post('/api/auth/forgotpassword', { email });
+      return response.data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.error) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Reset password
+export const resetPassword = createAsyncThunk(
+  'auth/resetPassword',
+  async ({ token, password }, thunkAPI) => {
+    try {
+      const response = await axios.put(`/api/auth/resetpassword/${token}`, {
+        password,
+      });
+      return response.data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.error) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -126,6 +196,34 @@ export const authSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
         state.token = null;
+      })
+      .addCase(forgotPassword.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.message = '';
+      })
+      .addCase(forgotPassword.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(resetPassword.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.message = '';
+      })
+      .addCase(resetPassword.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
       });
   },
 });
