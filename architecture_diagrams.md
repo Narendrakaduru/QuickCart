@@ -59,6 +59,7 @@ graph LR
         R8["/api/addresses"]
         R9["/api/logs"]
         R10["/api/coupons"]
+        R11["/api/notifications"]
     end
 
     subgraph Controllers["Controller Layer"]
@@ -72,6 +73,7 @@ graph LR
         C8["addressController"]
         C9["logController"]
         C10["couponController"]
+        C11["notificationController"]
     end
 
     subgraph Models["Model Layer (Mongoose)"]
@@ -82,6 +84,7 @@ graph LR
         M5["Address"]
         M6["Coupon"]
         M7["Log"]
+        M8["Notification"]
     end
 
     R1 --> C1
@@ -94,6 +97,7 @@ graph LR
     R8 --> C8
     R9 --> C9
     R10 --> C10
+    R11 --> C11
 
     C1 --> M1
     C2 --> M1
@@ -101,9 +105,11 @@ graph LR
     C4 --> M4
     C5 --> M1
     C6 --> M3
+    C6 --> M8
     C8 --> M5
     C9 --> M7
     C10 --> M6
+    C11 --> M8
 ```
 
 ---
@@ -119,11 +125,13 @@ erDiagram
     USER ||--o{ PRODUCT : "creates (admin)"
     USER ||--o{ COUPON : "creates (admin)"
     USER ||--o{ PRODUCT : "reviews"
+    USER ||--o{ NOTIFICATION : "receives"
 
     PRODUCT ||--o{ ORDER_ITEM : "appears in"
     ORDER ||--|{ ORDER_ITEM : "contains"
     PRODUCT ||--o{ CART_ITEM : "added to"
     CART ||--|{ CART_ITEM : "has"
+    ORDER ||--o{ NOTIFICATION : "triggers"
 
     COUPON ||--o{ ORDER : "applied to"
 
@@ -221,6 +229,17 @@ erDiagram
         json meta
         date timestamp
     }
+
+    NOTIFICATION {
+        ObjectId _id PK
+        ObjectId user FK
+        enum type "order_placed | order_status | order_payment | order_cancelled"
+        string title
+        string message
+        ObjectId orderId FK
+        boolean isRead
+        date createdAt
+    }
 ```
 
 ---
@@ -239,6 +258,7 @@ graph TB
         APP --> MEGA["MegaMenu"]
         APP --> FOOTER["Footer"]
         APP --> SCROLL["ScrollToTop"]
+        NAVBAR --> NOTIF_DD["NotificationDropdown"]
     end
 
     subgraph Pages["Page Components"]
@@ -257,6 +277,7 @@ graph TB
         APP --> FP["ForgotPassword"]
         APP --> RP["ResetPassword"]
         APP --> VE["VerifyEmail"]
+        APP --> NOTIF_P["Notifications"]
     end
 
     subgraph Modals["Modal Components"]
@@ -267,7 +288,7 @@ graph TB
         ADMIN --> CONFIRM["ConfirmModal"]
     end
 
-    subgraph Store["Redux Store (9 Slices)"]
+    subgraph Store["Redux Store (10 Slices)"]
         AUTH_S["authSlice"]
         PRODUCT_S["productSlice"]
         CART_S["cartSlice"]
@@ -277,6 +298,7 @@ graph TB
         COUPON_S["couponSlice"]
         LOG_S["logSlice"]
         ADDR_S["addressSlice"]
+        NOTIF_S["notificationSlice"]
     end
 
     Pages -- "dispatch / useSelector" --> Store
@@ -290,7 +312,7 @@ graph TB
 ```mermaid
 flowchart TD
     A([User opens app]) --> B{Logged in?}
-    B -- Yes --> C[Load Cart & Wishlist]
+    B -- Yes --> C["Load Cart, Wishlist & Unread Notifications"]
     C --> D([Browse App])
     B -- No --> E[Show Login / Register]
 
@@ -347,7 +369,8 @@ flowchart TD
 
     N --> O["Server: Create Order doc"]
     O --> P["Server: Clear Cart"]
-    P --> Q{Coupon used?}
+    P --> PA["Create Notification: Order Placed"]
+    PA --> Q{Coupon used?}
     Q -- Yes --> R["Increment coupon usedCount"]
     Q -- No --> S["Skip"]
     R --> T["Return order confirmation"]
@@ -377,6 +400,7 @@ flowchart TD
     E --> E1["GET /api/orders/all — admin"]
     E1 --> E2["Update order status"]
     E2 --> E3["PUT /api/orders/:id/status"]
+    E3 --> E4["Notification sent to user"]
 
     C --> F["👥 Users Tab"]
     F --> F1["GET /api/users — list all"]
@@ -485,6 +509,7 @@ graph TB
 | `/forgot-password` | `ForgotPassword` | ❌ | Any |
 | `/reset-password/:token` | `ResetPassword` | ❌ | Any |
 | `/verify-email/:token` | `VerifyEmail` | ❌ | Any |
+| `/notifications` | `Notifications` | ✅ | User |
 
 ---
 
@@ -501,4 +526,5 @@ graph LR
     STORE --> CPN["coupon: { coupons, loading }"]
     STORE --> LOG["log: { logs, loading }"]
     STORE --> ADDR["address: { addresses, loading }"]
+    STORE --> NOTIF["notifications: { notifications, unreadCount, loading }"]
 ```
