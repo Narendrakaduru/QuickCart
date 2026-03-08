@@ -29,6 +29,7 @@ app.use("/api/upload", require("./routes/uploadRoutes"));
 app.use("/api/addresses", require("./routes/addressRoutes"));
 app.use("/api/logs", require("./routes/logRoutes"));
 app.use("/api/coupons", require("./routes/couponRoutes"));
+app.use("/api/notifications", require("./routes/notificationRoutes"));
 
 // Make uploads folder static
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));

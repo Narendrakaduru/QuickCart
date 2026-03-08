@@ -10,10 +10,12 @@ import {
   Package,
   ShieldCheck,
 } from "lucide-react";
+import NotificationDropdown from "./NotificationDropdown";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../slices/authSlice";
 import { clearCart } from "../slices/cartSlice";
 import { clearWishlist } from "../slices/wishlistSlice";
+import { clearNotifications } from "../slices/notificationSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -38,6 +40,7 @@ const Navbar = () => {
     dispatch(logout());
     dispatch(clearCart());
     dispatch(clearWishlist());
+    dispatch(clearNotifications());
     navigate("/");
   };
 
@@ -186,6 +189,8 @@ const Navbar = () => {
               <User size={18} className="mr-1.5" /> Login
             </Link>
           )}
+
+          {user && <NotificationDropdown />}
 
           <Link
             to="/wishlist"
