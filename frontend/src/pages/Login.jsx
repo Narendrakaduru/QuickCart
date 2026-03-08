@@ -98,12 +98,20 @@ const Login = () => {
             />
           </div>
           <div className="space-y-2">
-            <label
-              className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1"
-              htmlFor="password"
-            >
-              Security Password
-            </label>
+            <div className="flex justify-between items-center pl-1">
+              <label
+                className="text-[10px] font-bold text-gray-400 uppercase tracking-widest"
+                htmlFor="password"
+              >
+                Security Password
+              </label>
+              <Link
+                to="/forgot-password"
+                className="text-[10px] font-bold text-blue-600 uppercase tracking-widest hover:text-blue-700 transition-colors"
+              >
+                Forgot Password?
+              </Link>
+            </div>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -127,13 +135,13 @@ const Login = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-blue-100 uppercase tracking-widest text-xs disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] mt-4"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-blue-100 uppercase tracking-widest text-xs disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] mt-2"
           >
             {isLoading ? "Authenticating..." : "Sign In to Account"}
           </button>
         </form>
 
-        <div className="mt-10 text-center">
+        <div className="mt-8 text-center">
           <p className="text-gray-500 text-sm font-medium">
             New to QuickCart?{" "}
             <Link

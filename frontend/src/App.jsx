@@ -19,6 +19,9 @@ import Profile from "./pages/Profile";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import TrackOrder from "./pages/TrackOrder";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
   const dispatch = useDispatch();
@@ -52,6 +55,9 @@ function App() {
             <Route path="/order/:id/track" element={<TrackOrder />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route path="/verify-email/:token" element={<VerifyEmail />} />
           </Routes>
         </main>
 
