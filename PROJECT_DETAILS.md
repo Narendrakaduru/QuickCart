@@ -7,7 +7,7 @@ QuickCart is a modern, full-stack e-commerce application designed for a seamless
 ### Frontend
 
 - **React**: Modern UI library for building dynamic user interfaces.
-- **Redux Toolkit**: State management for cart, wishlist, and authentication.
+- **Redux Toolkit**: State management for cart, wishlist, notifications, and authentication.
 - **Tailwind CSS**: Utility-first CSS framework for premium and responsive design.
 - **Vite**: Ultra-fast build tool for modern web development.
 - **Lucide React**: For beautiful and consistent iconography.
@@ -104,6 +104,12 @@ The project comes with pre-configured data to get you started:
     - **Real-time Checkout Integration**: Validation for availability, expiry, minimum purchase, and usage limits with instant price recalculation.
 - **Shopping Cart & Wishlist**: Persistent state management for user selections.
 - **Order Tracking**: Real-time status updates and order history.
+- **In-App Notifications**:
+  - **Bell icon** in the Navbar with animated **unread count badge**.
+  - **Dropdown panel** showing recent notifications with type-specific icons (order placed, shipped, payment, cancelled).
+  - **Full history page** at `/notifications` with read/unread visual distinction.
+  - **Automatic triggers**: Notifications created on order placement, status updates, payment changes, and cancellations.
+  - **Mark as read**: Individual or bulk "mark all read" support.
 - **Responsive Design**: Optimized for all devices, featuring a **single product per row** layout on small screens for better visibility.
 
 ## 📧 Email Verification & Password Reset
@@ -170,4 +176,5 @@ FRONTEND_URL=       # Frontend base URL for email links
 - **Cart**: `/api/cart` (add, remove, update)
 - **Orders**: `/api/orders` (checkout, tracking)
 - **Coupons**: `/api/coupons` (creation, validation, management)
+- **Notifications**: `/api/notifications` (list, unread count, mark read)
 - **Logs**: `/api/logs` (system activity monitoring - Superadmin only)
