@@ -1,6 +1,7 @@
 const Order = require("../models/Order");
 const Cart = require("../models/Cart");
 const Coupon = require("../models/Coupon");
+const Notification = require("../models/Notification");
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -34,6 +35,15 @@ exports.addOrderItems = async (req, res) => {
 
     // Clear cart after order is placed
     await Cart.findOneAndUpdate({ user: req.user._id }, { items: [] });
+
+    // Fire-and-forget notification
+    Notification.create({
+      user: req.user._id,
+      type: "order_placed",
+      title: "Order Placed",
+      message: `Your order #${createdOrder._id.toString().slice(-8).toUpperCase()} has been placed successfully.`,
+      orderId: createdOrder._id,
+    }).catch((err) => console.error("Notification Error:", err.message));
 
     res.status(201).json({
       success: true,
@@ -152,6 +162,16 @@ exports.updateOrderStatus = async (req, res) => {
 
     await order.save();
 
+    // Notify user of order status change
+    const statusLabel = req.body.status.charAt(0).toUpperCase() + req.body.status.slice(1);
+    Notification.create({
+      user: order.user,
+      type: "order_status",
+      title: `Order ${statusLabel}`,
+      message: `Your order #${order._id.toString().slice(-8).toUpperCase()} has been ${statusLabel.toLowerCase()}.`,
+      orderId: order._id,
+    }).catch((err) => console.error("Notification Error:", err.message));
+
     const updatedOrder = await Order.findById(order._id)
       .populate("user", "id name")
       .populate("items.product");
@@ -183,6 +203,16 @@ exports.updatePaymentStatus = async (req, res) => {
     order.updatedAt = Date.now();
 
     await order.save();
+
+    // Notify user of payment status change
+    const paymentLabel = req.body.status.charAt(0).toUpperCase() + req.body.status.slice(1);
+    Notification.create({
+      user: order.user,
+      type: "order_payment",
+      title: `Payment ${paymentLabel}`,
+      message: `Payment for your order #${order._id.toString().slice(-8).toUpperCase()} has been marked as ${paymentLabel.toLowerCase()}.`,
+      orderId: order._id,
+    }).catch((err) => console.error("Notification Error:", err.message));
 
     const updatedOrder = await Order.findById(order._id)
       .populate("user", "id name")
@@ -236,6 +266,15 @@ exports.cancelOrder = async (req, res) => {
     order.updatedAt = Date.now();
 
     await order.save();
+
+    // Notify user of cancellation
+    Notification.create({
+      user: order.user,
+      type: "order_cancelled",
+      title: "Order Cancelled",
+      message: `Your order #${order._id.toString().slice(-8).toUpperCase()} has been cancelled.`,
+      orderId: order._id,
+    }).catch((err) => console.error("Notification Error:", err.message));
 
     const updatedOrder = await Order.findById(order._id)
       .populate("user", "id name")

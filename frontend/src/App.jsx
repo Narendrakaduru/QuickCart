@@ -7,6 +7,7 @@ import MegaMenu from "./components/MegaMenu";
 import Footer from "./components/Footer";
 import { fetchCart } from "./slices/cartSlice";
 import { fetchWishlist } from "./slices/wishlistSlice";
+import { fetchUnreadCount } from "./slices/notificationSlice";
 import Home from "./pages/Home";
 import ProductList from "./pages/ProductList";
 import ProductDetail from "./pages/ProductDetail";
@@ -22,6 +23,7 @@ import TrackOrder from "./pages/TrackOrder";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import VerifyEmail from "./pages/VerifyEmail";
+import Notifications from "./pages/Notifications";
 
 function App() {
   const dispatch = useDispatch();
@@ -31,6 +33,7 @@ function App() {
     if (user) {
       dispatch(fetchCart());
       dispatch(fetchWishlist());
+      dispatch(fetchUnreadCount());
     }
   }, [dispatch, user]);
 
@@ -58,6 +61,7 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/verify-email/:token" element={<VerifyEmail />} />
+            <Route path="/notifications" element={<Notifications />} />
           </Routes>
         </main>
 

@@ -8,6 +8,7 @@ import orderReducer from '../slices/orderSlice';
 import addressReducer from '../slices/addressSlice';
 import logReducer from '../slices/logSlice';
 import couponReducer from "../slices/couponSlice";
+import notificationReducer from "../slices/notificationSlice";
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
     addresses: addressReducer,
     logs: logReducer,
     coupons: couponReducer,
+    notifications: notificationReducer,
   },
 });
 
