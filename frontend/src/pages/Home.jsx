@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { fetchProducts } from "../slices/productSlice";
 import ProductCard from "../components/ProductCard";
 import BannerCarousel from "../components/BannerCarousel";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Star } from "lucide-react";
 
-const ProductSection = ({ title, filter, products, category }) => {
+const ProductSection = ({ title, icon: Icon, filter, products, category }) => {
   const navigate = useNavigate();
   const filteredProducts = products.filter(filter).slice(0, 4);
   
@@ -15,6 +15,8 @@ const ProductSection = ({ title, filter, products, category }) => {
   const handleViewAll = () => {
     if (category) {
       navigate(`/products?category=${category}`);
+    } else if (title === "Featured Highlights") {
+      navigate("/products?featured=true");
     } else {
       navigate("/products");
     }
@@ -24,6 +26,7 @@ const ProductSection = ({ title, filter, products, category }) => {
     <section className="bg-white p-6 md:p-8 shadow-sm rounded-3xl border border-gray-100 flex flex-col">
       <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4 relative z-10">
         <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight flex items-center">
+          {Icon && <Icon className="mr-2 text-blue-600" size={24} />}
           {title}
           <div className="ml-3 w-1.5 h-1.5 bg-blue-600 rounded-full hidden md:block"></div>
         </h2>
@@ -105,6 +108,13 @@ const Home = () => {
         </div>
 
         {/* Dynamic Sections */}
+        <ProductSection 
+          title="Featured Highlights" 
+          icon={Star}
+          filter={(p) => p.isFeatured} 
+          products={products} 
+        />
+
         <ProductSection 
           title="Trending Now" 
           filter={() => true} 

@@ -12,7 +12,27 @@
       "/products/nexus-quantum-x1-crystal-smartphone-side-profile.png"
     ],
     "rating": 4.5,
-    "numReviews": 10
+    "numReviews": 10,
+    "isFeatured": true,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Screen Size",
+        "value": "6.7 Inches"
+      },
+      {
+        "key": "RAM",
+        "value": "12 GB"
+      },
+      {
+        "key": "Storage",
+        "value": "256 GB"
+      },
+      {
+        "key": "Battery",
+        "value": "5000 mAh"
+      }
+    ]
   },
   {
     "title": "AudioTech Sonic Wave Pro Earbuds",
@@ -27,7 +47,23 @@
       "/products/audiotech-sonic-wave-pro-earbuds-charging-case.png"
     ],
     "rating": 4.8,
-    "numReviews": 25
+    "numReviews": 25,
+    "isFeatured": true,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Warranty",
+        "value": "1 Year Manufacturer"
+      },
+      {
+        "key": "Connectivity",
+        "value": "Bluetooth 5.3, Wi-Fi 6"
+      },
+      {
+        "key": "Color",
+        "value": "Matte Black"
+      }
+    ]
   },
   {
     "title": "UrbanStyle Urban Nomad Techwear Jacket",
@@ -42,7 +78,23 @@
       "/products/urbanstyle-urban-nomad-techwear-jacket-pocket-details.png"
     ],
     "rating": 4.2,
-    "numReviews": 50
+    "numReviews": 50,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Premium Blend"
+      },
+      {
+        "key": "Fit",
+        "value": "Regular Fit"
+      },
+      {
+        "key": "Care",
+        "value": "Machine Washable"
+      }
+    ]
   },
   {
     "title": "WoodWork Nordic Oak Minimalist Desk",
@@ -57,7 +109,23 @@
       "/products/woodwork-nordic-oak-minimalist-desk-top-view.png"
     ],
     "rating": 4.6,
-    "numReviews": 12
+    "numReviews": 12,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Solid Wood / Metal"
+      },
+      {
+        "key": "Assembly Required",
+        "value": "Yes"
+      },
+      {
+        "key": "Dimensions",
+        "value": "Standard Size"
+      }
+    ]
   },
   {
     "title": "ViewMaster Onyx 8K Smart OLED TV",
@@ -72,7 +140,23 @@
       "/products/viewmaster-onyx-8k-smart-oled-tv-wall-mount.png"
     ],
     "rating": 4.7,
-    "numReviews": 18
+    "numReviews": 18,
+    "isFeatured": true,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Warranty",
+        "value": "1 Year Manufacturer"
+      },
+      {
+        "key": "Connectivity",
+        "value": "Bluetooth 5.3, Wi-Fi 6"
+      },
+      {
+        "key": "Color",
+        "value": "Matte Black"
+      }
+    ]
   },
   {
     "title": "CoolBreeze Arctic Freeze Smart Fridge",
@@ -87,7 +171,23 @@
       "/products/coolbreeze-arctic-freeze-smart-fridge-internal-camera.png"
     ],
     "rating": 4.6,
-    "numReviews": 293
+    "numReviews": 293,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Power Consumption",
+        "value": "1500W"
+      },
+      {
+        "key": "Energy Rating",
+        "value": "5 Star"
+      },
+      {
+        "key": "Warranty",
+        "value": "2 Years Comprehensive"
+      }
+    ]
   },
   {
     "title": "HeatMax Vortex Steam Convection Oven",
@@ -102,7 +202,23 @@
       "/products/heatmax-vortex-steam-convection-oven-digital-display.png"
     ],
     "rating": 3.7,
-    "numReviews": 57
+    "numReviews": 57,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Power Consumption",
+        "value": "1500W"
+      },
+      {
+        "key": "Energy Rating",
+        "value": "5 Star"
+      },
+      {
+        "key": "Warranty",
+        "value": "2 Years Comprehensive"
+      }
+    ]
   },
   {
     "title": "ChefHat Culinary Pro High-Power Blender",
@@ -117,7 +233,23 @@
       "/products/chefhat-culinary-pro-highpower-blender-blade-detail.png"
     ],
     "rating": 3.8,
-    "numReviews": 459
+    "numReviews": 459,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Premium Grade"
+      },
+      {
+        "key": "Weight",
+        "value": "Varies"
+      },
+      {
+        "key": "Care",
+        "value": "Wipe with dry cloth"
+      }
+    ]
   },
   {
     "title": "OrganicLife Premium Quinoa Blend",
@@ -132,7 +264,23 @@
       "/products/organiclife-premium-quinoa-blend-package-display.png"
     ],
     "rating": 4.7,
-    "numReviews": 253
+    "numReviews": 253,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Shelf Life",
+        "value": "12 Months"
+      },
+      {
+        "key": "Organic",
+        "value": "Yes"
+      },
+      {
+        "key": "Storage",
+        "value": "Store in a cool, dry place"
+      }
+    ]
   },
   {
     "title": "FashionHub Silk Road Patterned Scarf",
@@ -147,7 +295,23 @@
       "/products/fashionhub-silk-road-patterned-scarf-fabric-texture.png"
     ],
     "rating": 3.6,
-    "numReviews": 431
+    "numReviews": 431,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Premium Blend"
+      },
+      {
+        "key": "Fit",
+        "value": "Regular Fit"
+      },
+      {
+        "key": "Care",
+        "value": "Machine Washable"
+      }
+    ]
   },
   {
     "title": "SoftRest Cloud Recliner Massage Sofa",
@@ -162,7 +326,23 @@
       "/products/softrest-cloud-recliner-massage-sofa-remote-control.png"
     ],
     "rating": 4.7,
-    "numReviews": 496
+    "numReviews": 496,
+    "isFeatured": true,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Solid Wood / Metal"
+      },
+      {
+        "key": "Assembly Required",
+        "value": "Yes"
+      },
+      {
+        "key": "Dimensions",
+        "value": "Standard Size"
+      }
+    ]
   },
   {
     "title": "MegaBlocks Galactic Explorer Space Rig",
@@ -177,7 +357,23 @@
       "/products/megablocks-galactic-explorer-space-rig-motorized-gears.png"
     ],
     "rating": 4.7,
-    "numReviews": 85
+    "numReviews": 85,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Age Group",
+        "value": "8+ Years"
+      },
+      {
+        "key": "Batteries Required",
+        "value": "No"
+      },
+      {
+        "key": "Material",
+        "value": "Non-toxic ABS Plastic"
+      }
+    ]
   },
   {
     "title": "Pulse Air Console Next Gen Gaming",
@@ -192,7 +388,23 @@
       "/products/pulse-air-console-next-gen-gaming-wireless-controller.png"
     ],
     "rating": 4.2,
-    "numReviews": 242
+    "numReviews": 242,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Warranty",
+        "value": "1 Year Manufacturer"
+      },
+      {
+        "key": "Connectivity",
+        "value": "Bluetooth 5.3, Wi-Fi 6"
+      },
+      {
+        "key": "Color",
+        "value": "Matte Black"
+      }
+    ]
   },
   {
     "title": "NatureBest Golden Wildflower Honey",
@@ -207,7 +419,23 @@
       "/products/naturebest-golden-wildflower-honey-honeycomb.png"
     ],
     "rating": 3.7,
-    "numReviews": 287
+    "numReviews": 287,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Shelf Life",
+        "value": "12 Months"
+      },
+      {
+        "key": "Organic",
+        "value": "Yes"
+      },
+      {
+        "key": "Storage",
+        "value": "Store in a cool, dry place"
+      }
+    ]
   },
   {
     "title": "PureLiving PureMist Ultrasonic Humidifier",
@@ -222,7 +450,23 @@
       "/products/pureliving-puremist-ultrasonic-humidifier-night-light.png"
     ],
     "rating": 4.4,
-    "numReviews": 166
+    "numReviews": 166,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Premium Grade"
+      },
+      {
+        "key": "Weight",
+        "value": "Varies"
+      },
+      {
+        "key": "Care",
+        "value": "Wipe with dry cloth"
+      }
+    ]
   },
   {
     "title": "ViewMaster Vista Pro 4K Laser Projector",
@@ -237,7 +481,23 @@
       "/products/viewmaster-vista-pro-4k-laser-projector-lifestyle-setup.png"
     ],
     "rating": 4.2,
-    "numReviews": 246
+    "numReviews": 246,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Warranty",
+        "value": "1 Year Manufacturer"
+      },
+      {
+        "key": "Connectivity",
+        "value": "Bluetooth 5.3, Wi-Fi 6"
+      },
+      {
+        "key": "Color",
+        "value": "Matte Black"
+      }
+    ]
   },
   {
     "title": "Vibe Horizon Edge V Infinity Phone",
@@ -252,7 +512,27 @@
       "/products/vibe-horizon-edge-v-infinity-phone-under-screen-camera.png"
     ],
     "rating": 4.4,
-    "numReviews": 406
+    "numReviews": 406,
+    "isFeatured": true,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Screen Size",
+        "value": "6.7 Inches"
+      },
+      {
+        "key": "RAM",
+        "value": "12 GB"
+      },
+      {
+        "key": "Storage",
+        "value": "256 GB"
+      },
+      {
+        "key": "Battery",
+        "value": "5000 mAh"
+      }
+    ]
   },
   {
     "title": "ModernNest Metro Loft Steel Bookcase",
@@ -267,7 +547,23 @@
       "/products/modernnest-metro-loft-steel-bookcase-industrial-detail.png"
     ],
     "rating": 3.7,
-    "numReviews": 349
+    "numReviews": 349,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Solid Wood / Metal"
+      },
+      {
+        "key": "Assembly Required",
+        "value": "Yes"
+      },
+      {
+        "key": "Dimensions",
+        "value": "Standard Size"
+      }
+    ]
   },
   {
     "title": "HomeEase SafeGuard Biometric Smart Lock",
@@ -282,7 +578,23 @@
       "/products/homeease-safeguard-biometric-smart-lock-door-mounted.png"
     ],
     "rating": 4.4,
-    "numReviews": 295
+    "numReviews": 295,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Premium Grade"
+      },
+      {
+        "key": "Weight",
+        "value": "Varies"
+      },
+      {
+        "key": "Care",
+        "value": "Wipe with dry cloth"
+      }
+    ]
   },
   {
     "title": "DailyNeed Artisan Single Origin Roast",
@@ -297,7 +609,23 @@
       "/products/dailyneed-artisan-single-origin-roast-brewed-cup.png"
     ],
     "rating": 4.9,
-    "numReviews": 185
+    "numReviews": 185,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Shelf Life",
+        "value": "12 Months"
+      },
+      {
+        "key": "Organic",
+        "value": "Yes"
+      },
+      {
+        "key": "Storage",
+        "value": "Store in a cool, dry place"
+      }
+    ]
   },
   {
     "title": "CleanSweep Hydro Clean Smart Washer",
@@ -312,7 +640,23 @@
       "/products/cleansweep-hydro-clean-smart-washer-energy-label.png"
     ],
     "rating": 3.5,
-    "numReviews": 332
+    "numReviews": 332,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Power Consumption",
+        "value": "1500W"
+      },
+      {
+        "key": "Energy Rating",
+        "value": "5 Star"
+      },
+      {
+        "key": "Warranty",
+        "value": "2 Years Comprehensive"
+      }
+    ]
   },
   {
     "title": "TechBrand Titan G7 Rugged Mobile",
@@ -327,7 +671,27 @@
       "/products/techbrand-titan-g7-rugged-mobile-waterproof-test.png"
     ],
     "rating": 4.5,
-    "numReviews": 421
+    "numReviews": 421,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Screen Size",
+        "value": "6.7 Inches"
+      },
+      {
+        "key": "RAM",
+        "value": "12 GB"
+      },
+      {
+        "key": "Storage",
+        "value": "256 GB"
+      },
+      {
+        "key": "Battery",
+        "value": "5000 mAh"
+      }
+    ]
   },
   {
     "title": "AudioTech Echo Master 360 Speaker",
@@ -342,7 +706,23 @@
       "/products/audiotech-echo-master-360-speaker-living-room.png"
     ],
     "rating": 4.9,
-    "numReviews": 39
+    "numReviews": 39,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Warranty",
+        "value": "1 Year Manufacturer"
+      },
+      {
+        "key": "Connectivity",
+        "value": "Bluetooth 5.3, Wi-Fi 6"
+      },
+      {
+        "key": "Color",
+        "value": "Matte Black"
+      }
+    ]
   },
   {
     "title": "Pulse Volt Charge Hub 100W",
@@ -357,7 +737,23 @@
       "/products/pulse-volt-charge-hub-100w-compact-design.png"
     ],
     "rating": 3.7,
-    "numReviews": 108
+    "numReviews": 108,
+    "isFeatured": true,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Warranty",
+        "value": "1 Year Manufacturer"
+      },
+      {
+        "key": "Connectivity",
+        "value": "Bluetooth 5.3, Wi-Fi 6"
+      },
+      {
+        "key": "Color",
+        "value": "Matte Black"
+      }
+    ]
   },
   {
     "title": "PureAir PureStream Eco Dishwasher",
@@ -372,7 +768,23 @@
       "/products/pureair-purestream-eco-dishwasher-steam-jets.png"
     ],
     "rating": 4.4,
-    "numReviews": 5
+    "numReviews": 5,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Power Consumption",
+        "value": "1500W"
+      },
+      {
+        "key": "Energy Rating",
+        "value": "5 Star"
+      },
+      {
+        "key": "Warranty",
+        "value": "2 Years Comprehensive"
+      }
+    ]
   },
   {
     "title": "OrganicLife First Press Virgin Olive Oil",
@@ -387,7 +799,23 @@
       "/products/organiclife-first-press-virgin-olive-oil-serving.png"
     ],
     "rating": 5,
-    "numReviews": 438
+    "numReviews": 438,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Shelf Life",
+        "value": "12 Months"
+      },
+      {
+        "key": "Organic",
+        "value": "Yes"
+      },
+      {
+        "key": "Storage",
+        "value": "Store in a cool, dry place"
+      }
+    ]
   },
   {
     "title": "UrbanSpace Luxe Velvet Tufted Armchair",
@@ -402,7 +830,23 @@
       "/products/urbanspace-luxe-velvet-tufted-armchair-room-corner.png"
     ],
     "rating": 3.6,
-    "numReviews": 10
+    "numReviews": 10,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Solid Wood / Metal"
+      },
+      {
+        "key": "Assembly Required",
+        "value": "Yes"
+      },
+      {
+        "key": "Dimensions",
+        "value": "Standard Size"
+      }
+    ]
   },
   {
     "title": "DenimCo Indigo Selvedge Raw Denim",
@@ -417,7 +861,23 @@
       "/products/denimco-indigo-selvedge-raw-denim-selvedge-line.png"
     ],
     "rating": 4.1,
-    "numReviews": 494
+    "numReviews": 494,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Premium Blend"
+      },
+      {
+        "key": "Fit",
+        "value": "Regular Fit"
+      },
+      {
+        "key": "Care",
+        "value": "Machine Washable"
+      }
+    ]
   },
   {
     "title": "PlayJoy CyberBot AI Robotics Kit",
@@ -432,7 +892,23 @@
       "/products/playjoy-cyberbot-ai-robotics-kit-coding-interface.png"
     ],
     "rating": 4.1,
-    "numReviews": 377
+    "numReviews": 377,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Age Group",
+        "value": "8+ Years"
+      },
+      {
+        "key": "Batteries Required",
+        "value": "No"
+      },
+      {
+        "key": "Material",
+        "value": "Non-toxic ABS Plastic"
+      }
+    ]
   },
   {
     "title": "KidQuest Fantasy Multi-Level Dollhouse",
@@ -447,7 +923,23 @@
       "/products/kidquest-fantasy-multilevel-dollhouse-working-bridge.png"
     ],
     "rating": 4,
-    "numReviews": 423
+    "numReviews": 423,
+    "isFeatured": true,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Age Group",
+        "value": "8+ Years"
+      },
+      {
+        "key": "Batteries Required",
+        "value": "No"
+      },
+      {
+        "key": "Material",
+        "value": "Non-toxic ABS Plastic"
+      }
+    ]
   },
   {
     "title": "HeatMax AeroFryer Dual Basket Stack",
@@ -462,7 +954,23 @@
       "/products/heatmax-aerofryer-dual-basket-stack-dual-controls.png"
     ],
     "rating": 5,
-    "numReviews": 113
+    "numReviews": 113,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Power Consumption",
+        "value": "1500W"
+      },
+      {
+        "key": "Energy Rating",
+        "value": "5 Star"
+      },
+      {
+        "key": "Warranty",
+        "value": "2 Years Comprehensive"
+      }
+    ]
   },
   {
     "title": "Connect Aura Slim Pro Titanium Phone",
@@ -477,7 +985,27 @@
       "/products/connect-aura-slim-pro-titanium-phone-titanium-finish.png"
     ],
     "rating": 3.9,
-    "numReviews": 24
+    "numReviews": 24,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Screen Size",
+        "value": "6.7 Inches"
+      },
+      {
+        "key": "RAM",
+        "value": "12 GB"
+      },
+      {
+        "key": "Storage",
+        "value": "256 GB"
+      },
+      {
+        "key": "Battery",
+        "value": "5000 mAh"
+      }
+    ]
   },
   {
     "title": "HomeEase Lumina Smart Mood Lamp",
@@ -492,7 +1020,23 @@
       "/products/homeease-lumina-smart-mood-lamp-color-cycling.png"
     ],
     "rating": 3.6,
-    "numReviews": 182
+    "numReviews": 182,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Premium Grade"
+      },
+      {
+        "key": "Weight",
+        "value": "Varies"
+      },
+      {
+        "key": "Care",
+        "value": "Wipe with dry cloth"
+      }
+    ]
   },
   {
     "title": "CoolBreeze FrostEdge AI AC Unit",
@@ -507,7 +1051,23 @@
       "/products/coolbreeze-frostedge-ai-ac-unit-remote-app.png"
     ],
     "rating": 4.9,
-    "numReviews": 346
+    "numReviews": 346,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Power Consumption",
+        "value": "1500W"
+      },
+      {
+        "key": "Energy Rating",
+        "value": "5 Star"
+      },
+      {
+        "key": "Warranty",
+        "value": "2 Years Comprehensive"
+      }
+    ]
   },
   {
     "title": "FunZone Nitro RC Extreme Racer",
@@ -522,7 +1082,23 @@
       "/products/funzone-nitro-rc-extreme-racer-remote-controller.png"
     ],
     "rating": 4.1,
-    "numReviews": 1
+    "numReviews": 1,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Age Group",
+        "value": "8+ Years"
+      },
+      {
+        "key": "Batteries Required",
+        "value": "No"
+      },
+      {
+        "key": "Material",
+        "value": "Non-toxic ABS Plastic"
+      }
+    ]
   },
   {
     "title": "DailyNeed Himalayan Pink Savory Salt",
@@ -537,7 +1113,23 @@
       "/products/dailyneed-himalayan-pink-savory-salt-grinder.png"
     ],
     "rating": 4.2,
-    "numReviews": 305
+    "numReviews": 305,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Shelf Life",
+        "value": "12 Months"
+      },
+      {
+        "key": "Organic",
+        "value": "Yes"
+      },
+      {
+        "key": "Storage",
+        "value": "Store in a cool, dry place"
+      }
+    ]
   },
   {
     "title": "CleanSweep DuraCycle Advanced Dryer",
@@ -552,7 +1144,23 @@
       "/products/cleansweep-duracycle-advanced-dryer-dryer-interior.png"
     ],
     "rating": 3.5,
-    "numReviews": 424
+    "numReviews": 424,
+    "isFeatured": true,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Power Consumption",
+        "value": "1500W"
+      },
+      {
+        "key": "Energy Rating",
+        "value": "5 Star"
+      },
+      {
+        "key": "Warranty",
+        "value": "2 Years Comprehensive"
+      }
+    ]
   },
   {
     "title": "TrendSetter Lunar Mesh Athletic Sneakers",
@@ -567,7 +1175,23 @@
       "/products/trendsetter-lunar-mesh-athletic-sneakers-sole-traction.png"
     ],
     "rating": 3.6,
-    "numReviews": 262
+    "numReviews": 262,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Premium Blend"
+      },
+      {
+        "key": "Fit",
+        "value": "Regular Fit"
+      },
+      {
+        "key": "Care",
+        "value": "Machine Washable"
+      }
+    ]
   },
   {
     "title": "ChefHat Grio Automatic Coffee Station",
@@ -582,7 +1206,23 @@
       "/products/chefhat-grio-automatic-coffee-station-bean-grinder.png"
     ],
     "rating": 4.4,
-    "numReviews": 67
+    "numReviews": 67,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Premium Grade"
+      },
+      {
+        "key": "Weight",
+        "value": "Varies"
+      },
+      {
+        "key": "Care",
+        "value": "Wipe with dry cloth"
+      }
+    ]
   },
   {
     "title": "WoodWork Zen Teak Platform Bed",
@@ -597,7 +1237,23 @@
       "/products/woodwork-zen-teak-platform-bed-minimalist-frame.png"
     ],
     "rating": 4.3,
-    "numReviews": 283
+    "numReviews": 283,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Solid Wood / Metal"
+      },
+      {
+        "key": "Assembly Required",
+        "value": "Yes"
+      },
+      {
+        "key": "Dimensions",
+        "value": "Standard Size"
+      }
+    ]
   },
   {
     "title": "FreshPick Wild Berry Nut Granola",
@@ -612,7 +1268,23 @@
       "/products/freshpick-wild-berry-nut-granola-berry-mix.png"
     ],
     "rating": 4.6,
-    "numReviews": 11
+    "numReviews": 11,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Shelf Life",
+        "value": "12 Months"
+      },
+      {
+        "key": "Organic",
+        "value": "Yes"
+      },
+      {
+        "key": "Storage",
+        "value": "Store in a cool, dry place"
+      }
+    ]
   },
   {
     "title": "FashionHub Ethereal Gala Satin Dress",
@@ -627,7 +1299,23 @@
       "/products/fashionhub-ethereal-gala-satin-dress-satin-shimmer.png"
     ],
     "rating": 3.5,
-    "numReviews": 467
+    "numReviews": 467,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Premium Blend"
+      },
+      {
+        "key": "Fit",
+        "value": "Regular Fit"
+      },
+      {
+        "key": "Care",
+        "value": "Machine Washable"
+      }
+    ]
   },
   {
     "title": "ComfortSeat Velvet Cloud Bedding Set",
@@ -642,7 +1330,23 @@
       "/products/comfortseat-velvet-cloud-bedding-set-fabric-softness.png"
     ],
     "rating": 3.9,
-    "numReviews": 229
+    "numReviews": 229,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Premium Grade"
+      },
+      {
+        "key": "Weight",
+        "value": "Varies"
+      },
+      {
+        "key": "Care",
+        "value": "Wipe with dry cloth"
+      }
+    ]
   },
   {
     "title": "Nexus Nebula Fold 3 Duo Display",
@@ -657,7 +1361,27 @@
       "/products/nexus-nebula-fold-3-duo-display-unfolded-display.png"
     ],
     "rating": 4.9,
-    "numReviews": 331
+    "numReviews": 331,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Screen Size",
+        "value": "6.7 Inches"
+      },
+      {
+        "key": "RAM",
+        "value": "12 GB"
+      },
+      {
+        "key": "Storage",
+        "value": "256 GB"
+      },
+      {
+        "key": "Battery",
+        "value": "5000 mAh"
+      }
+    ]
   },
   {
     "title": "Sonic Glide Pro Wireless Gaming Mouse",
@@ -672,7 +1396,23 @@
       "/products/sonic-glide-pro-wireless-gaming-mouse-ergonomic-grip.png"
     ],
     "rating": 4.8,
-    "numReviews": 336
+    "numReviews": 336,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Warranty",
+        "value": "1 Year Manufacturer"
+      },
+      {
+        "key": "Connectivity",
+        "value": "Bluetooth 5.3, Wi-Fi 6"
+      },
+      {
+        "key": "Color",
+        "value": "Matte Black"
+      }
+    ]
   },
   {
     "title": "FreshPick Pure Alphonso Mango Pulp",
@@ -687,7 +1427,23 @@
       "/products/freshpick-pure-alphonso-mango-pulp-mango-slices.png"
     ],
     "rating": 4,
-    "numReviews": 60
+    "numReviews": 60,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Shelf Life",
+        "value": "12 Months"
+      },
+      {
+        "key": "Organic",
+        "value": "Yes"
+      },
+      {
+        "key": "Storage",
+        "value": "Store in a cool, dry place"
+      }
+    ]
   },
   {
     "title": "PureLiving Ariel HEPA Air Purifier",
@@ -702,7 +1458,23 @@
       "/products/pureliving-ariel-hepa-air-purifier-modern-setup.png"
     ],
     "rating": 3.6,
-    "numReviews": 460
+    "numReviews": 460,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Premium Grade"
+      },
+      {
+        "key": "Weight",
+        "value": "Varies"
+      },
+      {
+        "key": "Care",
+        "value": "Wipe with dry cloth"
+      }
+    ]
   },
   {
     "title": "ModernNest Gravity Electric Standing Desk",
@@ -717,7 +1489,23 @@
       "/products/modernnest-gravity-electric-standing-desk-wireless-charging.png"
     ],
     "rating": 4.7,
-    "numReviews": 447
+    "numReviews": 447,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Solid Wood / Metal"
+      },
+      {
+        "key": "Assembly Required",
+        "value": "Yes"
+      },
+      {
+        "key": "Dimensions",
+        "value": "Standard Size"
+      }
+    ]
   },
   {
     "title": "UrbanStyle Summit Peak Winter Parka",
@@ -732,7 +1520,23 @@
       "/products/urbanstyle-summit-peak-winter-parka-extreme-cold-test.png"
     ],
     "rating": 4.9,
-    "numReviews": 228
+    "numReviews": 228,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Premium Blend"
+      },
+      {
+        "key": "Fit",
+        "value": "Regular Fit"
+      },
+      {
+        "key": "Care",
+        "value": "Machine Washable"
+      }
+    ]
   },
   {
     "title": "SoftRest Siesta Woven Hammock Stand",
@@ -747,7 +1551,23 @@
       "/products/softrest-siesta-woven-hammock-stand-fabric-weave.png"
     ],
     "rating": 3.8,
-    "numReviews": 21
+    "numReviews": 21,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Solid Wood / Metal"
+      },
+      {
+        "key": "Assembly Required",
+        "value": "Yes"
+      },
+      {
+        "key": "Dimensions",
+        "value": "Standard Size"
+      }
+    ]
   },
   {
     "title": "NatureBest Slow Milled Ancient Flour",
@@ -762,7 +1582,23 @@
       "/products/naturebest-slow-milled-ancient-flour-baked-bread.png"
     ],
     "rating": 5,
-    "numReviews": 498
+    "numReviews": 498,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Shelf Life",
+        "value": "12 Months"
+      },
+      {
+        "key": "Organic",
+        "value": "Yes"
+      },
+      {
+        "key": "Storage",
+        "value": "Store in a cool, dry place"
+      }
+    ]
   },
   {
     "title": "Connect Sync Photon S 6G Smartphone",
@@ -777,7 +1613,27 @@
       "/products/connect-sync-photon-s-6g-smartphone-6g-connectivity.png"
     ],
     "rating": 3.7,
-    "numReviews": 135
+    "numReviews": 135,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Screen Size",
+        "value": "6.7 Inches"
+      },
+      {
+        "key": "RAM",
+        "value": "12 GB"
+      },
+      {
+        "key": "Storage",
+        "value": "256 GB"
+      },
+      {
+        "key": "Battery",
+        "value": "5000 mAh"
+      }
+    ]
   },
   {
     "title": "Vibe Zenith Core Max AI Phone",
@@ -792,7 +1648,27 @@
       "/products/vibe-zenith-core-max-ai-phone-professional-camera.png"
     ],
     "rating": 3.7,
-    "numReviews": 68
+    "numReviews": 68,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Screen Size",
+        "value": "6.7 Inches"
+      },
+      {
+        "key": "RAM",
+        "value": "12 GB"
+      },
+      {
+        "key": "Storage",
+        "value": "256 GB"
+      },
+      {
+        "key": "Battery",
+        "value": "5000 mAh"
+      }
+    ]
   },
   {
     "title": "Sonic Spectral RGB Mechanical Keyboard",
@@ -807,7 +1683,23 @@
       "/products/sonic-spectral-rgb-mechanical-keyboard-rgb-lighting-dark.png"
     ],
     "rating": 4.1,
-    "numReviews": 13
+    "numReviews": 13,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Warranty",
+        "value": "1 Year Manufacturer"
+      },
+      {
+        "key": "Connectivity",
+        "value": "Bluetooth 5.3, Wi-Fi 6"
+      },
+      {
+        "key": "Color",
+        "value": "Matte Black"
+      }
+    ]
   },
   {
     "title": "DenimCo Revive Eco-Friendly Tee",
@@ -822,6 +1714,22 @@
       "/products/denimco-revive-ecofriendly-tee-recycled-label.png"
     ],
     "rating": 5,
-    "numReviews": 84
+    "numReviews": 84,
+    "isFeatured": false,
+    "isActive": true,
+    "specifications": [
+      {
+        "key": "Material",
+        "value": "Premium Blend"
+      },
+      {
+        "key": "Fit",
+        "value": "Regular Fit"
+      },
+      {
+        "key": "Care",
+        "value": "Machine Washable"
+      }
+    ]
   }
 ]

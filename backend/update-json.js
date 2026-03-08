@@ -1,0 +1,1 @@
+const fs = require('fs'); const path = './data/products.json'; let data = require(path); data = data.map(p => ({ ...p, isFeatured: false, isActive: true, specifications: [] })); fs.writeFileSync(path, JSON.stringify(data, null, 2)); console.log('Successfully updated products.json');
