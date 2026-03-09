@@ -24,6 +24,7 @@ QuickCart is a modern, full-stack e-commerce application designed for a seamless
 - **Multer**: For handling image and file uploads.
 - **Jest & Supertest**: Robust testing suite for backend API.
 - **Express Rate Limit**: Distributed tiered rate-limiting powered by Redis.
+- **Razorpay**: Node.js SDK for secure payment integration (Test Mode).
 
 ## 📁 Directory Structure
 
@@ -138,6 +139,7 @@ The project comes with pre-configured data to get you started:
   - **Advanced Search**: High-performance **auto-complete** (suggestions) using `search_as_you_type` technology.
   - **Typo Tolerance**: Robust fuzzy matching that understands intent even with misspellings (e.g., "ipone" → "iPhone").
 - **Responsive Design**: Optimized for all devices, featuring a **single product per row** layout on small screens for better visibility.
+- **Dynamic Platform Fee Logic**: Automated fee waivers for small orders. The standard ₹20 platform fee is **automatically waived (₹0/FREE)** for orders where the product total is below ₹500.
 
 ## 🛡️ Tiered API Rate Limiting
 
@@ -152,6 +154,22 @@ Using Redis as the limit store ensures that rate execution counts persist across
 | **Order Limit** | `POST /api/orders` | 5 | 15 Minutes | Prevents order spamming and inventory manipulation. |
 
 *Note: Tiers are scoped. If a malicious user hits the 10-request Auth Limit, they are blocked from logging in but can still browse products (up to the 200 Global Limit).*
+
+## 💳 Razorpay Payment Integration
+
+QuickCart uses the **Razorpay** payment gateway in **Test Mode** to handle secure online transactions.
+
+### Payment Workflow
+
+1.  **Order Initialization**: When a user clicks "Place Order", a pending order is created in MongoDB.
+2.  **Razorpay Order**: The backend calls the Razorpay API to generate a unique `razorpay_order_id`.
+3.  **Checkout UI**: The frontend invokes the Razorpay SDK modal where the user completes the payment.
+4.  **Secure Verification**: Upon success, the frontend sending the `razorpay_signature` to the backend. The backend uses **HMAC SHA256** to verify the signature against the secret key before marking the order as `completed`.
+
+### Merchant Identity
+The checkout modal is branded with:
+- **Registered Name**: Razorpay Payments Private Limited
+- **Theme Color**: `#2563eb` (Blue)
 
 ## 📧 Email Verification & Password Reset
 
@@ -216,6 +234,7 @@ FRONTEND_URL=       # Frontend base URL for email links
 - **Products**: `/api/products` (listing, search, details, recommendations, suggestions)
 - **Cart**: `/api/cart` (add, remove, update)
 - **Orders**: `/api/orders` (checkout, tracking)
+- **Payment**: `/api/payment` (Razorpay order creation, signature verification)
 - **Coupons**: `/api/coupons` (creation, validation, management)
 - **Notifications**: `/api/notifications` (list, unread count, mark read)
 - **Logs**: `/api/logs` (system activity monitoring - Superadmin only)

@@ -28,6 +28,7 @@ graph TB
 
     subgraph External["☁️ External Services"]
         SMTP["SMTP Email Server"]
+        RAZORPAY["Razorpay API (Test Mode)"]
         CLOUDINARY["Cloudinary"]
         INSIGHT["RedisInsight :8005"]
     end
@@ -37,6 +38,7 @@ graph TB
     EXPRESS -- "Mongoose ODM" --> MONGO
     EXPRESS -- "Redis Client" --> REDIS
     EXPRESS -- "Nodemailer" --> SMTP
+    EXPRESS -- "Razorpay SDK" --> RAZORPAY
     EXPRESS -- "REST API" --> LOGSTASH
     LOGSTASH -- "Indexing" --> ELASTIC
     ELASTIC -- "Visualize" --> KIBANA
@@ -71,6 +73,7 @@ graph LR
         R9["/api/logs"]
         R10["/api/coupons"]
         R11["/api/notifications"]
+        R12["/api/payment"]
     end
 
     subgraph Controllers["Controller Layer"]
@@ -85,6 +88,7 @@ graph LR
         C9["logController"]
         C10["couponController"]
         C11["notificationController"]
+        C12["paymentController"]
     end
 
     subgraph Models["Model Layer (Mongoose)"]
@@ -110,6 +114,7 @@ graph LR
         Kibana["Kibana (Visualization)"]
         Mailtrap["Mailtrap (SMTP)"]
         Cloudinary["Cloudinary (Images)"]
+        Razorpay["Razorpay (Payments)"]
     end
 
     R1 --> C1
@@ -135,6 +140,8 @@ graph LR
     C9 --> M7
     C10 --> M6
     C11 --> M8
+    C12 --> M3
+    C12 --> Razorpay
 ```
 
 ---
@@ -590,4 +597,40 @@ flowchart TD
     G --> I
     H --> I
     I --> J([Job Finishes])
+```
+
+---
+
+## 13. Razorpay Payment Workflow
+
+```mermaid
+sequenceDiagram
+    participant User as 👤 User (Browser)
+    participant SDK as 🛡️ Razorpay SDK
+    participant FE as 🖥️ Frontend (React)
+    participant BE as ⚙️ Backend (Node/Express)
+    participant RP as 💳 Razorpay API
+
+    User->>FE: Click "Confirm & Place Order"
+    FE->>BE: POST /api/orders (Create Order)
+    BE->>BE: Validation & Stock Check
+    BE-->>FE: Return Order Doc (status: pending)
+    
+    FE->>BE: POST /api/payment/order (SmallPaise Amt)
+    BE->>RP: instance.orders.create(options)
+    RP-->>BE: Return razorpay_order_id
+    BE-->>FE: Return Payment Order JSON
+    
+    FE->>SDK: window.Razorpay(options).open()
+    SDK->>User: Show Checkout Modal
+    User->>SDK: Enter OTP / Payment Details
+    SDK->>RP: Authorize Transaction
+    RP-->>SDK: Success Response (Signatures)
+    SDK-->>FE: handler(response) callback
+    
+    FE->>BE: POST /api/payment/verify (Signatures + orderId)
+    BE->>BE: crypto.createHmac("sha256").verify()
+    BE->>BE: Update local Order (paymentStatus: completed)
+    BE-->>FE: Verification Success
+    FE->>User: Redirect to Success / Orders Page
 ```
