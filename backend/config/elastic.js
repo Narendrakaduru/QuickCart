@@ -2,6 +2,10 @@ const { Client } = require('@elastic/elasticsearch');
 
 const elasticClient = new Client({
   node: process.env.ELASTIC_URL || 'http://localhost:9200',
+  headers: {
+    'Accept': 'application/vnd.elasticsearch+json; compatible-with=8',
+    'Content-Type': 'application/vnd.elasticsearch+json; compatible-with=8'
+  }
 });
 
 const connectElastic = async () => {

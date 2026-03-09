@@ -27,6 +27,44 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
+// Fetch Suggestions (Auto-complete)
+export const fetchSuggestions = createAsyncThunk(
+  'products/fetchSuggestions',
+  async (keyword, thunkAPI) => {
+    try {
+      const response = await axios.get(`${API_URL}/suggestions?keyword=${keyword}`);
+      return response.data.data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.error) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Fetch Recommendations (Trending by Category)
+export const fetchRecommendations = createAsyncThunk(
+  'products/fetchRecommendations',
+  async (_, thunkAPI) => {
+    try {
+      const response = await axios.get(`${API_URL}/recommendations`);
+      return response.data.data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.error) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const fetchProductDetails = createAsyncThunk(
   'products/fetchProductDetails',
   async (id, thunkAPI) => {
@@ -151,9 +189,12 @@ export const createProductReview = createAsyncThunk(
 const initialState = {
   products: [],
   productDetails: null,
+  suggestions: [],
+  recommendations: [],
   isError: false,
   isSuccess: false,
   isLoading: false,
+  recommendationsLoading: false,
   message: '',
 };
 
@@ -256,6 +297,21 @@ export const productSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      // Fetch Suggestions
+      .addCase(fetchSuggestions.fulfilled, (state, action) => {
+        state.suggestions = action.payload;
+      })
+      // Fetch Recommendations
+      .addCase(fetchRecommendations.pending, (state) => {
+        state.recommendationsLoading = true;
+      })
+      .addCase(fetchRecommendations.fulfilled, (state, action) => {
+        state.recommendationsLoading = false;
+        state.recommendations = action.payload;
+      })
+      .addCase(fetchRecommendations.rejected, (state) => {
+        state.recommendationsLoading = false;
       });
   },
 });

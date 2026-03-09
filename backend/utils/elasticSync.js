@@ -22,12 +22,22 @@ const syncProductsToElastic = async () => {
       body: {
         mappings: {
           properties: {
-            title: { type: 'text' },
+            title: {
+              type: 'text',
+              fields: {
+                suggest: {
+                  type: 'search_as_you_type'
+                }
+              }
+            },
             description: { type: 'text' },
             category: { type: 'keyword' },
             brand: { type: 'keyword' },
             price: { type: 'float' },
-            isFeatured: { type: 'boolean' }
+            isFeatured: { type: 'boolean' },
+            rating: { type: 'float' },
+            numReviews: { type: 'integer' },
+            discountPercentage: { type: 'float' }
           }
         }
       }
@@ -48,7 +58,11 @@ const syncProductsToElastic = async () => {
         category: doc.category,
         brand: doc.brand,
         price: doc.price,
-        isFeatured: doc.isFeatured
+        isFeatured: doc.isFeatured,
+        images: doc.images,
+        rating: doc.rating,
+        numReviews: doc.numReviews,
+        discountPercentage: doc.discountPercentage
       }
     ]);
 
@@ -61,7 +75,7 @@ const syncProductsToElastic = async () => {
     }
 
   } catch (error) {
-    console.error(`Elasticsearch Sync Error: ${error.message}`);
+    console.error('Elasticsearch Sync Error:', error);
   }
 };
 

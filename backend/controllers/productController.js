@@ -20,17 +20,17 @@ const clearProductCache = async (id = null) => {
 
 // Helper to sync single product to Elastic
 const syncToElastic = async (product, deleted = false) => {
-  if (process.env.NODE_ENV === 'test') return;
+  if (process.env.NODE_ENV === "test") return;
   try {
     if (deleted) {
       await elasticClient.delete({
-        index: 'products',
+        index: "products",
         id: product._id.toString(),
-        refresh: true
+        refresh: true,
       });
     } else {
       await elasticClient.index({
-        index: 'products',
+        index: "products",
         id: product._id.toString(),
         document: {
           title: product.title,
@@ -38,9 +38,13 @@ const syncToElastic = async (product, deleted = false) => {
           category: product.category,
           brand: product.brand,
           price: product.price,
-          isFeatured: product.isFeatured
+          isFeatured: product.isFeatured,
+          images: product.images,
+          rating: product.rating,
+          numReviews: product.numReviews,
+          discountPercentage: product.discountPercentage,
         },
-        refresh: true
+        refresh: true,
       });
     }
   } catch (err) {
@@ -57,7 +61,7 @@ exports.getProducts = async (req, res, next) => {
       const cacheKey = `products:${req.originalUrl}`;
       const cachedProducts = await redisClient.get(cacheKey);
       if (cachedProducts) {
-        if (req.logMeta) req.logMeta.search_engine = 'redis';
+        if (req.logMeta) req.logMeta.search_engine = "redis";
         return res.status(200).json(JSON.parse(cachedProducts));
       }
     }
@@ -86,25 +90,29 @@ exports.getProducts = async (req, res, next) => {
     if (req.query.keyword) {
       try {
         const result = await elasticClient.search({
-          index: 'products',
+          index: "products",
           body: {
             query: {
               multi_match: {
                 query: req.query.keyword,
-                fields: ['title^3', 'description', 'category', 'brand'],
-                fuzziness: 'AUTO'
-              }
-            }
-          }
+                fields: ["title^3", "description", "category", "brand"],
+                fuzziness: "AUTO:3,6",
+                prefix_length: 0,
+              },
+            },
+          },
         });
 
-        const ids = result.hits.hits.map(hit => hit._id);
+        const ids = result.hits.hits.map((hit) => hit._id);
         mongoQuery._id = { $in: ids };
-        if (req.logMeta) req.logMeta.search_engine = 'elasticsearch';
+        if (req.logMeta) req.logMeta.search_engine = "elasticsearch";
       } catch (err) {
-        console.error("Elasticsearch search error, falling back to basic regex:", err.message);
+        console.error(
+          "Elasticsearch search error, falling back to basic regex:",
+          err.message,
+        );
         // Fallback to basic regex if ES is down
-        mongoQuery.title = { $regex: req.query.keyword, $options: 'i' };
+        mongoQuery.title = { $regex: req.query.keyword, $options: "i" };
       }
     }
 
@@ -138,7 +146,7 @@ exports.getProducts = async (req, res, next) => {
     const products = await query.populate("user", "name email");
 
     if (req.logMeta && !req.logMeta.search_engine) {
-      req.logMeta.search_engine = 'mongodb';
+      req.logMeta.search_engine = "mongodb";
     }
 
     // Pagination result
@@ -181,7 +189,7 @@ exports.getProduct = async (req, res, next) => {
       const cacheKey = `product:${req.params.id}`;
       const cachedProduct = await redisClient.get(cacheKey);
       if (cachedProduct) {
-        if (req.logMeta) req.logMeta.search_engine = 'redis';
+        if (req.logMeta) req.logMeta.search_engine = "redis";
         return res.status(200).json(JSON.parse(cachedProduct));
       }
     }
@@ -191,7 +199,7 @@ exports.getProduct = async (req, res, next) => {
       "name email",
     );
 
-    if (req.logMeta) req.logMeta.search_engine = 'mongodb';
+    if (req.logMeta) req.logMeta.search_engine = "mongodb";
 
     if (!product) {
       return res
@@ -330,5 +338,121 @@ exports.createProductReview = async (req, res, next) => {
     res
       .status(500)
       .json({ success: false, error: "Server Error: Review failed" });
+  }
+};
+
+// @desc    Get search suggestions (Auto-complete)
+// @route   GET /api/products/suggestions
+// @access  Public
+exports.getSearchSuggestions = async (req, res, next) => {
+  try {
+    const { keyword } = req.query;
+    if (!keyword) {
+      return res.status(200).json({ success: true, data: [] });
+    }
+
+    const result = await elasticClient.search({
+      index: "products",
+      body: {
+        query: {
+          bool: {
+            should: [
+              {
+                multi_match: {
+                  query: keyword,
+                  type: "bool_prefix",
+                  fields: [
+                    "title.suggest",
+                    "title.suggest._2gram",
+                    "title.suggest._3gram",
+                  ],
+                  boost: 2,
+                },
+              },
+              {
+                multi_match: {
+                  query: keyword,
+                  fields: ["title^3", "category", "brand"],
+                  fuzziness: "AUTO:3,6",
+                  prefix_length: 0,
+                },
+              },
+            ],
+          },
+        },
+      },
+    });
+
+    const suggestions = result.hits.hits.map((hit) => ({
+      _id: hit._id,
+      title: hit._source.title,
+      category: hit._source.category,
+    }));
+
+    if (req.logMeta) req.logMeta.search_engine = "elasticsearch";
+
+    res.status(200).json({ success: true, data: suggestions });
+  } catch (error) {
+    console.error(`Suggestions Error: ${error.message}`);
+    res.status(500).json({ success: false, error: "Suggestions failed" });
+  }
+};
+
+// @desc    Get product recommendations
+// @route   GET /api/products/recommendations
+// @access  Public
+exports.getRecommendations = async (req, res, next) => {
+  try {
+    const result = await elasticClient.search({
+      index: "products",
+      body: {
+        size: 0,
+        aggs: {
+          trending_categories: {
+            terms: {
+              field: "category",
+              size: 5,
+            },
+            aggs: {
+              top_products: {
+                top_hits: {
+                  size: 4,
+                  _source: {
+                    includes: [
+                      "title",
+                      "price",
+                      "images",
+                      "category",
+                      "brand",
+                      "isFeatured",
+                      "rating",
+                      "numReviews",
+                      "discountPercentage",
+                    ],
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const recommendations = result.aggregations.trending_categories.buckets.map(
+      (bucket) => ({
+        category: bucket.key,
+        products: bucket.top_products.hits.hits.map((hit) => ({
+          _id: hit._id,
+          ...hit._source,
+        })),
+      }),
+    );
+
+    if (req.logMeta) req.logMeta.search_engine = "elasticsearch";
+
+    res.status(200).json({ success: true, data: recommendations });
+  } catch (error) {
+    console.error(`Recommendations Error: ${error.message}`);
+    res.status(500).json({ success: false, error: "Recommendations failed" });
   }
 };

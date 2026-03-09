@@ -16,25 +16,50 @@ import { logout } from "../slices/authSlice";
 import { clearCart } from "../slices/cartSlice";
 import { clearWishlist } from "../slices/wishlistSlice";
 import { clearNotifications } from "../slices/notificationSlice";
+import { fetchSuggestions } from "../slices/productSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const { cart } = useSelector((state) => state.cart);
+  const { suggestions } = useSelector((state) => state.products);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileRef = useRef(null);
+  const searchRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
         setShowProfileMenu(false);
       }
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowSuggestions(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const searchTimeoutRef = useRef(null);
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+
+    if (value.trim().length > 1) {
+      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+      
+      searchTimeoutRef.current = setTimeout(() => {
+        dispatch(fetchSuggestions(value.trim()));
+        setShowSuggestions(true);
+      }, 300);
+    } else {
+      setShowSuggestions(false);
+    }
+  };
 
   const onLogout = () => {
     dispatch(logout());
@@ -45,11 +70,18 @@ const Navbar = () => {
   };
 
   const handleSearch = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery("");
+      setShowSuggestions(false);
     }
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setSearchQuery("");
+    setShowSuggestions(false);
+    navigate(`/product/${suggestion._id}`);
   };
 
   const cartItemsCount =
@@ -69,24 +101,55 @@ const Navbar = () => {
         </Link>
 
         {/* Search Bar */}
-        <form
-          onSubmit={handleSearch}
-          className="hidden md:flex flex-1 relative max-w-2xl group"
-        >
-          <input
-            type="text"
-            placeholder="Search for products, brands and more..."
-            className="w-full py-2.5 px-6 pr-12 rounded-lg text-gray-800 bg-white border-2 border-transparent focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-400/20 shadow-sm placeholder:text-gray-400 text-sm font-medium transition-all duration-300"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <button
-            type="submit"
-            className="absolute right-0 top-0 h-full px-5 text-gray-400 hover:text-blue-400 transition-colors"
+        <div className="hidden md:flex flex-1 relative max-w-2xl group" ref={searchRef}>
+          <form
+            onSubmit={handleSearch}
+            className="w-full relative"
           >
-            <Search size={18} className="stroke-[3]" />
-          </button>
-        </form>
+            <input
+              type="text"
+              placeholder="Search for products, brands and more..."
+              className="w-full py-2.5 px-6 pr-12 rounded-lg text-gray-800 bg-white border-2 border-transparent focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-400/20 shadow-sm placeholder:text-gray-400 text-sm font-medium transition-all duration-300"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              onFocus={() => searchQuery.trim().length > 1 && setShowSuggestions(true)}
+            />
+            <button
+              type="submit"
+              className="absolute right-0 top-0 h-full px-5 text-gray-400 hover:text-blue-400 transition-colors"
+            >
+              <Search size={18} className="stroke-[3]" />
+            </button>
+          </form>
+
+          {/* Autocomplete Suggestions Dropdown */}
+          {showSuggestions && suggestions && suggestions.length > 0 && (
+            <div className="absolute top-full left-0 w-full mt-2 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="p-2">
+                <p className="px-4 py-2 text-[10px] text-gray-400 font-bold uppercase tracking-widest border-b border-gray-50 mb-1">
+                  Suggestions
+                </p>
+                {suggestions.map((suggestion) => (
+                  <button
+                    key={suggestion._id}
+                    onClick={() => handleSuggestionClick(suggestion)}
+                    className="w-full flex items-center px-4 py-3 hover:bg-blue-50 transition-colors text-left group"
+                  >
+                    <Search size={14} className="mr-3 text-gray-400 group-hover:text-blue-500" />
+                    <div>
+                      <p className="text-sm font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                        {suggestion.title}
+                      </p>
+                      <p className="text-[10px] text-gray-500 font-medium">
+                        in <span className="text-blue-400/80">{suggestion.category}</span>
+                      </p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* User Actions */}
         <div className="flex items-center space-x-4 md:space-x-8">
