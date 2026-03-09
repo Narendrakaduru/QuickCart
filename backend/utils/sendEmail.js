@@ -31,8 +31,8 @@ const sendEmail = async (options) => {
     console.log('Message:', options.message);
     console.log('---------------------');
     
-    // If we are in development, don't throw error
-    if (process.env.NODE_ENV === 'development') {
+    // If we are in development or test, don't throw error
+    if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
       return { msg: 'Email logged to console' };
     }
     throw error;
