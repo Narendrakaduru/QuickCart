@@ -16,6 +16,7 @@ QuickCart is a modern, full-stack e-commerce application designed for a seamless
 
 - **Node.js & Express**: Scalable server-side environment and web framework.
 - **MongoDB & Mongoose**: NoSQL database and ODM for flexible data modeling.
+- **Redis (Redis Stack)**: In-memory datastore acting as a high-performance query cache.
 - **JWT (JSON Web Tokens)**: Secure authentication and role-based access control.
 - **Multer**: For handling image and file uploads.
 - **Jest & Supertest**: Robust testing suite for backend API.
@@ -57,6 +58,7 @@ The project is fully dockerized for easy setup.
    - **Frontend**: [http://localhost:3000](http://localhost:3000)
    - **Backend API**: [http://localhost:5001](http://localhost:5001)
    - **MongoDB**: [mongodb://localhost:27027](mongodb://localhost:27027)
+   - **RedisInsight**: [http://localhost:8005](http://localhost:8005)
 
 ### 📊 Seeding the Database
 
@@ -93,7 +95,7 @@ The project comes with pre-configured data to get you started:
 - **Role-Based Access**: Specialized dashboards for Admins, and Superadmins.
 - **System Activity Monitoring**: Advanced log viewer for **Superadmins** to track system actions, errors, and logins with detailed metadata (IP, Method, Path).
 - **Enhanced Admin Controls**: **Dynamic sorting** and searching across all administrative tables (Products, Orders, Users, Logs).
-- **Product Management**: Complete CRUD for products with image upload support and interactive carousels.
+- **Product Management & Caching**: Complete CRUD for products with image upload support and interactive carousels. Product catalog queries are heavily accelerated via **Redis Caching**, complete with automatic cache invalidation on edits.
 - **Coupon Management & Logic**:
   - Admins can create/edit/delete coupons via the dashboard.
   - Supports **Percentage** (%) and **Fixed** (₹) discounts.
