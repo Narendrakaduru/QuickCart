@@ -17,6 +17,9 @@ QuickCart is a modern, full-stack e-commerce application designed for a seamless
 - **Node.js & Express**: Scalable server-side environment and web framework.
 - **MongoDB & Mongoose**: NoSQL database and ODM for flexible data modeling.
 - **Redis (Redis Stack)**: In-memory datastore acting as a high-performance query cache.
+- **Elasticsearch**: Powerful search engine for product search and reviews.
+- **Logstash**: Centralized data processing pipeline with robust **hybrid JSON parsing** and performance tracking.
+- **Kibana**: Advanced data visualization dashboard for system metrics and log analysis.
 - **JWT (JSON Web Tokens)**: Secure authentication and role-based access control.
 - **Multer**: For handling image and file uploads.
 - **Jest & Supertest**: Robust testing suite for backend API.
@@ -58,7 +61,10 @@ The project is fully dockerized for easy setup.
    - **Frontend**: [http://localhost:3000](http://localhost:3000)
    - **Backend API**: [http://localhost:5001](http://localhost:5001)
    - **MongoDB**: [mongodb://localhost:27027](mongodb://localhost:27027)
-   - **RedisInsight**: [http://localhost:8005](http://localhost:8005)
+   - **Cache**: Redis Stack (RedisInsight at [http://localhost:8005](http://localhost:8005))
+   - **Search**: Elasticsearch 8.10
+   - **Logging**: Centralized Logstash pipeline with **hybrid JSON parsing**, **search attribution**, and **performance metrics**.
+   - **Visualization**: Kibana (at [http://localhost:5601](http://localhost:5601)) for real-time log analysis and dashboarding.
 
 ### 📊 Seeding the Database
 
@@ -93,7 +99,8 @@ The project comes with pre-configured data to get you started:
 
 - **User Authentication**: Secure Login/Register with JWT, **password visibility toggles**, **email verification**, and **forgot/reset password** flows.
 - **Role-Based Access**: Specialized dashboards for Admins, and Superadmins.
-- **System Activity Monitoring**: Advanced log viewer for **Superadmins** to track system actions, errors, and logins with detailed metadata (IP, Method, Path).
+- **System Activity Monitoring**: Advanced log viewer for **Superadmins** with centralized logging via **ELK Stack**. Includes detailed metadata (IP, Method, Path) and **search engine attribution** (logs identify if a query was handled by Redis, ES, or MongoDB).
+- **Performance Tracking**: All API logs include **real-time response durations** and **HTTP status codes**, enabling precise monitoring and bottleneck identification via Kibana dashboards.
 - **Enhanced Admin Controls**: **Dynamic sorting** and searching across all administrative tables (Products, Orders, Users, Logs).
 - **Product Management & Caching**: Complete CRUD for products with image upload support and interactive carousels. Product catalog queries are heavily accelerated via **Redis Caching**, complete with automatic cache invalidation on edits.
 - **Coupon Management & Logic**:

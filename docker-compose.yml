@@ -15,11 +15,17 @@ services:
       - PORT=5001
       - MONGO_URI=mongodb://mongodb:27017/quickcart
       - REDIS_URI=redis://redis:6379
+      - ELASTIC_URL=http://elasticsearch:9200
       - JWT_SECRET=quickcart_super_secret_key_123
       - JWT_EXPIRE=30d
     depends_on:
       - mongodb
       - redis
+      - elasticsearch
+      - logstash
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
 
   redis:
     image: redis/redis-stack:latest
@@ -29,10 +35,46 @@ services:
     volumes:
       - ./redis_data:/data
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - ./elastic_data:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.10.2
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=v3ry_s3cur3_3ncrypt10n_k3y_qckcrt
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.10.2
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+    ports:
+      - "5044:5044"
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "9600:9600"
+    depends_on:
+      - elasticsearch
+
   frontend:
     build: ./frontend
     ports:
       - "3000:80"
     depends_on:
       - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
 
