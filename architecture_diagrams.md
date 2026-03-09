@@ -20,6 +20,9 @@ graph TB
         subgraph DB["MongoDB Container :27027"]
             MONGO[("MongoDB")]
         end
+        subgraph Cache["Redis Container :6379, :8005"]
+            REDIS[("Redis Stack")]
+        end
     end
 
     subgraph External["☁️ External Services"]
@@ -29,6 +32,7 @@ graph TB
     REACT -- "HTTP Requests" --> NGINX
     NGINX -- "Reverse Proxy" --> EXPRESS
     EXPRESS -- "Mongoose ODM" --> MONGO
+    EXPRESS -- "Redis Client" --> REDIS
     EXPRESS -- "Nodemailer" --> SMTP
     MONGO -- "Persisted Volume" --> DISK[("mongo_data/")]
 ```
@@ -474,19 +478,27 @@ graph TB
         subgraph DB["mongodb"]
             MONGOD["mongod :27017"]
         end
+
+        subgraph Cache["redis"]
+            REDIS_STACK["redis-stack :6379"]
+        end
     end
 
     DC --> FE
     DC --> BE
     DC --> DB
+    DC --> Cache
 
     NGINX -- "proxy_pass /api" --> NODE
     NODE -- "mongoose connect" --> MONGOD
+    NODE -- "redis connect" --> REDIS_STACK
 
     FE -- "Port 3000" --> EXT_FE["localhost:3000"]
     BE -- "Port 5001" --> EXT_BE["localhost:5001"]
     DB -- "Port 27027" --> EXT_DB["localhost:27027"]
+    Cache -- "Port 8005" --> EXT_RI["localhost:8005 (RedisInsight)"]
     MONGOD -- "Volume" --> PERSIST[("./mongo_data")]
+    REDIS_STACK -- "Volume" --> REDIS_P[("./redis_data")]
 ```
 
 ---
