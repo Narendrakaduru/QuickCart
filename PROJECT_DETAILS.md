@@ -23,24 +23,36 @@ QuickCart is a modern, full-stack e-commerce application designed for a seamless
 - **JWT (JSON Web Tokens)**: Secure authentication and role-based access control.
 - **Multer**: For handling image and file uploads.
 - **Jest & Supertest**: Robust testing suite for backend API.
+- **Express Rate Limit**: Distributed tiered rate-limiting powered by Redis.
 
 ## 📁 Directory Structure
 
 ```
 QuickCart/
 ├── backend/                # Express API & MongoDB Models
-│   ├── ...
+│   ├── config/             # DB, Redis, Elastic configurations
+│   ├── controllers/        # Route logic & processing
+│   ├── cronJobs/           # Scheduled tasks (abandoned carts)
+│   ├── middleware/         # Auth, Role, Logger, Rate Limiting
+│   ├── models/             # Mongoose schemas
+│   ├── routes/             # API endpoint definitions
 │   └── uploads/            # Local storage for product images
 ├── frontend/               # React (Vite) Application
-│   ├── ...
-│   └── src/
-├── mongo_data/             # [LOCAL] Persisted MongoDB data files
+│   ├── src/
+│   │   ├── components/     # Reusable UI elements
+│   │   ├── pages/          # Views (Home, Admin, Checkout)
+│   │   └── slices/         # Redux state management
+├── logstash/               # Logstash pipeline configuration
+├── mongodb_data/           # [LOCAL] Persisted MongoDB data files
+├── redis_data/             # [LOCAL] Persisted Redis cache files
+├── elastic_data/           # [LOCAL] Persisted Elasticsearch indices
 ├── docker-compose.yml      # Orchestration for the entire stack
+├── architecture_diagrams.md# Detailed system flowcharts
 └── PROJECT_DETAILS.md      # This documentation file
 ```
 
 > [!NOTE]
-> The `mongo_data/` directory is created automatically when the database service runs. It ensures your data persists even if the containers are stopped or removed.
+> The `mongo_data/`, `redis_data/`, and `elastic_data/` directories are created automatically when the services run. They ensure your data persists even if the containers are stopped or removed.
 
 ## 🐳 Docker Setup
 
@@ -100,6 +112,7 @@ The project comes with pre-configured data to get you started:
 - **User Authentication**: Secure Login/Register with JWT, **password visibility toggles**, **email verification**, and **forgot/reset password** flows.
 - **Role-Based Access**: Specialized dashboards for Admins, and Superadmins.
 - **System Activity Monitoring**: Advanced log viewer for **Superadmins** with centralized logging via **ELK Stack**. Includes detailed metadata (IP, Method, Path) and **search engine attribution** (logs identify if a query was handled by Redis, ES, or MongoDB).
+- **API Security & Rate Limiting**: Distributed, Redis-backed rate limiters to deter brute-force attacks and bot spam, featuring decoupled tiers for global traffic, authentication, and order creation.
 - **Performance Tracking**: All API logs include **real-time response durations** and **HTTP status codes**, enabling precise monitoring and bottleneck identification via Kibana dashboards.
 - **Enhanced Admin Controls**: **Dynamic sorting** and searching across all administrative tables (Products, Orders, Users, Logs).
 - **Product Management & Caching**: Complete CRUD for products with image upload support and interactive carousels. Product catalog queries are heavily accelerated via **Redis Caching**, complete with automatic cache invalidation on edits.
@@ -125,6 +138,20 @@ The project comes with pre-configured data to get you started:
   - **Advanced Search**: High-performance **auto-complete** (suggestions) using `search_as_you_type` technology.
   - **Typo Tolerance**: Robust fuzzy matching that understands intent even with misspellings (e.g., "ipone" → "iPhone").
 - **Responsive Design**: Optimized for all devices, featuring a **single product per row** layout on small screens for better visibility.
+
+## 🛡️ Tiered API Rate Limiting
+
+To protect the application from brute-force attacks, credential stuffing, and bot spam, QuickCart implements a distributed rate-limiting system using `express-rate-limit` backed by **Redis**.
+
+Using Redis as the limit store ensures that rate execution counts persist across server restarts and are synchronized across multiple application instances.
+
+| Protection Tier | Target Endpoints | Allowed Requests | Time Window | Purpose |
+|---|---|---|---|---|
+| **Global Limit** | `ALL /api/*` | 200 | 15 Minutes | Prevents overall API scraping and DDoS attempts while allowing normal user activity. |
+| **Auth Limit** | `POST /api/auth/login`<br>`POST /api/auth/register` | 10 | 15 Minutes | Hard stops brute-force password guessing and bot account creation. |
+| **Order Limit** | `POST /api/orders` | 5 | 15 Minutes | Prevents order spamming and inventory manipulation. |
+
+*Note: Tiers are scoped. If a malicious user hits the 10-request Auth Limit, they are blocked from logging in but can still browse products (up to the 200 Global Limit).*
 
 ## 📧 Email Verification & Password Reset
 

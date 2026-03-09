@@ -11,11 +11,12 @@ const {
 } = require("../controllers/orderController");
 const { protect, authorize } = require("../middleware/auth");
 const { logAction } = require("../middleware/logger");
+const { orderLimiter } = require("../middleware/rateLimit");
 
 router
   .route("/")
   .get(protect, authorize("admin", "superadmin"), getAllOrders)
-  .post(protect, logAction("ORDER_CREATED", "New order placed"), addOrderItems);
+  .post(protect, orderLimiter, logAction("ORDER_CREATED", "New order placed"), addOrderItems);
 
 router.route("/myorders").get(protect, getMyOrders);
 
