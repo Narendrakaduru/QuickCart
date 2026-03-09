@@ -36,6 +36,10 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 
+// Rate Limiting
+const { globalLimiter, authLimiter, orderLimiter } = require('./middleware/rateLimit');
+app.use('/api', globalLimiter);
+
 // Logstash Request Logging Middleware
 app.use((req, res, next) => {
   const start = Date.now();

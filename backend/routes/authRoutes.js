@@ -12,9 +12,10 @@ const { logAction } = require('../middleware/logger');
 const { protect } = require('../middleware/auth');
 
 const router = express.Router();
+const { authLimiter } = require('../middleware/rateLimit');
 
-router.post('/register', logAction('USER_REGISTERED', 'New user registered'), register);
-router.post('/login', logAction('USER_LOGIN', 'User logged in'), login);
+router.post('/register', authLimiter, logAction('USER_REGISTERED', 'New user registered'), register);
+router.post('/login', authLimiter, logAction('USER_LOGIN', 'User logged in'), login);
 router.get('/logout', protect, logAction('USER_LOGOUT', 'User logged out'), logout);
 router.get('/me', protect, getMe);
 router.get('/verifyemail/:token', verifyEmail);

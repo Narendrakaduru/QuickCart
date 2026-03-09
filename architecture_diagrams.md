@@ -53,6 +53,7 @@ graph LR
         JSON["express.json()"]
         COOKIE["cookieParser()"]
         CORS["cors()"]
+        RATE["rateLimit()"]
         AUTH["protect()"]
         ROLE["authorize()"]
         LOGGER["logger()"]
@@ -449,6 +450,7 @@ flowchart TD
 sequenceDiagram
     participant Browser
     participant Express
+    participant RateLimiter
     participant AuthMiddleware
     participant Logger
     participant Controller
@@ -457,6 +459,8 @@ sequenceDiagram
 
     Browser->>Express: HTTP Request + JWT
     Express->>Express: Parse JSON & Cookies (built-in middleware)
+    Express->>RateLimiter: Check Tiered Limits (Redis)
+    RateLimiter-->>Express: Accept (If within limits)
     Express->>AuthMiddleware: protect()
     AuthMiddleware->>AuthMiddleware: Verify JWT
     AuthMiddleware->>Mongoose: User.findById(decoded.id)
