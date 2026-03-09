@@ -456,3 +456,6 @@ exports.getRecommendations = async (req, res, next) => {
     res.status(500).json({ success: false, error: "Recommendations failed" });
   }
 };
+
+exports.clearProductCache = clearProductCache;
+exports.syncToElastic = syncToElastic;

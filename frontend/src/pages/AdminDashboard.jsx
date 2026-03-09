@@ -274,6 +274,14 @@ const AdminDashboard = () => {
     setIsConfirmOpen(false);
   };
 
+  // Handle Order Status Update — re-fetches products to reflect updated stock on delivery
+  const handleOrderStatusUpdate = async (orderId, newStatus) => {
+    await dispatch(updateOrderStatus({ id: orderId, status: newStatus }));
+    if (newStatus === "delivered") {
+      dispatch(fetchProducts({}));
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -711,12 +719,7 @@ const AdminDashboard = () => {
                           <select
                             value={order.orderStatus || "ordered"}
                             onChange={(e) =>
-                              dispatch(
-                                updateOrderStatus({
-                                  id: order._id,
-                                  status: e.target.value,
-                                }),
-                              )
+                              handleOrderStatusUpdate(order._id, e.target.value)
                             }
                             className="bg-gray-50 border border-gray-200 rounded text-[10px] font-bold p-1 focus:border-blue-500 outline-none cursor-pointer"
                           >

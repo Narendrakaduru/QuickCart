@@ -37,7 +37,8 @@ const syncProductsToElastic = async () => {
             isFeatured: { type: 'boolean' },
             rating: { type: 'float' },
             numReviews: { type: 'integer' },
-            discountPercentage: { type: 'float' }
+            discountPercentage: { type: 'float' },
+            stockCount: { type: 'integer' }
           }
         }
       }
@@ -62,7 +63,8 @@ const syncProductsToElastic = async () => {
         images: doc.images,
         rating: doc.rating,
         numReviews: doc.numReviews,
-        discountPercentage: doc.discountPercentage
+        discountPercentage: doc.discountPercentage,
+        stockCount: doc.stockCount
       }
     ]);
 

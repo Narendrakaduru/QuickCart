@@ -2,6 +2,8 @@ const Order = require("../models/Order");
 const Cart = require("../models/Cart");
 const Coupon = require("../models/Coupon");
 const Notification = require("../models/Notification");
+const Product = require("../models/Product");
+const { clearProductCache } = require("./productController");
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -24,6 +26,14 @@ exports.addOrderItems = async (req, res) => {
     });
 
     const createdOrder = await order.save();
+
+    // Decrement stock for each ordered item
+    for (const item of items) {
+      await Product.findByIdAndUpdate(item.product, {
+        $inc: { stockCount: -item.quantity },
+      });
+      await clearProductCache(item.product.toString());
+    }
 
     // If coupon was used, increment usedCount
     if (couponCode) {
@@ -157,6 +167,8 @@ exports.updateOrderStatus = async (req, res) => {
       });
     }
 
+    // Stock decrement now happens at order placement, not delivery
+
     order.orderStatus = req.body.status;
     order.updatedAt = Date.now();
 
@@ -266,6 +278,14 @@ exports.cancelOrder = async (req, res) => {
     order.updatedAt = Date.now();
 
     await order.save();
+
+    // Restore stock since the order was cancelled
+    for (const item of order.items) {
+      await Product.findByIdAndUpdate(item.product, {
+        $inc: { stockCount: item.quantity },
+      });
+      await clearProductCache(item.product.toString());
+    }
 
     // Notify user of cancellation
     Notification.create({
