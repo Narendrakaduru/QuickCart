@@ -22,14 +22,10 @@ const CartSchema = new mongoose.Schema({
     unique: true
   },
   items: [CartItemSchema],
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
+  abandonedEmailSent: {
+    type: Boolean,
+    default: false
   }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Cart', CartSchema);

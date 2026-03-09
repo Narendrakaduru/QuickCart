@@ -11,6 +11,10 @@ dotenv.config({ path: path.join(__dirname, ".env") });
 // Connect to database
 connectDB();
 
+// Initialize Cron Jobs
+const abandonedCartJob = require("./cronJobs/abandonedCartJob");
+abandonedCartJob();
+
 const app = express();
 
 // Middleware

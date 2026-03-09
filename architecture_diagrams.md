@@ -188,6 +188,7 @@ erDiagram
         ObjectId _id PK
         ObjectId user FK
         json[] items
+        boolean abandonedEmailSent
         date createdAt
         date updatedAt
     }
@@ -233,7 +234,7 @@ erDiagram
     NOTIFICATION {
         ObjectId _id PK
         ObjectId user FK
-        enum type "order_placed | order_status | order_payment | order_cancelled"
+        enum type "order_placed | order_status | order_payment | order_cancelled | abandoned_cart"
         string title
         string message
         ObjectId orderId FK
@@ -527,4 +528,25 @@ graph LR
     STORE --> LOG["log: { logs, loading }"]
     STORE --> ADDR["address: { addresses, loading }"]
     STORE --> NOTIF["notifications: { notifications, unreadCount, loading }"]
+```
+
+---
+
+## 12. Abandoned Cart Tracking Flow
+
+```mermaid
+flowchart TD
+    A([Cron Job: Runs every 5 mins]) --> B["Check DB for Abandoned Carts"]
+    B --> C{"Cart > 5 mins old & items > 0 & abandonedEmailSent == false?"}
+    C -- No --> D["Ignore"]
+    C -- Yes --> E["Process Cart"]
+    
+    E --> F["Send Email via Nodemailer"]
+    E --> G["Create 'abandoned_cart' Notification"]
+    E --> H["Create System Activity Log"]
+    
+    F --> I["Update Cart (abandonedEmailSent = true)"]
+    G --> I
+    H --> I
+    I --> J([Job Finishes])
 ```

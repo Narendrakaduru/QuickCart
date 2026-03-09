@@ -106,10 +106,11 @@ The project comes with pre-configured data to get you started:
 - **Order Tracking**: Real-time status updates and order history.
 - **In-App Notifications**:
   - **Bell icon** in the Navbar with animated **unread count badge**.
-  - **Dropdown panel** showing recent notifications with type-specific icons (order placed, shipped, payment, cancelled).
+  - **Dropdown panel** showing recent notifications with type-specific icons (order placed, shipped, payment, cancelled, abandoned cart).
   - **Full history page** at `/notifications` with read/unread visual distinction.
-  - **Automatic triggers**: Notifications created on order placement, status updates, payment changes, and cancellations.
+  - **Automatic triggers**: Notifications created on order placement, status updates, payment changes, cancellations, and abandoned carts.
   - **Mark as read**: Individual or bulk "mark all read" support.
+- **Abandoned Cart Tracking**: Background worker (`node-cron`) that automatically detects carts inactive for 5 minutes (configurable), sends branded email reminders, triggers in-app notifications, and logs the automated action in System Activity Logs.
 - **Responsive Design**: Optimized for all devices, featuring a **single product per row** layout on small screens for better visibility.
 
 ## 📧 Email Verification & Password Reset
