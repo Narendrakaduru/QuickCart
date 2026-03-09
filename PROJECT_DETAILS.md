@@ -120,6 +120,10 @@ The project comes with pre-configured data to get you started:
   - **Automatic triggers**: Notifications created on order placement, status updates, payment changes, cancellations, and abandoned carts.
   - **Mark as read**: Individual or bulk "mark all read" support.
 - **Abandoned Cart Tracking**: Background worker (`node-cron`) that automatically detects carts inactive for 5 minutes (configurable), sends branded email reminders, triggers in-app notifications, and logs the automated action in System Activity Logs.
+- **AI-Driven Discovery Layer**:
+  - **Product Recommendations**: Automatically discovers trending category leaders using Elasticsearch aggregations.
+  - **Advanced Search**: High-performance **auto-complete** (suggestions) using `search_as_you_type` technology.
+  - **Typo Tolerance**: Robust fuzzy matching that understands intent even with misspellings (e.g., "ipone" → "iPhone").
 - **Responsive Design**: Optimized for all devices, featuring a **single product per row** layout on small screens for better visibility.
 
 ## 📧 Email Verification & Password Reset
@@ -182,7 +186,7 @@ FRONTEND_URL=       # Frontend base URL for email links
 
 - **Auth**: `/api/auth` (login, register, logout, verify email, forgot password, reset password)
 - **Users**: `/api/users` (profile, address management)
-- **Products**: `/api/products` (listing, search, details)
+- **Products**: `/api/products` (listing, search, details, recommendations, suggestions)
 - **Cart**: `/api/cart` (add, remove, update)
 - **Orders**: `/api/orders` (checkout, tracking)
 - **Coupons**: `/api/coupons` (creation, validation, management)

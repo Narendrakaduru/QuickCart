@@ -5,13 +5,18 @@ const {
   createProduct,
   updateProduct,
   deleteProduct,
-  createProductReview
+  createProductReview,
+  getSearchSuggestions,
+  getRecommendations
 } = require('../controllers/productController');
 
 const { protect, authorize } = require('../middleware/auth');
 const { logAction } = require('../middleware/logger');
 
 const router = express.Router();
+
+router.get('/suggestions', getSearchSuggestions);
+router.get('/recommendations', getRecommendations);
 
 router
   .route('/')
