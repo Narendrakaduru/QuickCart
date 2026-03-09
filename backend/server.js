@@ -11,9 +11,15 @@ dotenv.config({ path: path.join(__dirname, ".env") });
 // Connect to database
 connectDB();
 
-// Initialize Cron Jobs
-const abandonedCartJob = require("./cronJobs/abandonedCartJob");
-abandonedCartJob();
+// Connect to Redis
+const { connectRedis } = require('./config/redis');
+connectRedis();
+
+// Initialize Cron Jobs (skip in test to prevent open handles)
+if (process.env.NODE_ENV !== "test") {
+  const abandonedCartJob = require("./cronJobs/abandonedCartJob");
+  abandonedCartJob();
+}
 
 const app = express();
 
@@ -45,4 +51,8 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, console.log(`Server running on port ${PORT}`));
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, console.log(`Server running on port ${PORT}`));
+}
+
+module.exports = app;

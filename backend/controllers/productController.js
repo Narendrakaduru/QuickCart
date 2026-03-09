@@ -1,10 +1,35 @@
 const Product = require("../models/Product");
+const { redisClient } = require("../config/redis");
+
+// Helper to clear product caches on data mutation
+const clearProductCache = async (id = null) => {
+  try {
+    if (!redisClient.isReady) return;
+    const keys = await redisClient.keys("products:*");
+    if (keys.length > 0) {
+      await redisClient.del(keys);
+    }
+    if (id) {
+      await redisClient.del(`product:${id}`);
+    }
+  } catch (err) {
+    console.error("Redis cache clear error:", err.message);
+  }
+};
 
 // @desc    Get all products
 // @route   GET /api/products
 // @access  Public
 exports.getProducts = async (req, res, next) => {
   try {
+    if (redisClient.isReady) {
+      const cacheKey = `products:${req.originalUrl}`;
+      const cachedProducts = await redisClient.get(cacheKey);
+      if (cachedProducts) {
+        return res.status(200).json(JSON.parse(cachedProducts));
+      }
+    }
+
     let query;
 
     // Copy req.query
@@ -61,12 +86,19 @@ exports.getProducts = async (req, res, next) => {
       pagination.prev = { page: page - 1, limit };
     }
 
-    res.status(200).json({
+    const responseData = {
       success: true,
       count: products.length,
       pagination,
       data: products,
-    });
+    };
+
+    if (redisClient.isReady) {
+      const cacheKey = `products:${req.originalUrl}`;
+      await redisClient.setEx(cacheKey, 60, JSON.stringify(responseData)); // 60 seconds
+    }
+
+    res.status(200).json(responseData);
   } catch (error) {
     console.error(`Fetch Products Error: ${error.message}`);
     res.status(500).json({
@@ -81,6 +113,14 @@ exports.getProducts = async (req, res, next) => {
 // @access  Public
 exports.getProduct = async (req, res, next) => {
   try {
+    if (redisClient.isReady) {
+      const cacheKey = `product:${req.params.id}`;
+      const cachedProduct = await redisClient.get(cacheKey);
+      if (cachedProduct) {
+        return res.status(200).json(JSON.parse(cachedProduct));
+      }
+    }
+
     const product = await Product.findById(req.params.id).populate(
       "user",
       "name email",
@@ -92,7 +132,13 @@ exports.getProduct = async (req, res, next) => {
         .json({ success: false, error: "Product not found" });
     }
 
-    res.status(200).json({ success: true, data: product });
+    const responseData = { success: true, data: product };
+    if (redisClient.isReady) {
+      const cacheKey = `product:${req.params.id}`;
+      await redisClient.setEx(cacheKey, 60, JSON.stringify(responseData)); // 60 seconds
+    }
+
+    res.status(200).json(responseData);
   } catch (error) {
     console.error(`Fetch Product Error: ${error.message}`);
     res
@@ -110,6 +156,7 @@ exports.createProduct = async (req, res, next) => {
     req.body.user = req.user._id;
 
     const product = await Product.create(req.body);
+    await clearProductCache();
     res.status(201).json({ success: true, data: product });
   } catch (error) {
     console.error(`Create Product Error: ${error.message}`);
@@ -135,6 +182,8 @@ exports.updateProduct = async (req, res, next) => {
       runValidators: true,
     });
 
+    await clearProductCache(product._id);
+
     res.status(200).json({ success: true, data: product });
   } catch (error) {
     console.error(`Update Product Error: ${error.message}`);
@@ -156,6 +205,7 @@ exports.deleteProduct = async (req, res, next) => {
     }
 
     await product.deleteOne();
+    await clearProductCache(req.params.id);
     res.status(200).json({ success: true, data: {} });
   } catch (error) {
     console.error(`Delete Product Error: ${error.message}`);
@@ -199,6 +249,7 @@ exports.createProductReview = async (req, res, next) => {
         product.reviews.length;
 
       await product.save();
+      await clearProductCache(req.params.id);
       res.status(201).json({ success: true, message: "Review added" });
     } else {
       res.status(404).json({ success: false, error: "Product not found" });
