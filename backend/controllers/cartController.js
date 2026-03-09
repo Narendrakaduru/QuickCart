@@ -36,6 +36,9 @@ exports.updateCart = async (req, res, next) => {
       cart = await Cart.create({ user: req.user.id, items: [] });
     }
 
+    // Reset abandoned email flag on any cart activity
+    cart.abandonedEmailSent = false;
+
     const itemIndex = cart.items.findIndex(p => p.product.toString() === productId);
 
     if (itemIndex > -1) {
