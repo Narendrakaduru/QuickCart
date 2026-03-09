@@ -64,6 +64,7 @@ const Cart = () => {
     return acc + originalPrice * item.quantity;
   }, 0);
   const totalDiscount = basePrice - totalPrice;
+  const platformFee = totalPrice < 500 ? 0 : 20;
 
   return (
     <div className="min-h-screen bg-slate-50 py-12">
@@ -242,8 +243,8 @@ const Cart = () => {
                   </div>
                   <div className="flex justify-between items-center text-gray-600">
                     <span className="text-sm font-bold">Platform Fee</span>
-                    <span className="text-sm font-bold text-gray-900">
-                      ₹20.00
+                    <span className={`text-sm font-bold ${platformFee === 0 ? "text-green-600" : "text-gray-900"}`}>
+                      {platformFee === 0 ? "FREE" : `₹${platformFee.toFixed(2)}`}
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-gray-600">
@@ -260,7 +261,7 @@ const Cart = () => {
                       Total Amount
                     </span>
                     <span className="text-2xl font-bold text-blue-600 tracking-tight">
-                      ₹{(totalPrice + 20).toFixed(2)}
+                      ₹{(totalPrice + platformFee).toFixed(2)}
                     </span>
                   </div>
                 </div>
