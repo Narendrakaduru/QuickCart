@@ -43,6 +43,7 @@ const Checkout = () => {
     phone: "",
   });
 
+  const [paymentMethod, setPaymentMethod] = useState("online"); // default to Razorpay/online
   const [hasAutoFilled, setHasAutoFilled] = useState(false);
 
   // Auto-fill the form with a saved address during the initial load (avoids useEffect cascading render)
@@ -75,7 +76,8 @@ const Checkout = () => {
         : validCoupon.discountValue)
     : 0;
 
-  const finalTotal = itemsTotal + 20 - calculatedDiscount;
+  const platformFee = itemsTotal < 500 ? 0 : 20;
+  const finalTotal = itemsTotal + platformFee - calculatedDiscount;
 
   useEffect(() => {
     dispatch(reset());
@@ -134,8 +136,20 @@ const Checkout = () => {
     setCouponCode("");
   };
 
-  const handleSubmit = (e) => {
+  // Load Razorpay script
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     const orderData = {
       items: cartItems.map((item) => ({
         product: item.product._id,
@@ -147,7 +161,93 @@ const Checkout = () => {
       discountAmount: calculatedDiscount,
       couponCode: validCoupon ? validCoupon.code : "",
     };
-    dispatch(createOrder(orderData));
+
+    try {
+      // 1. Create Order in our DB (sets to pending)
+      const actionResponse = await dispatch(createOrder(orderData));
+      
+      if (createOrder.fulfilled.match(actionResponse)) {
+        const createdOrder = actionResponse.payload.data;
+        
+        if (paymentMethod === "cod") {
+          navigate("/orders");
+          dispatch(reset());
+          return;
+        }
+
+        // 2. Call our backend to create a Razorpay Order
+        const paymentOrderRes = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/payment/order`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            amount: finalTotal,
+            currency: "INR",
+            receipt: createdOrder._id,
+          }),
+        });
+        
+        const paymentOrderData = await paymentOrderRes.json();
+        
+        if (paymentOrderData.success) {
+          const options = {
+            key: import.meta.env.VITE_RAZORPAY_KEY_ID || "test_key_id",
+            amount: paymentOrderData.data.amount,
+            currency: paymentOrderData.data.currency,
+            name: "Razorpay Payments Private Limited",
+            description: "Payment for your QuickCart order",
+            order_id: paymentOrderData.data.id,
+            handler: async (response) => {
+              // 3. Verify Payment
+              const verifyRes = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/payment/verify`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: JSON.stringify({
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                  orderId: createdOrder._id,
+                }),
+              });
+              
+              const verifyData = await verifyRes.json();
+              if (verifyData.success) {
+                navigate("/orders");
+                dispatch(reset());
+              } else {
+                alert("Payment verification failed. Please contact support.");
+              }
+            },
+            prefill: {
+              name: user?.name,
+              email: user?.email,
+              contact: shippingDetails.phone,
+            },
+            theme: {
+              color: "#2563eb",
+            },
+          };
+          
+          const rzp1 = new window.Razorpay(options);
+          rzp1.on("payment.failed", function (response) {
+            alert("Payment failed: " + response.error.description);
+          });
+          rzp1.open();
+        } else {
+          // If Razorpay order fails, we still have the order in DB, 
+          // but we might want to redirect them to order page to retry payment later
+          alert("Could not initialize payment. Redirecting to your orders.");
+          navigate("/orders");
+        }
+      }
+    } catch (err) {
+      console.error("Order completion error:", err);
+    }
   };
 
   return (
@@ -353,16 +453,33 @@ const Checkout = () => {
                     </h2>
                   </div>
 
-                  <div className="bg-blue-50/50 p-4 border-2 border-blue-100 rounded-xl flex items-center justify-between hover:border-blue-300 transition-colors cursor-pointer group">
-                    <div className="flex items-center">
-                      <div className="w-5 h-5 rounded-full border-[5px] border-blue-600 bg-white mr-3 shadow-sm group-hover:scale-110 transition-transform"></div>
-                      <span className="font-bold text-blue-900 tracking-tight text-base">
-                        Cash on Delivery (COD)
+                  <div className="space-y-4">
+                    <div 
+                      onClick={() => setPaymentMethod("online")}
+                      className={`p-4 border-2 rounded-xl flex items-center justify-between transition-all cursor-pointer group ${paymentMethod === "online" ? "bg-blue-50/50 border-blue-500" : "border-gray-100 hover:border-gray-200"}`}
+                    >
+                      <div className="flex items-center">
+                        <div className={`w-5 h-5 rounded-full border-[5px] bg-white mr-3 shadow-sm transition-transform ${paymentMethod === "online" ? "border-blue-600 scale-110" : "border-gray-300"}`}></div>
+                        <span className={`font-bold tracking-tight text-base ${paymentMethod === "online" ? "text-blue-900" : "text-gray-600"}`}>
+                          Online Payment (Razorpay)
+                        </span>
+                      </div>
+                      <span className={`text-[9px] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider shadow-md ${paymentMethod === "online" ? "bg-blue-600 text-white shadow-blue-200" : "bg-gray-100 text-gray-500 shadow-none"}`}>
+                        Fast & Secure
                       </span>
                     </div>
-                    <span className="text-[9px] bg-blue-600 text-white px-2.5 py-1 rounded-full font-bold uppercase tracking-wider shadow-md shadow-blue-200">
-                      Default
-                    </span>
+
+                    <div 
+                      onClick={() => setPaymentMethod("cod")}
+                      className={`p-4 border-2 rounded-xl flex items-center justify-between transition-all cursor-pointer group ${paymentMethod === "cod" ? "bg-blue-50/50 border-blue-500" : "border-gray-100 hover:border-gray-200"}`}
+                    >
+                      <div className="flex items-center">
+                        <div className={`w-5 h-5 rounded-full border-[5px] bg-white mr-3 shadow-sm transition-transform ${paymentMethod === "cod" ? "border-blue-600 scale-110" : "border-gray-300"}`}></div>
+                        <span className={`font-bold tracking-tight text-base ${paymentMethod === "cod" ? "text-blue-900" : "text-gray-600"}`}>
+                          Cash on Delivery (COD)
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -463,12 +580,12 @@ const Checkout = () => {
                         Free
                       </span>
                     </div>
-                    <div className="flex justify-between items-center text-gray-600">
-                      <span className="text-sm font-bold">Platform Fee</span>
-                      <span className="text-sm font-black text-gray-900 tracking-tight">
-                        ₹20.00
-                      </span>
-                    </div>
+                     <div className="flex justify-between items-center text-gray-600">
+                       <span className="text-sm font-bold">Platform Fee</span>
+                       <span className={`text-sm font-black tracking-tight ${platformFee === 0 ? "text-green-600" : "text-gray-900"}`}>
+                         {platformFee === 0 ? "FREE" : `₹${platformFee.toFixed(2)}`}
+                       </span>
+                     </div>
                   </div>
 
                   {/* Coupon Application Box */}
