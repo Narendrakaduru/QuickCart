@@ -22,8 +22,8 @@ const ProductList = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
+    dispatch(fetchProducts({ keyword: searchParam }));
+  }, [dispatch, searchParam]);
 
   // Extract unique categories from products
   const categories = products
@@ -53,16 +53,6 @@ const ProductList = () => {
               !searchCategories.includes(productCategory) &&
               productCategory !== categoryParam.toLowerCase()
             ) {
-              return false;
-            }
-          }
-
-          // Apply search filter from URL if present
-          if (searchParam) {
-            const query = searchParam.toLowerCase();
-            const title = p.title.toLowerCase();
-            const description = (p.description || "").toLowerCase();
-            if (!title.includes(query) && !description.includes(query)) {
               return false;
             }
           }

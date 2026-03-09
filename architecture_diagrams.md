@@ -17,16 +17,19 @@ graph TB
         subgraph BE["Backend Container :5001"]
             EXPRESS["Express.js API"]
         end
-        subgraph DB["MongoDB Container :27027"]
+        subgraph DB["Service Cluster"]
             MONGO[("MongoDB")]
-        end
-        subgraph Cache["Redis Container :6379, :8005"]
-            REDIS[("Redis Stack")]
+            REDIS[("Redis")]
+            ELASTIC[("Elasticsearch")]
+            LOGSTASH["Logstash"]
+            KIBANA["Kibana :5601"]
         end
     end
 
     subgraph External["☁️ External Services"]
         SMTP["SMTP Email Server"]
+        CLOUDINARY["Cloudinary"]
+        INSIGHT["RedisInsight :8005"]
     end
 
     REACT -- "HTTP Requests" --> NGINX
@@ -34,6 +37,9 @@ graph TB
     EXPRESS -- "Mongoose ODM" --> MONGO
     EXPRESS -- "Redis Client" --> REDIS
     EXPRESS -- "Nodemailer" --> SMTP
+    EXPRESS -- "REST API" --> LOGSTASH
+    LOGSTASH -- "Indexing" --> ELASTIC
+    ELASTIC -- "Visualize" --> KIBANA
     MONGO -- "Persisted Volume" --> DISK[("mongo_data/")]
 ```
 
@@ -89,6 +95,20 @@ graph LR
         M6["Coupon"]
         M7["Log"]
         M8["Notification"]
+    end
+
+    subgraph "Storage & Infrastructure"
+        MongoDB[("MongoDB (Products, Users, Orders)")]
+        Redis[("Redis (Cache)")]
+        Elasticsearch[("Elasticsearch (Search Index)")]
+        Logstash["Logstash (Hybrid JSON Engine)"]
+    end
+
+    subgraph "External Services"
+        RedisInsight["RedisInsight (UI)"]
+        Kibana["Kibana (Visualization)"]
+        Mailtrap["Mailtrap (SMTP)"]
+        Cloudinary["Cloudinary (Images)"]
     end
 
     R1 --> C1
@@ -451,7 +471,12 @@ sequenceDiagram
     Mongoose->>MongoDB: DB query
     MongoDB-->>Mongoose: Result
     Mongoose-->>Controller: Data
-    Controller-->>Browser: JSON Response
+    Controller-->>Express: JSON Response
+    Express-->>Browser: HTTP Response (Finish)
+    Note right of Express: Start Post-Response Logging
+    Express->>Logger: logRequestMetadata()
+    Logger->>Logstash: Send JSON Payload (Timing, Engine, Status)
+    Logstash->>Elasticsearch: Index Log Entry
 ```
 
 ---

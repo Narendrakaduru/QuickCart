@@ -11,6 +11,8 @@ backend/build/
 
 # Database Data (Docker bind mount)
 mongo_data/
+redis_data/
+elastic_data/
 
 # Uploads
 backend/uploads/*

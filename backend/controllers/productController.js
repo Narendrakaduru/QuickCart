@@ -1,5 +1,6 @@
 const Product = require("../models/Product");
 const { redisClient } = require("../config/redis");
+const { elasticClient } = require("../config/elastic");
 
 // Helper to clear product caches on data mutation
 const clearProductCache = async (id = null) => {
@@ -17,6 +18,36 @@ const clearProductCache = async (id = null) => {
   }
 };
 
+// Helper to sync single product to Elastic
+const syncToElastic = async (product, deleted = false) => {
+  if (process.env.NODE_ENV === 'test') return;
+  try {
+    if (deleted) {
+      await elasticClient.delete({
+        index: 'products',
+        id: product._id.toString(),
+        refresh: true
+      });
+    } else {
+      await elasticClient.index({
+        index: 'products',
+        id: product._id.toString(),
+        document: {
+          title: product.title,
+          description: product.description,
+          category: product.category,
+          brand: product.brand,
+          price: product.price,
+          isFeatured: product.isFeatured
+        },
+        refresh: true
+      });
+    }
+  } catch (err) {
+    console.error("Elasticsearch sync error:", err.message);
+  }
+};
+
 // @desc    Get all products
 // @route   GET /api/products
 // @access  Public
@@ -26,6 +57,7 @@ exports.getProducts = async (req, res, next) => {
       const cacheKey = `products:${req.originalUrl}`;
       const cachedProducts = await redisClient.get(cacheKey);
       if (cachedProducts) {
+        if (req.logMeta) req.logMeta.search_engine = 'redis';
         return res.status(200).json(JSON.parse(cachedProducts));
       }
     }
@@ -36,7 +68,7 @@ exports.getProducts = async (req, res, next) => {
     const reqQuery = { ...req.query };
 
     // Fields to exclude
-    const removeFields = ["select", "sort", "page", "limit"];
+    const removeFields = ["select", "sort", "page", "limit", "keyword"];
     removeFields.forEach((param) => delete reqQuery[param]);
 
     // Create query string
@@ -48,8 +80,36 @@ exports.getProducts = async (req, res, next) => {
       (match) => `$${match}`,
     );
 
+    let mongoQuery = JSON.parse(queryStr);
+
+    // Handle Keyword Search with Elasticsearch
+    if (req.query.keyword) {
+      try {
+        const result = await elasticClient.search({
+          index: 'products',
+          body: {
+            query: {
+              multi_match: {
+                query: req.query.keyword,
+                fields: ['title^3', 'description', 'category', 'brand'],
+                fuzziness: 'AUTO'
+              }
+            }
+          }
+        });
+
+        const ids = result.hits.hits.map(hit => hit._id);
+        mongoQuery._id = { $in: ids };
+        if (req.logMeta) req.logMeta.search_engine = 'elasticsearch';
+      } catch (err) {
+        console.error("Elasticsearch search error, falling back to basic regex:", err.message);
+        // Fallback to basic regex if ES is down
+        mongoQuery.title = { $regex: req.query.keyword, $options: 'i' };
+      }
+    }
+
     // Finding resource
-    query = Product.find(JSON.parse(queryStr));
+    query = Product.find(mongoQuery);
 
     // Select Fields
     if (req.query.select) {
@@ -70,12 +130,16 @@ exports.getProducts = async (req, res, next) => {
     const limit = parseInt(req.query.limit, 10) || 100;
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
-    const total = await Product.countDocuments(JSON.parse(queryStr));
+    const total = await Product.countDocuments(mongoQuery);
 
     query = query.skip(startIndex).limit(limit);
 
     // Executing query
     const products = await query.populate("user", "name email");
+
+    if (req.logMeta && !req.logMeta.search_engine) {
+      req.logMeta.search_engine = 'mongodb';
+    }
 
     // Pagination result
     const pagination = {};
@@ -117,6 +181,7 @@ exports.getProduct = async (req, res, next) => {
       const cacheKey = `product:${req.params.id}`;
       const cachedProduct = await redisClient.get(cacheKey);
       if (cachedProduct) {
+        if (req.logMeta) req.logMeta.search_engine = 'redis';
         return res.status(200).json(JSON.parse(cachedProduct));
       }
     }
@@ -125,6 +190,8 @@ exports.getProduct = async (req, res, next) => {
       "user",
       "name email",
     );
+
+    if (req.logMeta) req.logMeta.search_engine = 'mongodb';
 
     if (!product) {
       return res
@@ -156,6 +223,7 @@ exports.createProduct = async (req, res, next) => {
     req.body.user = req.user._id;
 
     const product = await Product.create(req.body);
+    await syncToElastic(product);
     await clearProductCache();
     res.status(201).json({ success: true, data: product });
   } catch (error) {
@@ -182,6 +250,7 @@ exports.updateProduct = async (req, res, next) => {
       runValidators: true,
     });
 
+    await syncToElastic(product);
     await clearProductCache(product._id);
 
     res.status(200).json({ success: true, data: product });
@@ -205,6 +274,7 @@ exports.deleteProduct = async (req, res, next) => {
     }
 
     await product.deleteOne();
+    await syncToElastic(product, true);
     await clearProductCache(req.params.id);
     res.status(200).json({ success: true, data: {} });
   } catch (error) {
@@ -249,6 +319,7 @@ exports.createProductReview = async (req, res, next) => {
         product.reviews.length;
 
       await product.save();
+      await syncToElastic(product);
       await clearProductCache(req.params.id);
       res.status(201).json({ success: true, message: "Review added" });
     } else {

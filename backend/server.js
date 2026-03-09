@@ -15,6 +15,13 @@ connectDB();
 const { connectRedis } = require('./config/redis');
 connectRedis();
 
+// Connect to Elasticsearch
+const { connectElastic } = require('./config/elastic');
+const syncProductsToElastic = require('./utils/elasticSync');
+connectElastic().then(() => {
+  syncProductsToElastic();
+});
+
 // Initialize Cron Jobs (skip in test to prevent open handles)
 if (process.env.NODE_ENV !== "test") {
   const abandonedCartJob = require("./cronJobs/abandonedCartJob");
@@ -22,11 +29,33 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 const app = express();
+const logger = require('./config/logger');
 
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
+
+// Logstash Request Logging Middleware
+app.use((req, res, next) => {
+  const start = Date.now();
+  req.logMeta = {}; // For controllers to inject metadata
+
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    logger.info({
+      message: `${req.method} ${req.originalUrl} ${res.statusCode} (${duration}ms)`,
+      method: req.method,
+      url: req.originalUrl,
+      ip: req.ip,
+      status_code: res.statusCode,
+      response_time: duration,
+      ...req.logMeta,
+      timestamp: new Date().toISOString()
+    });
+  });
+  next();
+});
 
 // Mount routers
 app.use("/api/auth", require("./routes/authRoutes"));
