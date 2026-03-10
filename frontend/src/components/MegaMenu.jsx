@@ -1,26 +1,6 @@
 import { Link } from "react-router-dom";
-import {
-  ChevronDown,
-  Smartphone,
-  Laptop,
-  Shirt,
-  ChefHat,
-  Armchair,
-  Tv,
-  Gamepad,
-  ShoppingBasket,
-} from "lucide-react";
-
-const categories = [
-  { name: "Mobiles", icon: Smartphone },
-  { name: "Electronics", icon: Laptop },
-  { name: "Fashion", icon: Shirt },
-  { name: "Home", icon: ChefHat },
-  { name: "Appliances", icon: Tv },
-  { name: "Furniture", icon: Armchair },
-  { name: "Toys", icon: Gamepad },
-  { name: "Grocery", icon: ShoppingBasket },
-];
+import { ChevronDown } from "lucide-react";
+import { CATEGORIES } from "../constants/categoryConstants";
 
 const MegaMenu = () => {
   return (
@@ -28,7 +8,7 @@ const MegaMenu = () => {
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Horizontal Scrollable Container */}
         <div className="flex items-center md:justify-center py-4 overflow-x-auto gap-6 sm:gap-10 md:gap-14 no-scrollbar scroll-smooth">
-          {categories.map((category) => {
+          {CATEGORIES.map((category) => {
             const Icon = category.icon;
             return (
               <Link

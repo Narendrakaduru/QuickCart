@@ -19,7 +19,12 @@ import {
   updatePaymentStatus,
 } from "../slices/orderSlice";
 import { fetchLogs } from "../slices/logSlice";
-import { fetchCoupons, createCoupon, updateCoupon, deleteCoupon } from "../slices/couponSlice";
+import {
+  fetchCoupons,
+  createCoupon,
+  updateCoupon,
+  deleteCoupon,
+} from "../slices/couponSlice";
 import {
   Edit,
   Trash2,
@@ -52,10 +57,17 @@ const Pagination = ({ pagination, onPageChange }) => {
   return (
     <div className="flex justify-between items-center p-4 bg-gray-50 border-t border-gray-100">
       <div className="text-sm text-gray-500">
-        Showing <span className="font-semibold text-gray-700">{pagination.total > 0 ? (pagination.page - 1) * 10 + 1 : 0}</span> to{" "}
+        Showing{" "}
+        <span className="font-semibold text-gray-700">
+          {pagination.total > 0 ? (pagination.page - 1) * 10 + 1 : 0}
+        </span>{" "}
+        to{" "}
         <span className="font-semibold text-gray-700">
           {Math.min(pagination.page * 10, pagination.total)}
-        </span> of <span className="font-semibold text-gray-700">{pagination.total}</span> entries
+        </span>{" "}
+        of{" "}
+        <span className="font-semibold text-gray-700">{pagination.total}</span>{" "}
+        entries
       </div>
       <div className="flex gap-2">
         <button
@@ -124,18 +136,12 @@ const AdminDashboard = () => {
     isError: couponsError,
     message: couponsMessage,
   } = useSelector((state) => state.coupons);
-  const {
-    pagination: productPagination
-  } = useSelector((state) => state.products);
-  const {
-    pagination: orderPagination
-  } = useSelector((state) => state.orders);
-  const {
-    pagination: userPagination
-  } = useSelector((state) => state.users);
-  const {
-    pagination: logPagination
-  } = useSelector((state) => state.logs);
+  const { pagination: productPagination } = useSelector(
+    (state) => state.products,
+  );
+  const { pagination: orderPagination } = useSelector((state) => state.orders);
+  const { pagination: userPagination } = useSelector((state) => state.users);
+  const { pagination: logPagination } = useSelector((state) => state.logs);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "inventory";
@@ -147,10 +153,15 @@ const AdminDashboard = () => {
 
   const setPage = (page) => {
     setSearchParams({ tab: activeTab, page });
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 0);
   };
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortConfig, setSortConfig] = useState({ key: "createdAt", direction: "desc" });
+  const [sortConfig, setSortConfig] = useState({
+    key: "createdAt",
+    direction: "desc",
+  });
 
   // Product Modal States
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
@@ -182,7 +193,7 @@ const AdminDashboard = () => {
     if (!data) return [];
     const sorted = [...data].sort((a, b) => {
       let aVal, bVal;
-      
+
       if (sortConfig.key.includes(".")) {
         const [obj, field] = sortConfig.key.split(".");
         aVal = a[obj]?.[field] ?? "";
@@ -203,10 +214,18 @@ const AdminDashboard = () => {
   };
 
   const renderSortIcon = (column) => {
-    if (sortConfig.key !== column) return <ChevronDown size={12} className="ml-1 text-gray-300 opacity-50 inline" />;
-    return sortConfig.direction === "asc" ? 
-      <ChevronUp size={12} className="ml-2 text-blue-600 inline" /> : 
-      <ChevronDown size={12} className="ml-2 text-blue-600 inline" />;
+    if (sortConfig.key !== column)
+      return (
+        <ChevronDown
+          size={12}
+          className="ml-1 text-gray-300 opacity-50 inline"
+        />
+      );
+    return sortConfig.direction === "asc" ? (
+      <ChevronUp size={12} className="ml-2 text-blue-600 inline" />
+    ) : (
+      <ChevronDown size={12} className="ml-2 text-blue-600 inline" />
+    );
   };
 
   useEffect(() => {
@@ -267,7 +286,7 @@ const AdminDashboard = () => {
         updateProduct({
           id: product._id,
           productData: { ...product, isFeatured: !product.isFeatured },
-        })
+        }),
       ).unwrap();
     } catch (err) {
       alert(err || "Failed to update featured status");
@@ -347,7 +366,6 @@ const AdminDashboard = () => {
       dispatch(fetchProducts({ page: currentPage, limit: 10 }));
     }
   };
-
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -455,22 +473,39 @@ const AdminDashboard = () => {
             <table className="w-full min-w-[1000px] text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50 text-gray-600 text-[11px] uppercase tracking-wider border-b">
-                  <th onClick={() => handleSort("title")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("title")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Product {renderSortIcon("title")}
                   </th>
-                  <th onClick={() => handleSort("user.name")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("user.name")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     By {renderSortIcon("user.name")}
                   </th>
-                  <th onClick={() => handleSort("price")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("price")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Price {renderSortIcon("price")}
                   </th>
-                  <th onClick={() => handleSort("category")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("category")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Cat {renderSortIcon("category")}
                   </th>
-                  <th onClick={() => handleSort("stockCount")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("stockCount")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Stock {renderSortIcon("stockCount")}
                   </th>
-                  <th className="p-4 font-bold text-right min-w-[120px]">Actions</th>
+                  <th className="p-4 font-bold text-right min-w-[120px]">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -518,69 +553,81 @@ const AdminDashboard = () => {
                         key={product._id}
                         className="hover:bg-gray-50/50 transition whitespace-nowrap"
                       >
-                      <td className="p-4 flex items-center space-x-3">
-                        <img
-                          src={
-                            product.images && product.images[0]
-                              ? product.images[0]
-                              : ""
-                          }
-                          alt=""
-                          className="w-10 h-10 object-contain rounded border bg-white"
-                        />
-                        <span className="font-medium text-gray-800 text-sm max-w-[200px] truncate flex items-center gap-1">
-                          {product.title}
-                          {product.isFeatured && (
-                            <Star size={14} className="text-yellow-400 fill-yellow-400 inline-block flex-shrink-0" />
-                          )}
-                        </span>
-                      </td>
-                      <td className="p-4">
-                        <div className="flex flex-col">
-                          <span className="text-sm font-bold text-gray-700">
-                            {product.user?.name || "System"}
+                        <td className="p-4 flex items-center space-x-3">
+                          <img
+                            src={
+                              product.images && product.images[0]
+                                ? product.images[0]
+                                : ""
+                            }
+                            alt=""
+                            className="w-10 h-10 object-contain rounded border bg-white"
+                          />
+                          <span className="font-medium text-gray-800 text-sm max-w-[200px] truncate flex items-center gap-1">
+                            {product.title}
+                            {product.isFeatured && (
+                              <Star
+                                size={14}
+                                className="text-yellow-400 fill-yellow-400 inline-block flex-shrink-0"
+                              />
+                            )}
                           </span>
-                          <span className="text-[10px] text-gray-400 font-medium">
-                            {product.user?.email || ""}
+                        </td>
+                        <td className="p-4">
+                          <div className="flex flex-col">
+                            <span className="text-sm font-bold text-gray-700">
+                              {product.user?.name || "System"}
+                            </span>
+                            <span className="text-[10px] text-gray-400 font-medium">
+                              {product.user?.email || ""}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="p-4 font-bold text-gray-700">
+                          ₹{(product.price || 0).toFixed(2)}
+                        </td>
+                        <td className="p-4 text-xs font-semibold text-gray-500 uppercase">
+                          {product.category}
+                        </td>
+                        <td className="p-4">
+                          <span
+                            className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${product.stockCount > 10 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
+                          >
+                            {product.stockCount} Units
                           </span>
-                        </div>
-                      </td>
-                      <td className="p-4 font-bold text-gray-700">
-                        ₹{(product.price || 0).toFixed(2)}
-                      </td>
-                      <td className="p-4 text-xs font-semibold text-gray-500 uppercase">
-                        {product.category}
-                      </td>
-                      <td className="p-4">
-                        <span
-                          className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${product.stockCount > 10 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
-                        >
-                          {product.stockCount} Units
-                        </span>
-                      </td>
-                      <td className="p-4 text-right">
-                        <button
-                          onClick={() => handleToggleFeatured(product)}
-                          className={`mr-3 p-1 rounded transition ${product.isFeatured ? "text-yellow-500 hover:text-yellow-600 hover:bg-yellow-50" : "text-gray-300 hover:text-yellow-500 hover:bg-gray-50"}`}
-                          title={product.isFeatured ? "Remove from Featured" : "Mark as Featured"}
-                        >
-                          <Star size={18} className={product.isFeatured ? "fill-yellow-500" : ""} />
-                        </button>
-                        <button
-                          onClick={() => handleEditProduct(product)}
-                          className="text-blue-600 hover:text-blue-800 mr-3 p-1 hover:bg-blue-50 rounded transition"
-                        >
-                          <Edit size={18} />
-                        </button>
-                        <button
-                          onClick={() =>
-                            handleDeleteRequest(product._id, "product")
-                          }
-                          className="text-red-500 hover:text-red-700 p-1 hover:bg-red-50 rounded transition"
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                      </td>
+                        </td>
+                        <td className="p-4 text-right">
+                          <button
+                            onClick={() => handleToggleFeatured(product)}
+                            className={`mr-3 p-1 rounded transition ${product.isFeatured ? "text-yellow-500 hover:text-yellow-600 hover:bg-yellow-50" : "text-gray-300 hover:text-yellow-500 hover:bg-gray-50"}`}
+                            title={
+                              product.isFeatured
+                                ? "Remove from Featured"
+                                : "Mark as Featured"
+                            }
+                          >
+                            <Star
+                              size={18}
+                              className={
+                                product.isFeatured ? "fill-yellow-500" : ""
+                              }
+                            />
+                          </button>
+                          <button
+                            onClick={() => handleEditProduct(product)}
+                            className="text-blue-600 hover:text-blue-800 mr-3 p-1 hover:bg-blue-50 rounded transition"
+                          >
+                            <Edit size={18} />
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleDeleteRequest(product._id, "product")
+                            }
+                            className="text-red-500 hover:text-red-700 p-1 hover:bg-red-50 rounded transition"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </td>
                       </tr>
                     ));
                   })()
@@ -625,20 +672,34 @@ const AdminDashboard = () => {
             <table className="w-full min-w-[1000px] text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50 text-gray-600 text-[11px] uppercase tracking-wider border-b">
-                  <th onClick={() => handleSort("_id")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("_id")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Order ID {renderSortIcon("_id")}
                   </th>
-                  <th onClick={() => handleSort("user.name")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("user.name")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Customer {renderSortIcon("user.name")}
                   </th>
                   <th className="p-4 font-bold">Items</th>
-                  <th onClick={() => handleSort("totalAmount")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("totalAmount")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Total {renderSortIcon("totalAmount")}
                   </th>
-                  <th onClick={() => handleSort("paymentStatus")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("paymentStatus")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Status {renderSortIcon("paymentStatus")}
                   </th>
-                  <th className="p-4 font-bold text-right min-w-[120px]">Actions</th>
+                  <th className="p-4 font-bold text-right min-w-[120px]">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -662,9 +723,13 @@ const AdminDashboard = () => {
                     const filtered = orders.filter((order) => {
                       const search = searchTerm.toLowerCase();
                       return (
-                        (order.user?.name || "").toLowerCase().includes(search) ||
+                        (order.user?.name || "")
+                          .toLowerCase()
+                          .includes(search) ||
                         (order._id || "").toLowerCase().includes(search) ||
-                        (order.paymentStatus || "").toLowerCase().includes(search) ||
+                        (order.paymentStatus || "")
+                          .toLowerCase()
+                          .includes(search) ||
                         (order.orderStatus || "").toLowerCase().includes(search)
                       );
                     });
@@ -687,126 +752,129 @@ const AdminDashboard = () => {
                         key={order._id}
                         className="hover:bg-gray-50/50 transition border-b border-gray-100 last:border-0"
                       >
-                      <td className="p-4">
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-tighter">
-                          #
-                          {order._id
-                            ? order._id.substring(order._id.length - 8)
-                            : "..."}
-                        </span>
-                      </td>
-                      <td className="p-4">
-                        <div className="flex flex-col">
-                          <span className="text-sm font-bold text-gray-800">
-                            {order.user?.name || "Unknown User"}
+                        <td className="p-4">
+                          <span className="text-xs font-bold text-gray-400 uppercase tracking-tighter">
+                            #
+                            {order._id
+                              ? order._id.substring(order._id.length - 8)
+                              : "..."}
                           </span>
-                          <span className="text-[10px] text-gray-400 font-medium lowercase">
-                            {order.createdAt
-                              ? new Date(order.createdAt).toLocaleDateString()
-                              : "Unknown Date"}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="p-4">
-                        <div className="flex -space-x-2">
-                          {order.items &&
-                            order.items.slice(0, 3).map((item, i) => (
-                              <div
-                                key={i}
-                                className="w-8 h-8 rounded-full border-2 border-white bg-white shadow-sm overflow-hidden z-[10]"
-                              >
-                                {item.product?.images?.[0] ? (
-                                  <img
-                                    src={item.product.images[0]}
-                                    alt=""
-                                    className="w-full h-full object-contain"
-                                  />
-                                ) : (
-                                  <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                                    <Package size={12} />
-                                  </div>
-                                )}
-                              </div>
-                            ))}
-                        </div>
-                      </td>
-                      <td className="p-4 font-bold text-gray-700 text-sm">
-                        ₹
-                        {order.totalAmount
-                          ? order.totalAmount.toFixed(2)
-                          : "0.00"}
-                      </td>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex flex-col">
+                            <span className="text-sm font-bold text-gray-800">
+                              {order.user?.name || "Unknown User"}
+                            </span>
+                            <span className="text-[10px] text-gray-400 font-medium lowercase">
+                              {order.createdAt
+                                ? new Date(order.createdAt).toLocaleDateString()
+                                : "Unknown Date"}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex -space-x-2">
+                            {order.items &&
+                              order.items.slice(0, 3).map((item, i) => (
+                                <div
+                                  key={i}
+                                  className="w-8 h-8 rounded-full border-2 border-white bg-white shadow-sm overflow-hidden z-[10]"
+                                >
+                                  {item.product?.images?.[0] ? (
+                                    <img
+                                      src={item.product.images[0]}
+                                      alt=""
+                                      className="w-full h-full object-contain"
+                                    />
+                                  ) : (
+                                    <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                                      <Package size={12} />
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                          </div>
+                        </td>
+                        <td className="p-4 font-bold text-gray-700 text-sm">
+                          ₹
+                          {order.totalAmount
+                            ? order.totalAmount.toFixed(2)
+                            : "0.00"}
+                        </td>
 
-                      {/* Payment Status Column */}
-                      <td className="p-4">
-                        <div className="flex flex-col gap-1">
-                          <span
-                            className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase w-fit ${
-                              order.paymentStatus === "completed"
-                                ? "bg-blue-100 text-blue-700"
-                                : "bg-red-100 text-red-700"
-                            }`}
-                          >
-                            {order.paymentStatus}
-                          </span>
-                          <select
-                            value={order.paymentStatus || "pending"}
-                            onChange={(e) =>
-                              dispatch(
-                                updatePaymentStatus({
-                                  id: order._id,
-                                  status: e.target.value,
-                                }),
-                              )
-                            }
-                            className="bg-gray-50 border border-gray-200 rounded text-[10px] font-bold p-1 focus:border-blue-500 outline-none cursor-pointer"
-                          >
-                            <option value="pending">Pending</option>
-                            <option value="completed">Completed</option>
-                            <option value="failed">Failed</option>
-                          </select>
-                        </div>
-                      </td>
-
-                      {/* Order Status Column */}
-                      <td className="p-4">
-                        <div className="flex flex-col gap-1">
-                          <span
-                            className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase w-fit ${
-                              order.orderStatus === "delivered"
-                                ? "bg-green-100 text-green-700"
-                                : order.orderStatus === "shipped"
+                        {/* Payment Status Column */}
+                        <td className="p-4">
+                          <div className="flex flex-col gap-1">
+                            <span
+                              className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase w-fit ${
+                                order.paymentStatus === "completed"
                                   ? "bg-blue-100 text-blue-700"
-                                  : order.orderStatus === "packed"
-                                    ? "bg-orange-100 text-orange-700"
-                                    : "bg-gray-100 text-gray-700"
-                            }`}
-                          >
-                            {order.orderStatus || "ordered"}
-                          </span>
-                          <select
-                            value={order.orderStatus || "ordered"}
-                            onChange={(e) =>
-                              handleOrderStatusUpdate(order._id, e.target.value)
-                            }
-                            className="bg-gray-50 border border-gray-200 rounded text-[10px] font-bold p-1 focus:border-blue-500 outline-none cursor-pointer"
-                          >
-                            <option value="ordered">Ordered</option>
-                            <option value="packed">Packed</option>
-                            <option value="shipped">Shipped</option>
-                            <option
-                              value="delivered"
-                              disabled={order.paymentStatus !== "completed"}
+                                  : "bg-red-100 text-red-700"
+                              }`}
                             >
-                              Delivered{" "}
-                              {order.paymentStatus !== "completed"
-                                ? "(Needs Payment)"
-                                : ""}
-                            </option>
-                          </select>
-                        </div>
-                      </td>
-                    </tr>
+                              {order.paymentStatus}
+                            </span>
+                            <select
+                              value={order.paymentStatus || "pending"}
+                              onChange={(e) =>
+                                dispatch(
+                                  updatePaymentStatus({
+                                    id: order._id,
+                                    status: e.target.value,
+                                  }),
+                                )
+                              }
+                              className="bg-gray-50 border border-gray-200 rounded text-[10px] font-bold p-1 focus:border-blue-500 outline-none cursor-pointer"
+                            >
+                              <option value="pending">Pending</option>
+                              <option value="completed">Completed</option>
+                              <option value="failed">Failed</option>
+                            </select>
+                          </div>
+                        </td>
+
+                        {/* Order Status Column */}
+                        <td className="p-4">
+                          <div className="flex flex-col gap-1">
+                            <span
+                              className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase w-fit ${
+                                order.orderStatus === "delivered"
+                                  ? "bg-green-100 text-green-700"
+                                  : order.orderStatus === "shipped"
+                                    ? "bg-blue-100 text-blue-700"
+                                    : order.orderStatus === "packed"
+                                      ? "bg-orange-100 text-orange-700"
+                                      : "bg-gray-100 text-gray-700"
+                              }`}
+                            >
+                              {order.orderStatus || "ordered"}
+                            </span>
+                            <select
+                              value={order.orderStatus || "ordered"}
+                              onChange={(e) =>
+                                handleOrderStatusUpdate(
+                                  order._id,
+                                  e.target.value,
+                                )
+                              }
+                              className="bg-gray-50 border border-gray-200 rounded text-[10px] font-bold p-1 focus:border-blue-500 outline-none cursor-pointer"
+                            >
+                              <option value="ordered">Ordered</option>
+                              <option value="packed">Packed</option>
+                              <option value="shipped">Shipped</option>
+                              <option
+                                value="delivered"
+                                disabled={order.paymentStatus !== "completed"}
+                              >
+                                Delivered{" "}
+                                {order.paymentStatus !== "completed"
+                                  ? "(Needs Payment)"
+                                  : ""}
+                              </option>
+                            </select>
+                          </div>
+                        </td>
+                      </tr>
                     ));
                   })()
                 ) : (
@@ -859,19 +927,33 @@ const AdminDashboard = () => {
             <table className="w-full min-w-[1000px] text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50 text-gray-600 text-[11px] uppercase tracking-wider border-b">
-                  <th onClick={() => handleSort("name")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("name")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     User {renderSortIcon("name")}
                   </th>
-                  <th onClick={() => handleSort("email")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("email")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Email {renderSortIcon("email")}
                   </th>
-                  <th onClick={() => handleSort("role")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("role")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Role {renderSortIcon("role")}
                   </th>
-                  <th onClick={() => handleSort("createdAt")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("createdAt")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Joined {renderSortIcon("createdAt")}
                   </th>
-                  <th className="p-4 font-bold text-right min-w-[120px]">Actions</th>
+                  <th className="p-4 font-bold text-right min-w-[120px]">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -916,48 +998,48 @@ const AdminDashboard = () => {
                         key={userItem._id}
                         className="hover:bg-gray-50/50 transition whitespace-nowrap"
                       >
-                      <td className="p-4 font-medium text-gray-800 text-sm">
-                        {userItem.name}
-                      </td>
-                      <td className="p-4 text-sm text-gray-600">
-                        {userItem.email}
-                      </td>
-                      <td className="p-4">
-                        <span
-                          className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${
-                            userItem.role === "superadmin"
-                              ? "bg-purple-100 text-purple-700"
-                              : userItem.role === "admin"
-                                ? "bg-blue-100 text-blue-700"
-                                : "bg-gray-100 text-gray-700"
-                          }`}
-                        >
-                          {userItem.role}
-                        </span>
-                      </td>
-                      <td className="p-4 text-xs text-gray-500 font-medium">
-                        {new Date(userItem.createdAt).toLocaleDateString()}
-                      </td>
-                      <td className="p-4 text-right">
-                        <button
-                          onClick={() => handleEditUser(userItem)}
-                          className="text-blue-600 hover:text-blue-800 mr-3 p-1 hover:bg-blue-50 rounded transition"
-                        >
-                          <Edit size={18} />
-                        </button>
-                        <button
-                          onClick={() =>
-                            handleDeleteRequest(
-                              userItem._id || userItem.id,
-                              "user",
-                            )
-                          }
-                          className="text-red-500 hover:text-red-700 p-1 hover:bg-red-50 rounded transition"
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                      </td>
-                    </tr>
+                        <td className="p-4 font-medium text-gray-800 text-sm">
+                          {userItem.name}
+                        </td>
+                        <td className="p-4 text-sm text-gray-600">
+                          {userItem.email}
+                        </td>
+                        <td className="p-4">
+                          <span
+                            className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${
+                              userItem.role === "superadmin"
+                                ? "bg-purple-100 text-purple-700"
+                                : userItem.role === "admin"
+                                  ? "bg-blue-100 text-blue-700"
+                                  : "bg-gray-100 text-gray-700"
+                            }`}
+                          >
+                            {userItem.role}
+                          </span>
+                        </td>
+                        <td className="p-4 text-xs text-gray-500 font-medium">
+                          {new Date(userItem.createdAt).toLocaleDateString()}
+                        </td>
+                        <td className="p-4 text-right">
+                          <button
+                            onClick={() => handleEditUser(userItem)}
+                            className="text-blue-600 hover:text-blue-800 mr-3 p-1 hover:bg-blue-50 rounded transition"
+                          >
+                            <Edit size={18} />
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleDeleteRequest(
+                                userItem._id || userItem.id,
+                                "user",
+                              )
+                            }
+                            className="text-red-500 hover:text-red-700 p-1 hover:bg-red-50 rounded transition"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </td>
+                      </tr>
                     ));
                   })()
                 )}
@@ -985,12 +1067,14 @@ const AdminDashboard = () => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-              
+
               <select
                 className="bg-white border border-gray-200 rounded-lg text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
                 onChange={(e) => {
                   if (e.target.value) {
-                    dispatch(fetchLogs({ page: 1, limit: 10, action: e.target.value }));
+                    dispatch(
+                      fetchLogs({ page: 1, limit: 10, action: e.target.value }),
+                    );
                   } else {
                     dispatch(fetchLogs({ page: 1, limit: 10 }));
                   }
@@ -1010,19 +1094,34 @@ const AdminDashboard = () => {
             <table className="w-full min-w-[1000px] text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50 text-gray-600 text-[11px] uppercase tracking-wider border-b">
-                  <th onClick={() => handleSort("status")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("status")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Status {renderSortIcon("status")}
                   </th>
-                  <th onClick={() => handleSort("action")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("action")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Action {renderSortIcon("action")}
                   </th>
-                  <th onClick={() => handleSort("user.name")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("user.name")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Account {renderSortIcon("user.name")}
                   </th>
-                  <th onClick={() => handleSort("method")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("method")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Method {renderSortIcon("method")}
                   </th>
-                  <th onClick={() => handleSort("createdAt")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("createdAt")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Date {renderSortIcon("createdAt")}
                   </th>
                 </tr>
@@ -1102,9 +1201,26 @@ const AdminDashboard = () => {
                             <span className="text-sm font-bold text-gray-800">
                               {log.action}
                             </span>
-                            <span className="text-[10px] text-gray-500 max-w-[200px] truncate">
-                              {log.description}
-                            </span>
+                            {(() => {
+                              const colonIdx = log.description.indexOf(': ');
+                              if (colonIdx !== -1) {
+                                return (
+                                  <>
+                                    <span className="text-[10px] text-gray-400">
+                                      {log.description.slice(0, colonIdx + 1)}
+                                    </span>
+                                    <span className="text-[10px] text-gray-600 font-medium max-w-[200px] truncate">
+                                      {log.description.slice(colonIdx + 2)}
+                                    </span>
+                                  </>
+                                );
+                              }
+                              return (
+                                <span className="text-[10px] text-gray-500 max-w-[200px] truncate">
+                                  {log.description}
+                                </span>
+                              );
+                            })()}
                           </div>
                         </td>
                         <td className="p-4">
@@ -1123,11 +1239,11 @@ const AdminDashboard = () => {
                           </div>
                         </td>
                         <td className="p-4">
-                          <div className="flex items-center gap-2">
-                            <span className="bg-gray-800 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
+                          <div className="flex flex-col gap-1">
+                            <span className="bg-gray-800 text-white text-[9px] font-bold px-1.5 py-0.5 rounded w-fit">
                               {log.method}
                             </span>
-                            <span className="text-xs font-mono text-gray-400 truncate max-w-[120px]">
+                            <span className="text-[10px] font-mono text-gray-400 truncate max-w-[120px]">
                               {log.endpoint}
                             </span>
                           </div>
@@ -1143,7 +1259,9 @@ const AdminDashboard = () => {
                     <td colSpan="5" className="p-12 text-center">
                       <div className="flex flex-col items-center">
                         <Server size={32} className="text-gray-200 mb-2" />
-                        <span className="text-gray-400 font-medium">No logs recorded yet.</span>
+                        <span className="text-gray-400 font-medium">
+                          No logs recorded yet.
+                        </span>
                       </div>
                     </td>
                   </tr>
@@ -1191,19 +1309,34 @@ const AdminDashboard = () => {
             <table className="w-full min-w-[1000px] text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50 text-gray-600 text-[11px] uppercase tracking-wider border-b">
-                  <th onClick={() => handleSort("code")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("code")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Code {renderSortIcon("code")}
                   </th>
-                  <th onClick={() => handleSort("discountType")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("discountType")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Type {renderSortIcon("discountType")}
                   </th>
-                  <th onClick={() => handleSort("discountValue")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("discountValue")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Value {renderSortIcon("discountValue")}
                   </th>
-                  <th onClick={() => handleSort("usageLimit")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("usageLimit")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Usage {renderSortIcon("usageLimit")}
                   </th>
-                  <th onClick={() => handleSort("expiryDate")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
+                  <th
+                    onClick={() => handleSort("expiryDate")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
                     Expires {renderSortIcon("expiryDate")}
                   </th>
                   <th className="p-4 font-bold text-right">Actions</th>
@@ -1267,7 +1400,9 @@ const AdminDashboard = () => {
                           {!coupon.usageLimit ? "Unlimited" : coupon.usageLimit}
                         </td>
                         <td className="p-4 text-xs text-gray-500 font-medium">
-                          {coupon.expiryDate ? new Date(coupon.expiryDate).toLocaleDateString() : "N/A"}
+                          {coupon.expiryDate
+                            ? new Date(coupon.expiryDate).toLocaleDateString()
+                            : "N/A"}
                         </td>
                         <td className="p-4 text-right">
                           <button

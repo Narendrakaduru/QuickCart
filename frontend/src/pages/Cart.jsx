@@ -118,7 +118,7 @@ const Cart = () => {
                             </Link>
                             <button
                               onClick={() => handleRemoveItem(item.product._id)}
-                              className="w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center shrink-0 hover:bg-red-500 hover:text-white hover:rotate-90 transition-all duration-300"
+                              className="w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center shrink-0 hover:bg-red-500 hover:text-white transition-colors"
                               title="Remove item"
                             >
                               <Trash2 size={16} />

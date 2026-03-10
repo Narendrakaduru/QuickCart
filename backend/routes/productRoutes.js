@@ -10,7 +10,7 @@ const {
   getRecommendations
 } = require('../controllers/productController');
 
-const { protect, authorize } = require('../middleware/auth');
+const { protect, authorize, optionalAuth } = require('../middleware/auth');
 const { logAction } = require('../middleware/logger');
 
 const router = express.Router();
@@ -27,7 +27,7 @@ router.route('/:id/reviews').post(protect, createProductReview);
 
 router
   .route('/:id')
-  .get(getProduct)
+  .get(optionalAuth, getProduct)
   .put(protect, authorize('admin', 'superadmin'), logAction("PRODUCT_UPDATED", "Product details updated"), updateProduct)
   .delete(protect, authorize('admin', 'superadmin'), logAction("PRODUCT_DELETED", "Product deleted"), deleteProduct);
 
