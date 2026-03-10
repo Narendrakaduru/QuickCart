@@ -52,6 +52,10 @@ const ProductSchema = new mongoose.Schema({
     required: [true, "Please add stock count"],
     default: 0,
   },
+  reservedCount: {
+    type: Number,
+    default: 0,
+  },
   isFeatured: {
     type: Boolean,
     default: false,

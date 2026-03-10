@@ -100,6 +100,7 @@ graph LR
         M6["Coupon"]
         M7["Log"]
         M8["Notification"]
+        M9["InventoryLock"]
     end
 
     subgraph "Storage & Infrastructure"
@@ -136,6 +137,7 @@ graph LR
     C5 --> M1
     C6 --> M3
     C6 --> M8
+    C6 --> M9
     C8 --> M5
     C9 --> M7
     C10 --> M6
@@ -164,6 +166,8 @@ erDiagram
     PRODUCT ||--o{ CART_ITEM : "added to"
     CART ||--|{ CART_ITEM : "has"
     ORDER ||--o{ NOTIFICATION : "triggers"
+    USER ||--o{ INVENTORY_LOCK : "holds"
+    PRODUCT ||--o{ INVENTORY_LOCK : "locked in"
 
     COUPON ||--o{ ORDER : "applied to"
 
@@ -199,6 +203,7 @@ erDiagram
         json[] reviews
         number rating
         number numReviews
+        number reservedCount
         date createdAt
     }
 
@@ -272,6 +277,14 @@ erDiagram
         ObjectId orderId FK
         boolean isRead
         date createdAt
+    }
+
+    INVENTORY_LOCK {
+        ObjectId _id PK
+        ObjectId user FK
+        ObjectId product FK
+        number quantity
+        date expiresAt
     }
 ```
 
@@ -397,22 +410,27 @@ flowchart TD
     J --> K
 
     K --> L["Select / Enter shipping address"]
-    L --> M["Review order summary"]
-    M --> N["Place Order → POST /api/orders"]
+    M --> L1([Lock Inventory])
+    L1 --> L2["POST /api/orders/lock"]
+    L2 --> L3["Server: Atomic inc reservedCount"]
+    L3 --> L4["Server: Create InventoryLock"]
+    L4 --> L5["UI: Show Items Secured Banner"]
+    L5 --> N["Place Order → POST /api/orders"]
 
     N --> O["Server: Create Order doc"]
-    O --> P["Server: Clear Cart"]
-    P --> PA["Create Notification: Order Placed"]
-    PA --> Q{Coupon used?}
-    Q -- Yes --> R["Increment coupon usedCount"]
-    Q -- No --> S["Skip"]
-    R --> T["Return order confirmation"]
-    S --> T
+    O --> P["Server: Clear Cart & Delete Lock"]
+    P --> Q["Server: Dec stock & reservedCount"]
+    Q --> PA["Create Notification: Order Placed"]
+    PA --> R{Coupon used?}
+    R -- Yes --> S["Increment coupon usedCount"]
+    R -- No --> T["Skip"]
+    S --> U["Return order confirmation"]
+    T --> U
 
-    T --> U([Order Confirmation shown])
-    U --> V([Track Order page])
-    V --> W["GET /api/orders/:id"]
-    W --> X["Show status: ordered → packed → shipped → delivered"]
+    U --> V([Order Confirmation shown])
+    V --> W([Track Order page])
+    W --> X["GET /api/orders/:id"]
+    X --> Y["Show status: ordered → packed → shipped → delivered"]
 ```
 
 ---
@@ -443,6 +461,10 @@ flowchart TD
     C --> G["🎟️ Coupons Tab"]
     G --> G1["GET /api/coupons — list all"]
     G1 --> G2["CRUD via CouponModal"]
+
+    C --> I["🔒 Reservations Tab"]
+    I --> I1["GET /api/orders/locks"]
+    I1 --> I2["Monitor active holds & expiration"]
 
     C --> H["📊 Logs Tab (Superadmin only)"]
     H --> H1["GET /api/logs"]
@@ -570,7 +592,7 @@ graph LR
     STORE --> PROD["product: { products, product, loading }"]
     STORE --> CART["cart: { items, loading }"]
     STORE --> WL["wishlist: { items, loading }"]
-    STORE --> ORD["order: { orders, order, loading }"]
+    STORE --> ORD["order: { orders, locks, order, loading }"]
     STORE --> USR["user: { users, loading }"]
     STORE --> CPN["coupon: { coupons, loading }"]
     STORE --> LOG["log: { logs, loading }"]

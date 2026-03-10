@@ -25,7 +25,9 @@ connectElastic().then(() => {
 // Initialize Cron Jobs (skip in test to prevent open handles)
 if (process.env.NODE_ENV !== "test") {
   const abandonedCartJob = require("./cronJobs/abandonedCartJob");
+  const inventoryLockJob = require("./cronJobs/inventoryLockJob");
   abandonedCartJob();
+  inventoryLockJob();
 }
 
 const app = express();

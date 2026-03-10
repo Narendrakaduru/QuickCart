@@ -17,6 +17,7 @@ import {
   getAllOrdersAdmin,
   updateOrderStatus,
   updatePaymentStatus,
+  getInventoryLocks,
 } from "../slices/orderSlice";
 import { fetchLogs } from "../slices/logSlice";
 import {
@@ -49,6 +50,8 @@ import {
   ChevronsRight,
   Tag,
   Star,
+  Clock,
+  Unlock,
 } from "lucide-react";
 import ProductModal from "../components/ProductModal";
 import UserModal from "../components/UserModal";
@@ -189,6 +192,7 @@ const AdminDashboard = () => {
   } = useSelector((state) => state.users);
   const {
     orders,
+    locks,
     isLoading: ordersLoading,
     isError: ordersError,
     message: ordersMessage,
@@ -315,6 +319,8 @@ const AdminDashboard = () => {
         dispatch(fetchLogs({ page: currentPage, limit: 10 }));
       } else if (activeTab === "coupons") {
         dispatch(fetchCoupons({ page: currentPage, limit: 10 }));
+      } else if (activeTab === "reservations") {
+        dispatch(getInventoryLocks());
       }
     }
   }, [dispatch, user, activeTab, currentPage]);
@@ -498,6 +504,15 @@ const AdminDashboard = () => {
           >
             <Tag size={16} className="mr-2" /> Coupons
           </button>
+          <button
+            onClick={() => {
+              setActiveTab("reservations");
+              setSearchTerm("");
+            }}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition flex items-center ${activeTab === "reservations" ? "bg-blue-600 text-white shadow-sm" : "text-gray-600 hover:bg-gray-50"}`}
+          >
+            <Clock size={16} className="mr-2" /> Reservations
+          </button>
         </div>
       </div>
 
@@ -572,6 +587,7 @@ const AdminDashboard = () => {
                   >
                     Stock {renderSortIcon("stockCount")}
                   </th>
+                  <th className="p-4 font-bold">Reserved</th>
                   <th className="p-4 font-bold text-right min-w-[120px]">
                     Actions
                   </th>
@@ -663,6 +679,13 @@ const AdminDashboard = () => {
                             className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${product.stockCount > 10 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
                           >
                             {product.stockCount} Units
+                          </span>
+                        </td>
+                        <td className="p-4">
+                          <span
+                            className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${product.reservedCount > 0 ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-400"}`}
+                          >
+                            {product.reservedCount || 0} Locked
                           </span>
                         </td>
                         <td className="p-4 text-right">
@@ -836,7 +859,7 @@ const AdminDashboard = () => {
                             </span>
                             <span className="text-[10px] text-gray-400 font-medium lowercase">
                               {order.createdAt
-                                ? new Date(order.createdAt).toLocaleDateString()
+                                ? new Date(order.createdAt).toLocaleString()
                                 : "Unknown Date"}
                             </span>
                           </div>
@@ -1492,6 +1515,117 @@ const AdminDashboard = () => {
                       </tr>
                     ));
                   })()
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : activeTab === "reservations" ? (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-8">
+          <div className="p-4 border-b bg-gray-50 flex justify-between items-center">
+            <h2 className="text-lg font-semibold text-gray-700">
+              Active Inventory Reservations
+            </h2>
+            <div className="text-xs text-blue-600 font-bold uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full border border-blue-100 italic">
+              Auto-releases after 15 minutes
+            </div>
+          </div>
+
+          <div className="overflow-x-auto pb-4">
+            <table className="w-full min-w-[1000px] text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-50 text-gray-600 text-[11px] uppercase tracking-wider border-b">
+                  <th className="p-4 font-bold">Product</th>
+                  <th className="p-4 font-bold">User</th>
+                  <th className="p-4 font-bold">Quantity</th>
+                  <th className="p-4 font-bold font-bold">Value</th>
+                  <th className="p-4 font-bold">Expires At</th>
+                  <th className="p-4 font-bold">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {ordersLoading ? (
+                  <tr>
+                    <td colSpan="6" className="p-8 text-center text-gray-400">
+                      Loading reservations...
+                    </td>
+                  </tr>
+                ) : ordersError ? (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="p-8 text-center text-red-500 font-bold"
+                    >
+                      {ordersMessage}
+                    </td>
+                  </tr>
+                ) : locks && locks.length > 0 ? (
+                  locks.map((lock) => (
+                    <tr
+                      key={lock._id}
+                      className="hover:bg-gray-50/50 transition whitespace-nowrap"
+                    >
+                      <td className="p-4 flex items-center space-x-3">
+                        <img
+                          src={lock.product?.images?.[0] || ""}
+                          alt=""
+                          className="w-10 h-10 object-contain rounded border bg-white"
+                        />
+                        <div className="flex flex-col">
+                          <span className="font-medium text-gray-800 text-sm max-w-[200px] truncate">
+                            {lock.product?.title || "Unknown Product"}
+                          </span>
+                          <span className="text-[10px] text-gray-400 font-mono">
+                            {lock.product?._id}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex flex-col">
+                          <span className="text-sm font-bold text-gray-700">
+                            {lock.user?.name || "Anonymous"}
+                          </span>
+                          <span className="text-[10px] text-gray-400">
+                            {lock.user?.email || ""}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="p-4">
+                         <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-bold border border-blue-100 shadow-sm">
+                           {lock.quantity} Units
+                         </span>
+                      </td>
+                      <td className="p-4 font-bold text-gray-700">
+                        ₹{((lock.product?.price || 0) * lock.quantity).toFixed(2)}
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center text-xs text-gray-600 font-medium">
+                          <Clock size={12} className="mr-1.5 text-blue-500" />
+                          {new Date(lock.expiresAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                        </div>
+                      </td>
+                      <td className="p-4">
+                        {new Date(lock.expiresAt) > new Date() ? (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-green-100 text-green-700 border border-green-200">
+                            Active
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-100 text-red-700 border border-red-200 italic shadow-sm opacity-70">
+                            Expired
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="p-8 text-center text-gray-400 font-medium italic"
+                    >
+                      No active reservations found
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>

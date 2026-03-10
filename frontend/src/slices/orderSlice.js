@@ -177,10 +177,58 @@ export const cancelOrder = createAsyncThunk(
   },
 );
 
+// Lock inventory
+export const lockInventory = createAsyncThunk(
+  "orders/lockInventory",
+  async (items, thunkAPI) => {
+    try {
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.post(`${API_URL}/lock`, { items }, config);
+      return response.data;
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.error) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  },
+);
+
+// Get all inventory locks (Admin)
+export const getInventoryLocks = createAsyncThunk(
+  "orders/getInventoryLocks",
+  async (_, thunkAPI) => {
+    try {
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.get(`${API_URL}/locks`, config);
+      return response.data;
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.error) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  },
+);
+
 const orderSlice = createSlice({
   name: "orders",
   initialState: {
     orders: [],
+    locks: [],
     order: null,
     isError: false,
     isSuccess: false,
@@ -312,6 +360,30 @@ const orderSlice = createSlice({
       })
       .addCase(cancelOrder.rejected, (state, action) => {
         state.isUpdating = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(lockInventory.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(lockInventory.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+      })
+      .addCase(lockInventory.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getInventoryLocks.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getInventoryLocks.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.locks = action.payload.data;
+      })
+      .addCase(getInventoryLocks.rejected, (state, action) => {
+        state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       });

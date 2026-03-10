@@ -3,8 +3,83 @@ const Cart = require("../models/Cart");
 const Coupon = require("../models/Coupon");
 const Notification = require("../models/Notification");
 const Product = require("../models/Product");
+const InventoryLock = require("../models/InventoryLock");
 const { clearProductCache } = require("./productController");
 const { logEvent } = require("../middleware/logger");
+
+// @desc    Reserve inventory temporarily for checkout
+// @route   POST /api/orders/lock
+// @access  Private
+exports.lockInventory = async (req, res) => {
+  try {
+    const { items } = req.body; // Array of { product, quantity }
+
+    if (!items || items.length === 0) {
+      return res.status(400).json({ success: false, error: "No items to lock" });
+    }
+
+    const locks = [];
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+
+    for (const item of items) {
+      const product = await Product.findById(item.product);
+      if (!product) {
+        return res.status(404).json({ success: false, error: `Product ${item.product} not found` });
+      }
+
+      // Check availability: stockCount - reservedCount
+      const available = Math.max(0, product.stockCount - (product.reservedCount || 0));
+      if (available < item.quantity) {
+        return res.status(400).json({ 
+          success: false, 
+          error: `Insufficient stock for ${product.title}. Available: ${available}, Requested: ${item.quantity}` 
+        });
+      }
+
+      // Use an atomic update to prevent race conditions
+      // This is the "Locking" part: only increment reservedCount if there is enough available stock
+      const mongoose = require('mongoose');
+      const updatedProduct = await Product.findOneAndUpdate(
+        { 
+          _id: item.product,
+          $expr: { 
+            $gte: [
+              { $subtract: ["$stockCount", { $ifNull: ["$reservedCount", 0] }] }, 
+              item.quantity
+            ] 
+          }
+        },
+        { $inc: { reservedCount: item.quantity } },
+        { new: true }
+      );
+
+      if (!updatedProduct) {
+        return res.status(400).json({ success: false, error: `Race condition: ${product.title} is no longer available in the requested quantity.` });
+      }
+
+      // Create or update the lock record
+      const lock = await InventoryLock.findOneAndUpdate(
+        { user: req.user._id, product: item.product },
+        { 
+          quantity: item.quantity, 
+          expiresAt 
+        },
+        { upsert: true, new: true }
+      );
+      locks.push(lock);
+      await clearProductCache(item.product.toString());
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Inventory reserved for 15 minutes",
+      expiresAt
+    });
+  } catch (error) {
+    console.error(`Lock Inventory Error: ${error.message}`);
+    res.status(500).json({ success: false, error: "Server Error: Failed to reserve inventory" });
+  }
+};
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -28,11 +103,30 @@ exports.addOrderItems = async (req, res) => {
 
     const createdOrder = await order.save();
 
-    // Decrement stock for each ordered item
+    // Decrement stock for each ordered item and clear reservations
     for (const item of items) {
-      await Product.findByIdAndUpdate(item.product, {
-        $inc: { stockCount: -item.quantity },
+      // Find if there was a lock for this user and product
+      const lock = await InventoryLock.findOneAndDelete({ 
+        user: req.user._id, 
+        product: item.product 
       });
+
+      if (lock) {
+        // If a lock existed, we decrement both stockCount and reservedCount
+        // Note: quantity might differ if user changed cart since locking, 
+        // but for simplicity we assume the lock matches the order item.
+        await Product.findByIdAndUpdate(item.product, {
+          $inc: { 
+            stockCount: -item.quantity,
+            reservedCount: -lock.quantity // Use the locked quantity to clear the reservation
+          },
+        });
+      } else {
+        // Direct order without a prior lock (e.g. from a script)
+        await Product.findByIdAndUpdate(item.product, {
+          $inc: { stockCount: -item.quantity },
+        });
+      }
       await clearProductCache(item.product.toString());
     }
 
@@ -332,5 +426,29 @@ exports.cancelOrder = async (req, res) => {
     res
       .status(500)
       .json({ success: false, error: "Server Error: Cancellation failed" });
+  }
+};
+
+// @desc    Get all active inventory locks
+// @route   GET /api/orders/locks
+// @access  Private/Admin
+exports.getInventoryLocks = async (req, res) => {
+  try {
+    const locks = await InventoryLock.find({})
+      .populate("user", "name email")
+      .populate("product", "title images price")
+      .sort("-createdAt");
+
+    res.status(200).json({
+      success: true,
+      count: locks.length,
+      data: locks,
+    });
+  } catch (error) {
+    console.error(`Get Inventory Locks Error: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      error: "Server Error: Could not fetch inventory locks",
+    });
   }
 };
