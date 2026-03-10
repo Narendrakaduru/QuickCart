@@ -1,6 +1,7 @@
 const Product = require("../models/Product");
 const { redisClient } = require("../config/redis");
 const { elasticClient } = require("../config/elastic");
+const { logEvent } = require("../middleware/logger");
 
 // Helper to clear product caches on data mutation
 const clearProductCache = async (id = null) => {
@@ -150,18 +151,14 @@ exports.getProducts = async (req, res, next) => {
     }
 
     // Pagination result
-    const pagination = {};
-    if (endIndex < total) {
-      pagination.next = { page: page + 1, limit };
-    }
-    if (startIndex > 0) {
-      pagination.prev = { page: page - 1, limit };
-    }
-
     const responseData = {
       success: true,
       count: products.length,
-      pagination,
+      pagination: {
+        total,
+        page,
+        pages: Math.ceil(total / limit),
+      },
       data: products,
     };
 
@@ -208,6 +205,15 @@ exports.getProduct = async (req, res, next) => {
     }
 
     const responseData = { success: true, data: product };
+
+    // Track Activity: Product viewed
+    logEvent({
+      action: "Product Viewed",
+      description: `User viewed product: ${product.title}`,
+      req,
+      status: "success"
+    });
+
     if (redisClient.isReady) {
       const cacheKey = `product:${req.params.id}`;
       await redisClient.setEx(cacheKey, 60, JSON.stringify(responseData)); // 60 seconds

@@ -13,15 +13,16 @@ const initialState = {
 // Get all coupons (Admin)
 export const fetchCoupons = createAsyncThunk(
   'coupons/getAll',
-  async (_, thunkAPI) => {
+  async (params = {}, thunkAPI) => {
     try {
+      const { page = 1, limit = 10 } = params;
       const token = thunkAPI.getState().auth.token;
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await axios.get('/api/coupons', config);
+      const response = await axios.get(`/api/coupons?page=${page}&limit=${limit}`, config);
       return response.data;
     } catch (error) {
       const message =
@@ -151,6 +152,7 @@ export const couponSlice = createSlice({
       .addCase(fetchCoupons.fulfilled, (state, action) => {
         state.isLoading = false;
         state.coupons = action.payload.data;
+        state.pagination = action.payload.pagination || state.pagination;
       })
       .addCase(fetchCoupons.rejected, (state, action) => {
         state.isLoading = false;

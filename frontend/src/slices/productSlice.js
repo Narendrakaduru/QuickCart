@@ -8,13 +8,13 @@ export const fetchProducts = createAsyncThunk(
   'products/fetchProducts',
   async (params = {}, thunkAPI) => {
     try {
-      const { keyword = '', limit = 100 } = params;
-      let url = `${API_URL}?limit=${limit}`;
+      const { keyword = '', limit = 10, page = 1 } = params;
+      let url = `${API_URL}?limit=${limit}&page=${page}`;
       if (keyword) {
         url += `&keyword=${keyword}`;
       }
       const response = await axios.get(url);
-      return response.data.data;
+      return response.data; // Return full response object including pagination
     } catch (error) {
       const message =
         (error.response &&
@@ -195,6 +195,11 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   recommendationsLoading: false,
+  pagination: {
+    total: 0,
+    page: 1,
+    pages: 1,
+  },
   message: '',
 };
 
@@ -218,7 +223,8 @@ export const productSlice = createSlice({
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.products = action.payload;
+        state.products = action.payload.data;
+        state.pagination = action.payload.pagination || state.pagination;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.isLoading = false;

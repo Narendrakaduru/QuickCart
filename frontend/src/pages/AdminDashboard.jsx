@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   fetchProducts,
   createProduct,
@@ -30,7 +30,6 @@ import {
   ShoppingCart,
   CheckCircle,
   Truck,
-  Clock,
   Search,
   Activity,
   User as UserIcon,
@@ -46,6 +45,50 @@ import ProductModal from "../components/ProductModal";
 import UserModal from "../components/UserModal";
 import CouponModal from "../components/CouponModal";
 import ConfirmModal from "../components/ConfirmModal";
+
+const Pagination = ({ pagination, onPageChange }) => {
+  if (!pagination || pagination.pages <= 1) return null;
+
+  return (
+    <div className="flex justify-between items-center p-4 bg-gray-50 border-t border-gray-100">
+      <div className="text-sm text-gray-500">
+        Showing <span className="font-semibold text-gray-700">{pagination.total > 0 ? (pagination.page - 1) * 10 + 1 : 0}</span> to{" "}
+        <span className="font-semibold text-gray-700">
+          {Math.min(pagination.page * 10, pagination.total)}
+        </span> of <span className="font-semibold text-gray-700">{pagination.total}</span> entries
+      </div>
+      <div className="flex gap-2">
+        <button
+          onClick={() => onPageChange(pagination.page - 1)}
+          disabled={pagination.page === 1}
+          className="px-3 py-1 bg-white border border-gray-200 rounded text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+        >
+          Previous
+        </button>
+        {[...Array(pagination.pages)].map((_, i) => (
+          <button
+            key={i + 1}
+            onClick={() => onPageChange(i + 1)}
+            className={`px-3 py-1 rounded text-sm font-medium transition ${
+              pagination.page === i + 1
+                ? "bg-blue-600 text-white shadow-sm"
+                : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+            }`}
+          >
+            {i + 1}
+          </button>
+        ))}
+        <button
+          onClick={() => onPageChange(pagination.page + 1)}
+          disabled={pagination.page === pagination.pages}
+          className="px-3 py-1 bg-white border border-gray-200 rounded text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const AdminDashboard = () => {
   const dispatch = useDispatch();
@@ -81,8 +124,31 @@ const AdminDashboard = () => {
     isError: couponsError,
     message: couponsMessage,
   } = useSelector((state) => state.coupons);
+  const {
+    pagination: productPagination
+  } = useSelector((state) => state.products);
+  const {
+    pagination: orderPagination
+  } = useSelector((state) => state.orders);
+  const {
+    pagination: userPagination
+  } = useSelector((state) => state.users);
+  const {
+    pagination: logPagination
+  } = useSelector((state) => state.logs);
 
-  const [activeTab, setActiveTab] = useState("inventory");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get("tab") || "inventory";
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
+
+  const setActiveTab = (tab) => {
+    setSearchParams({ tab, page: 1 });
+  };
+
+  const setPage = (page) => {
+    setSearchParams({ tab: activeTab, page });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: "createdAt", direction: "desc" });
 
@@ -152,18 +218,18 @@ const AdminDashboard = () => {
   useEffect(() => {
     if (user) {
       if (activeTab === "inventory") {
-        dispatch(fetchProducts({}));
+        dispatch(fetchProducts({ page: currentPage, limit: 10 }));
       } else if (activeTab === "users" && user.role === "superadmin") {
-        dispatch(fetchUsers());
+        dispatch(fetchUsers({ page: currentPage, limit: 10 }));
       } else if (activeTab === "orders") {
-        dispatch(getAllOrdersAdmin());
+        dispatch(getAllOrdersAdmin({ page: currentPage, limit: 10 }));
       } else if (activeTab === "logs" && user.role === "superadmin") {
-        dispatch(fetchLogs());
+        dispatch(fetchLogs({ page: currentPage, limit: 10 }));
       } else if (activeTab === "coupons") {
-        dispatch(fetchCoupons());
+        dispatch(fetchCoupons({ page: currentPage, limit: 10 }));
       }
     }
-  }, [dispatch, user, activeTab]);
+  }, [dispatch, user, activeTab, currentPage]);
 
   if (!user || (user.role !== "admin" && user.role !== "superadmin")) {
     return null;
@@ -278,9 +344,10 @@ const AdminDashboard = () => {
   const handleOrderStatusUpdate = async (orderId, newStatus) => {
     await dispatch(updateOrderStatus({ id: orderId, status: newStatus }));
     if (newStatus === "delivered") {
-      dispatch(fetchProducts({}));
+      dispatch(fetchProducts({ page: currentPage, limit: 10 }));
     }
   };
+
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -348,7 +415,7 @@ const AdminDashboard = () => {
       </div>
 
       {activeTab === "inventory" ? (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-8">
           <div className="p-4 border-b bg-gray-50 flex flex-col sm:flex-row justify-between items-center gap-4">
             <h2 className="text-lg font-semibold text-gray-700">
               Product Management
@@ -384,8 +451,8 @@ const AdminDashboard = () => {
             </button>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+          <div className="overflow-x-auto pb-4">
+            <table className="w-full min-w-[1000px] text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50 text-gray-600 text-[11px] uppercase tracking-wider border-b">
                   <th onClick={() => handleSort("title")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
@@ -403,7 +470,7 @@ const AdminDashboard = () => {
                   <th onClick={() => handleSort("stockCount")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
                     Stock {renderSortIcon("stockCount")}
                   </th>
-                  <th className="p-4 font-bold text-right">Actions</th>
+                  <th className="p-4 font-bold text-right min-w-[120px]">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -521,6 +588,7 @@ const AdminDashboard = () => {
               </tbody>
             </table>
           </div>
+          <Pagination pagination={productPagination} onPageChange={setPage} />
         </div>
       ) : activeTab === "orders" ? (
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
@@ -553,8 +621,8 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+          <div className="overflow-x-auto pb-4">
+            <table className="w-full min-w-[1000px] text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50 text-gray-600 text-[11px] uppercase tracking-wider border-b">
                   <th onClick={() => handleSort("_id")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
@@ -570,7 +638,7 @@ const AdminDashboard = () => {
                   <th onClick={() => handleSort("paymentStatus")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
                     Status {renderSortIcon("paymentStatus")}
                   </th>
-                  <th className="p-4 font-bold text-right">Actions</th>
+                  <th className="p-4 font-bold text-right min-w-[120px]">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -751,6 +819,7 @@ const AdminDashboard = () => {
               </tbody>
             </table>
           </div>
+          <Pagination pagination={orderPagination} onPageChange={setPage} />
         </div>
       ) : activeTab === "users" ? (
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
@@ -786,8 +855,8 @@ const AdminDashboard = () => {
             </button>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+          <div className="overflow-x-auto pb-4">
+            <table className="w-full min-w-[1000px] text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50 text-gray-600 text-[11px] uppercase tracking-wider border-b">
                   <th onClick={() => handleSort("name")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
@@ -802,7 +871,7 @@ const AdminDashboard = () => {
                   <th onClick={() => handleSort("createdAt")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
                     Joined {renderSortIcon("createdAt")}
                   </th>
-                  <th className="p-4 font-bold text-right">Actions</th>
+                  <th className="p-4 font-bold text-right min-w-[120px]">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -895,6 +964,7 @@ const AdminDashboard = () => {
               </tbody>
             </table>
           </div>
+          <Pagination pagination={userPagination} onPageChange={setPage} />
         </div>
       ) : activeTab === "logs" ? (
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
@@ -902,30 +972,42 @@ const AdminDashboard = () => {
             <h2 className="text-lg font-semibold text-gray-700">
               System Activity Logs
             </h2>
-            <div className="relative flex-1 max-w-sm w-full">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search size={16} className="text-gray-400" />
+            <div className="flex flex-wrap items-center gap-2 flex-1 max-w-2xl">
+              <div className="relative flex-1">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search size={16} className="text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search logs..."
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg bg-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
               </div>
-              <input
-                type="text"
-                placeholder="Search logs (action, description)..."
-                className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg bg-white text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              {searchTerm && (
-                <button
-                  onClick={() => setSearchTerm("")}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-                >
-                  <Plus size={14} className="rotate-45" />
-                </button>
-              )}
+              
+              <select
+                className="bg-white border border-gray-200 rounded-lg text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
+                onChange={(e) => {
+                  if (e.target.value) {
+                    dispatch(fetchLogs({ page: 1, limit: 10, action: e.target.value }));
+                  } else {
+                    dispatch(fetchLogs({ page: 1, limit: 10 }));
+                  }
+                }}
+              >
+                <option value="">All Activities</option>
+                <option value="USER_LOGIN">User Login</option>
+                <option value="Product Viewed">Product Viewed</option>
+                <option value="Cart Updated">Cart Updated</option>
+                <option value="Order Placed">Order Placed</option>
+                <option value="Coupon Applied">Coupon Applied</option>
+              </select>
             </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+          <div className="overflow-x-auto pb-4">
+            <table className="w-full min-w-[1000px] text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50 text-gray-600 text-[11px] uppercase tracking-wider border-b">
                   <th onClick={() => handleSort("status")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
@@ -1069,6 +1151,7 @@ const AdminDashboard = () => {
               </tbody>
             </table>
           </div>
+          <Pagination pagination={logPagination} onPageChange={setPage} />
         </div>
       ) : activeTab === "coupons" ? (
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
@@ -1104,8 +1187,8 @@ const AdminDashboard = () => {
             </button>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+          <div className="overflow-x-auto pb-4">
+            <table className="w-full min-w-[1000px] text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50 text-gray-600 text-[11px] uppercase tracking-wider border-b">
                   <th onClick={() => handleSort("code")} className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition">
