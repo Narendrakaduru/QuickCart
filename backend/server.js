@@ -29,6 +29,7 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 const app = express();
+app.set('trust proxy', true);
 const logger = require('./config/logger');
 
 // Middleware

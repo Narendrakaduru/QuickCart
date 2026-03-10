@@ -57,6 +57,7 @@ const syncToElastic = async (product, deleted = false) => {
 // @route   GET /api/products
 // @access  Public
 exports.getProducts = async (req, res, next) => {
+  console.log('DEBUG START: req.query:', JSON.stringify(req.query));
   try {
     if (redisClient.isReady) {
       const cacheKey = `products:${req.originalUrl}`;
@@ -72,6 +73,18 @@ exports.getProducts = async (req, res, next) => {
     // Copy req.query
     const reqQuery = { ...req.query };
 
+    // Format special flat keys like field[operator] (e.g., category[in]) into nested objects
+    Object.keys(reqQuery).forEach(key => {
+      const match = key.match(/^(.+)\[(.+)\]$/);
+      if (match) {
+        const field = match[1];
+        const operator = match[2];
+        reqQuery[field] = reqQuery[field] || {};
+        reqQuery[field][operator] = reqQuery[key];
+        delete reqQuery[key];
+      }
+    });
+
     // Fields to exclude
     const removeFields = ["select", "sort", "page", "limit", "keyword"];
     removeFields.forEach((param) => delete reqQuery[param]);
@@ -86,6 +99,13 @@ exports.getProducts = async (req, res, next) => {
     );
 
     let mongoQuery = JSON.parse(queryStr);
+
+    // Handle comma-separated values for $in operator
+    Object.keys(mongoQuery).forEach((key) => {
+      if (mongoQuery[key].$in && typeof mongoQuery[key].$in === "string") {
+        mongoQuery[key].$in = mongoQuery[key].$in.split(",").map(val => val.trim());
+      }
+    });
 
     // Handle Keyword Search with Elasticsearch
     if (req.query.keyword) {

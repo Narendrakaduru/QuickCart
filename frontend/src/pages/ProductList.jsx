@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { fetchProducts } from "../slices/productSlice";
 import ProductCard from "../components/ProductCard";
+import { CATEGORIES } from "../constants/categoryConstants";
 
 const ProductList = () => {
   const dispatch = useDispatch();
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const categoryParam = searchParams.get("category");
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchParam = searchParams.get("search");
+  const categoryIn = searchParams.get("category[in]");
+  const categorySingle = searchParams.get("category");
   const featuredParam = searchParams.get("featured");
 
   const { products, isLoading, isError, message } = useSelector(
@@ -19,57 +20,51 @@ const ProductList = () => {
   // Filter States
   const [priceRange, setPriceRange] = useState(200000);
   const [sortBy, setSortBy] = useState("Relevance");
-  const [selectedCategories, setSelectedCategories] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchProducts({ keyword: searchParam }));
-  }, [dispatch, searchParam]);
+    const params = Object.fromEntries([...searchParams]);
+    dispatch(
+      fetchProducts({
+        ...params,
+        keyword: searchParam,
+        limit: 100,
+      }),
+    );
+  }, [dispatch, searchParams, searchParam]);
 
-  // Extract unique categories from products
-  const categories = products
-    ? [...new Set(products.map((p) => p.category))]
-    : [];
+  // Derive selected categories from URL
+  const selectedCategories = categoryIn 
+    ? categoryIn.split(",") 
+    : categorySingle 
+      ? [categorySingle] 
+      : [];
 
   const handleCategoryToggle = (category) => {
+    let newCategories;
     if (selectedCategories.includes(category)) {
-      setSelectedCategories(selectedCategories.filter((c) => c !== category));
+      newCategories = selectedCategories.filter((c) => c !== category);
     } else {
-      setSelectedCategories([...selectedCategories, category]);
+      newCategories = [...selectedCategories, category];
     }
+
+    const newParams = Object.fromEntries([...searchParams]);
+    
+    // Always use category[in] for filtering to support multiple values
+    if (newCategories.length > 0) {
+      newParams["category[in]"] = newCategories.join(",");
+      delete newParams["category"]; // Remove single category if multi is active
+    } else {
+      delete newParams["category[in]"];
+      delete newParams["category"];
+    }
+    
+    setSearchParams(newParams);
   };
 
-  // Derive filtered and sorted products
+  // Derive filtered and sorted products (Price and Sort remain client-side for better UX)
   const filteredProducts = products
     ? products
         .filter((p) => {
-          // Apply category filter from URL if present
-          if (categoryParam) {
-            const searchCategories = categoryParam
-              .split(",")
-              .map((s) => s.trim().toLowerCase());
-            const productCategory = p.category.toLowerCase();
-
-            if (
-              !searchCategories.includes(productCategory) &&
-              productCategory !== categoryParam.toLowerCase()
-            ) {
-              return false;
-            }
-          }
-
-          // Apply featured filter from URL if present
-          if (featuredParam === "true" && !p.isFeatured) {
-            return false;
-          }
-
-          // Apply dynamic category filters
-          if (
-            selectedCategories.length > 0 &&
-            !selectedCategories.includes(p.category)
-          ) {
-            return false;
-          }
-
           // Apply price filter
           if (p.price > priceRange) {
             return false;
@@ -110,33 +105,28 @@ const ProductList = () => {
           </div>
         </div>
 
-        {/* Categories (Dynamic) */}
+        {/* Categories (Shared Constants) */}
         <div className="mb-6">
           <h3 className="text-sm font-medium text-gray-700 mb-3 uppercase text-xs tracking-wider">
             Categories
           </h3>
           <div className="space-y-2 text-sm">
-            {categories.map((category) => (
+            {CATEGORIES.map((cat) => (
               <label
-                key={category}
+                key={cat.name}
                 className="flex items-center space-x-2 cursor-pointer group"
               >
                 <input
                   type="checkbox"
-                  className="rounded text-blue-600 focus:ring-blue-500"
-                  checked={selectedCategories.includes(category)}
-                  onChange={() => handleCategoryToggle(category)}
+                  className="rounded text-blue-600 focus:ring-blue-500 underline-offset-4"
+                  checked={selectedCategories.includes(cat.name)}
+                  onChange={() => handleCategoryToggle(cat.name)}
                 />
-                <span className="group-hover:text-blue-600 transition-colors uppercase text-[11px] font-medium tracking-tight">
-                  {category}
+                <span className={`group-hover:text-blue-600 transition-colors uppercase text-[11px] font-medium tracking-tight ${selectedCategories.includes(cat.name) ? "text-blue-600 font-bold" : "text-gray-600"}`}>
+                  {cat.name}
                 </span>
               </label>
             ))}
-            {categories.length === 0 && (
-              <p className="text-xs text-gray-400 italic">
-                No categories found
-              </p>
-            )}
           </div>
         </div>
       </aside>
@@ -150,8 +140,8 @@ const ProductList = () => {
                 Search results for "
                 <span className="text-blue-600">{searchParam}</span>"
               </>
-            ) : categoryParam ? (
-              `${categoryParam} Products`
+            ) : selectedCategories.length > 0 ? (
+              `${selectedCategories.join(" & ")} Products`
             ) : featuredParam === "true" ? (
               "Featured Products"
             ) : (

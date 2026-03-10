@@ -8,11 +8,20 @@ export const fetchProducts = createAsyncThunk(
   'products/fetchProducts',
   async (params = {}, thunkAPI) => {
     try {
-      const { keyword = '', limit = 10, page = 1 } = params;
+      const { keyword = "", limit = 10, page = 1, ...rest } = params;
       let url = `${API_URL}?limit=${limit}&page=${page}`;
+      
       if (keyword) {
         url += `&keyword=${keyword}`;
       }
+
+      // Append any other filter params (category[in], featured, etc.)
+      Object.keys(rest).forEach((key) => {
+        if (rest[key]) {
+          url += `&${key}=${encodeURIComponent(rest[key])}`;
+        }
+      });
+
       const response = await axios.get(url);
       return response.data; // Return full response object including pagination
     } catch (error) {
@@ -69,7 +78,13 @@ export const fetchProductDetails = createAsyncThunk(
   'products/fetchProductDetails',
   async (id, thunkAPI) => {
     try {
-      const response = await axios.get(`${API_URL}/${id}`);
+      const token = localStorage.getItem('token');
+      const config = token ? {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      } : {};
+      const response = await axios.get(`${API_URL}/${id}`, config);
       return response.data.data;
     } catch (error) {
       const message =

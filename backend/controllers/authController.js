@@ -67,7 +67,13 @@ exports.register = async (req, res, next) => {
 
       res.status(201).json({
         success: true,
-        data: 'Verification email sent'
+        data: 'Verification email sent',
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role
+        }
       });
     } catch (err) {
       console.error(err);
