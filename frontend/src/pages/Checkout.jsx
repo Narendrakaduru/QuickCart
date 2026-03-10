@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
-import { createOrder, reset } from "../slices/orderSlice";
+import { createOrder, lockInventory, reset } from "../slices/orderSlice";
 import { fetchAddresses } from "../slices/addressSlice";
 import { validateCoupon, clearAppliedCoupon, resetCouponStatus } from "../slices/couponSlice";
 import {
@@ -14,7 +14,10 @@ import {
   ShieldCheck,
   ShoppingBag,
   Home,
-  Building
+  Building,
+  AlertTriangle,
+  AlertCircle,
+  ArrowLeft
 } from "lucide-react";
 
 const Checkout = () => {
@@ -98,6 +101,23 @@ const Checkout = () => {
       }
     }
   }, [user, cart, navigate, isLoading, isSuccess, isCartLoading]);
+
+  const [isReserved, setIsReserved] = useState(false);
+
+  // Inventory Locking
+  useEffect(() => {
+    if (cart && cart.items && cart.items.length > 0 && !isReserved) {
+      const lockItems = cart.items.map(item => ({
+        product: item.product._id,
+        quantity: item.quantity
+      }));
+      dispatch(lockInventory(lockItems)).then((res) => {
+        if (lockInventory.fulfilled.match(res)) {
+          setIsReserved(true);
+        }
+      });
+    }
+  }, [dispatch, cart, isReserved]);
 
   useEffect(() => {
     if (isSuccess && cartItems.length === 0) {
@@ -262,6 +282,22 @@ const Checkout = () => {
               Checkout{" "}
               <div className="ml-4 w-2 h-2 bg-blue-600 rounded-full hidden md:block"></div>
             </h1>
+            {isReserved && !isError && (
+              <div className="mt-4 flex items-center bg-blue-600/10 backdrop-blur-sm text-blue-700 px-4 py-3 rounded-2xl border border-blue-200/50 shadow-sm animate-in fade-in slide-in-from-top-2 duration-500">
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white mr-3 shadow-blue-200 shadow-lg">
+                  <ShieldCheck size={18} strokeWidth={2.5} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-[0.15em] leading-none mb-1">Items Secured</p>
+                  <p className="text-xs font-bold opacity-80">Reserved for your checkout (15 min)</p>
+                </div>
+                <div className="ml-auto flex gap-1">
+                   <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce"></div>
+                   <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                   <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+                </div>
+              </div>
+            )}
           </div>
           <Link
             to="/cart"
@@ -484,11 +520,23 @@ const Checkout = () => {
                 </div>
 
                 {isError && (
-                  <div className="p-4 bg-red-50 text-red-600 rounded-2xl border border-red-100 font-medium flex items-center mt-6 shadow-sm">
-                    <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-red-500 mr-3 shrink-0 uppercase tracking-widest font-bold text-[10px]">
-                      Error
+                  <div className="mt-8 p-4 rounded-2xl border border-red-200 bg-red-50 flex items-start gap-3 animate-in fade-in duration-300">
+                    <AlertCircle size={18} className="text-red-600 mt-0.5 shrink-0" />
+                    <div className="flex-1">
+                      <p className="text-xs font-bold text-red-900 leading-snug">
+                        {message.includes("-") ? message.replace(/Available: -\d+/, "Available: 0") : message}
+                      </p>
+                      {(message?.toLowerCase().includes("stock") || message?.toLowerCase().includes("available")) && (
+                        <div className="mt-2 flex gap-4">
+                          <Link to="/cart" className="text-[10px] font-black uppercase tracking-widest text-red-600 hover:text-red-800 underline underline-offset-4">
+                            Adjust Cart
+                          </Link>
+                          <button onClick={() => window.location.reload()} className="text-[10px] font-black uppercase tracking-widest text-red-600 hover:text-red-800 underline underline-offset-4">
+                            Refresh
+                          </button>
+                        </div>
+                      )}
                     </div>
-                    {message}
                   </div>
                 )}
 

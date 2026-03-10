@@ -33,9 +33,9 @@ QuickCart/
 ├── backend/                # Express API & MongoDB Models
 │   ├── config/             # DB, Redis, Elastic configurations
 │   ├── controllers/        # Route logic & processing
-│   ├── cronJobs/           # Scheduled tasks (abandoned carts)
+│   ├── cronJobs/           # Scheduled tasks (abandoned carts, inventory release)
 │   ├── middleware/         # Auth, Role, Logger, Rate Limiting
-│   ├── models/             # Mongoose schemas
+│   ├── models/             # Mongoose schemas (Product, Order, InventoryLock)
 │   ├── routes/             # API endpoint definitions
 │   └── uploads/            # Local storage for product images
 ├── frontend/               # React (Vite) Application
@@ -112,7 +112,11 @@ The project comes with pre-configured data to get you started:
 
 - **User Authentication**: Secure Login/Register with JWT, **password visibility toggles**, **email verification**, and **forgot/reset password** flows.
 - **Role-Based Access**: Specialized dashboards for Admins, and Superadmins.
-- **System Activity Monitoring**: Advanced log viewer integrated into the Admin Dashboard with centralized logging via **ELK Stack**. Includes detailed metadata (IP, Method, Path), **search engine attribution**, and activity-specific filters (Login, Cart, Orders, Coupons).
+- **System Activity Monitoring**: Advanced log viewer integrated into the Admin Dashboard with centralized logging via **ELK Stack**. Includes detailed metadata (IP, Method, Path, **User Attribution**), **search engine attribution**, and activity-specific filters (Login, Cart, Orders, Coupons).
+- **Inventory Locking System**: 
+  - **Temporary Reservations**: items are held for 15 minutes when a user enters checkout, preventing overselling during high-traffic bursts.
+  - **Atomic Updates**: Uses Mongoose `$expr` and `$subtract` for race-condition-free stock reservations.
+  - **Auto-Release**: A background cron job (`inventoryLockJob.js`) combined with MongoDB TTL indexes ensures expired holds are restored to stock.
 - **API Security & Rate Limiting**: Distributed, Redis-backed rate limiters to deter brute-force attacks and bot spam, featuring decoupled tiers for global traffic, authentication, and order creation.
 - **Performance Tracking**: All API logs include **real-time response durations** and **HTTP status codes**, enabling precise monitoring and bottleneck identification via Kibana dashboards.
 - **Enhanced Admin Controls**:
@@ -120,6 +124,8 @@ The project comes with pre-configured data to get you started:
   - **URL-based persistence**: Active tabs and pagination states are preserved in the URL.
   - **Comprehensive Pagination**: Standardized pagination across Products, Orders, Users, Logs, and Coupons.
   - **Optimized Layout**: Clean, full-width management tables with smooth **scroll-to-top** on page changes.
+  - **Real-time Reservations**: A dedicated "Reservations" tab to monitor active inventory holds.
+  - **Stock Transparency**: A "Reserved" column in the Inventory tab shows total vs. held units at a glance.
 - **Product Management & Caching**: Complete CRUD for products with image upload support and interactive carousels. Product catalog queries are heavily accelerated via **Redis Caching**, complete with automatic cache invalidation on edits.
 - **Coupon Management & Logic**:
   - Admins can create/edit/delete coupons via the dashboard.
@@ -143,6 +149,9 @@ The project comes with pre-configured data to get you started:
   - **Advanced Search**: High-performance **auto-complete** (suggestions) using `search_as_you_type` technology.
   - **Typo Tolerance**: Robust fuzzy matching that understands intent even with misspellings (e.g., "ipone" → "iPhone").
 - **Responsive Design**: Optimized for all devices, featuring a **single product per row** layout on small screens for better visibility.
+- **Checkout UX & Polish**: 
+  - **Items Secured Notification**: Visual banner providing immediate feedback when items are reserved.
+  - **Compact Alert System**: Minimalist, non-intrusive error handling for stock issues with rapid-action links.
 - **Dynamic Platform Fee Logic**: Automated fee waivers for small orders. The standard ₹20 platform fee is **automatically waived (₹0/FREE)** for orders where the product total is below ₹500.
 
 ## 🛡️ Tiered API Rate Limiting
@@ -237,7 +246,7 @@ FRONTEND_URL=       # Frontend base URL for email links
 - **Users**: `/api/users` (profile, address management)
 - **Products**: `/api/products` (listing, search, details, recommendations, suggestions)
 - **Cart**: `/api/cart` (add, remove, update)
-- **Orders**: `/api/orders` (checkout, tracking)
+- **Orders**: `/api/orders` (checkout, tracking, inventory locking, admin lock list)
 - **Payment**: `/api/payment` (Razorpay order creation, signature verification)
 - **Coupons**: `/api/coupons` (creation, validation, management)
 - **Notifications**: `/api/notifications` (list, unread count, mark read)

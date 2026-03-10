@@ -8,6 +8,8 @@ const {
   updateOrderStatus,
   updatePaymentStatus,
   cancelOrder,
+  lockInventory,
+  getInventoryLocks,
 } = require("../controllers/orderController");
 const { protect, authorize } = require("../middleware/auth");
 const { logAction } = require("../middleware/logger");
@@ -17,6 +19,9 @@ router
   .route("/")
   .get(protect, authorize("admin", "superadmin"), getAllOrders)
   .post(protect, orderLimiter, logAction("ORDER_CREATED", "New order placed"), addOrderItems);
+
+router.route("/lock").post(protect, lockInventory);
+router.route("/locks").get(protect, authorize("admin", "superadmin"), getInventoryLocks);
 
 router.route("/myorders").get(protect, getMyOrders);
 
