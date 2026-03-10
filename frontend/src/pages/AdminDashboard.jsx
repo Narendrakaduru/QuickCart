@@ -43,6 +43,10 @@ import {
   Info,
   ChevronUp,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
   Tag,
   Star,
 } from "lucide-react";
@@ -54,48 +58,113 @@ import ConfirmModal from "../components/ConfirmModal";
 const Pagination = ({ pagination, onPageChange }) => {
   if (!pagination || pagination.pages <= 1) return null;
 
+  const { page, pages, total } = pagination;
+
+  const renderPageButtons = () => {
+    const buttons = [];
+    const maxVisiblePages = 5;
+
+    if (pages <= maxVisiblePages + 2) {
+      for (let i = 1; i <= pages; i++) {
+        buttons.push(renderButton(i));
+      }
+    } else {
+      // Always show page 1
+      buttons.push(renderButton(1));
+
+      if (page > 3) {
+        buttons.push(
+          <span key="ellipsis-start" className="px-2 text-gray-400">
+            ...
+          </span>,
+        );
+      }
+
+      // Show range around current page
+      const start = Math.max(2, page - 1);
+      const end = Math.min(pages - 1, page + 1);
+
+      for (let i = start; i <= end; i++) {
+        buttons.push(renderButton(i));
+      }
+
+      if (page < pages - 2) {
+        buttons.push(
+          <span key="ellipsis-end" className="px-2 text-gray-400">
+            ...
+          </span>,
+        );
+      }
+
+      // Always show last page
+      buttons.push(renderButton(pages));
+    }
+
+    return buttons;
+  };
+
+  const renderButton = (p) => (
+    <button
+      key={p}
+      onClick={() => onPageChange(p)}
+      className={`min-w-[32px] h-8 px-2 rounded text-sm font-medium transition ${
+        page === p
+          ? "bg-blue-600 text-white shadow-sm"
+          : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+      }`}
+    >
+      {p}
+    </button>
+  );
+
   return (
-    <div className="flex justify-between items-center p-4 bg-gray-50 border-t border-gray-100">
+    <div className="flex flex-col sm:flex-row justify-between items-center p-4 bg-gray-50 border-t border-gray-100 gap-4">
       <div className="text-sm text-gray-500">
         Showing{" "}
         <span className="font-semibold text-gray-700">
-          {pagination.total > 0 ? (pagination.page - 1) * 10 + 1 : 0}
+          {total > 0 ? (page - 1) * 10 + 1 : 0}
         </span>{" "}
         to{" "}
         <span className="font-semibold text-gray-700">
-          {Math.min(pagination.page * 10, pagination.total)}
+          {Math.min(page * 10, total)}
         </span>{" "}
-        of{" "}
-        <span className="font-semibold text-gray-700">{pagination.total}</span>{" "}
-        entries
+        of <span className="font-semibold text-gray-700">{total}</span> entries
       </div>
-      <div className="flex gap-2">
+      <div className="flex items-center gap-1">
         <button
-          onClick={() => onPageChange(pagination.page - 1)}
-          disabled={pagination.page === 1}
-          className="px-3 py-1 bg-white border border-gray-200 rounded text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          onClick={() => onPageChange(1)}
+          disabled={page === 1}
+          className="p-1.5 bg-white border border-gray-200 rounded text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition"
+          title="First Page"
         >
-          Previous
+          <ChevronsLeft size={16} />
         </button>
-        {[...Array(pagination.pages)].map((_, i) => (
-          <button
-            key={i + 1}
-            onClick={() => onPageChange(i + 1)}
-            className={`px-3 py-1 rounded text-sm font-medium transition ${
-              pagination.page === i + 1
-                ? "bg-blue-600 text-white shadow-sm"
-                : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
-            }`}
-          >
-            {i + 1}
-          </button>
-        ))}
         <button
-          onClick={() => onPageChange(pagination.page + 1)}
-          disabled={pagination.page === pagination.pages}
-          className="px-3 py-1 bg-white border border-gray-200 rounded text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          onClick={() => onPageChange(page - 1)}
+          disabled={page === 1}
+          className="p-1.5 bg-white border border-gray-200 rounded text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition mr-2"
+          title="Previous"
         >
-          Next
+          <ChevronLeft size={16} />
+        </button>
+
+        <div className="flex gap-1">{renderPageButtons()}</div>
+
+        <button
+          onClick={() => onPageChange(page + 1)}
+          disabled={page === pages}
+          className="p-1.5 bg-white border border-gray-200 rounded text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition ml-2"
+          title="Next"
+        >
+          <ChevronRight size={16} />
+        </button>
+        <button
+          onClick={() => onPageChange(pages)}
+          disabled={page === pages}
+          className="p-1.5 bg-white border border-gray-200 rounded text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition"
+          title="Last Page"
+        >
+          <ChevronsRight size={16} />
         </button>
       </div>
     </div>

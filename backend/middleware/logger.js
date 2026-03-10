@@ -12,7 +12,7 @@ const logEvent = async ({ action, description, req, user, status = 'info' }) => 
       method: req ? req.method : 'SYSTEM',
       endpoint: req ? req.originalUrl : 'SYSTEM',
       status,
-      ipAddress: req ? (req.headers['x-forwarded-for'] || req.connection.remoteAddress) : '127.0.0.1',
+      ipAddress: req ? req.ip : '127.0.0.1',
     };
 
     await Log.create(logData);
