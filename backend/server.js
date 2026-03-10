@@ -22,12 +22,23 @@ connectElastic().then(() => {
   syncProductsToElastic();
 });
 
-// Initialize Cron Jobs (skip in test to prevent open handles)
+// Initialize BullMQ Workers & Schedule repeatable jobs
 if (process.env.NODE_ENV !== "test") {
-  const abandonedCartJob = require("./cronJobs/abandonedCartJob");
-  const inventoryLockJob = require("./cronJobs/inventoryLockJob");
-  abandonedCartJob();
-  inventoryLockJob();
+  require("./workers/mainWorker");
+  const systemQueue = require("./queues/systemQueue");
+
+  // Schedule repeatable jobs
+  // Every 1 minute (responsive) - Inventory Release
+  systemQueue.add('inventory_release', {}, {
+    repeat: { pattern: '* * * * *' }
+  });
+
+  // Every 5 minutes - Abandoned Cart
+  systemQueue.add('abandoned_cart', {}, {
+    repeat: { pattern: '*/5 * * * *' }
+  });
+
+  console.log('BullMQ workers activated and repeatable jobs scheduled.');
 }
 
 const app = express();

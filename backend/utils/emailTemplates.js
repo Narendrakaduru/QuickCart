@@ -276,4 +276,100 @@ const verifyEmailTemplate = (name, verificationUrl) => wrapEmail(`
   </table>
 `);
 
-module.exports = { resetPasswordEmail, verifyEmailTemplate };
+/**
+ * Abandoned Cart Email Template
+ * @param {string} name - User's name
+ * @param {string} cartUrl - Full URL to the cart page
+ */
+const abandonedCartEmail = (name, cartUrl) => wrapEmail(`
+  <!-- TOP ACCENT — orange to pink, energetic for reminders -->
+  <div style="height:6px; background: linear-gradient(90deg, #f59e0b, #ec4899);"></div>
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding: 48px 40px;">
+
+    <!-- ICON -->
+    <tr>
+      <td align="center" style="padding-bottom: 28px;">
+        <div style="
+          width: 72px; height: 72px;
+          background: linear-gradient(135deg, #ffedd5, #fee2e2);
+          border-radius: 50%;
+          display: inline-block;
+          text-align: center;
+          line-height: 72px;
+          font-size: 32px;
+        ">🛒</div>
+      </td>
+    </tr>
+
+    <!-- HEADING -->
+    <tr>
+      <td align="center" style="padding-bottom: 12px;">
+        <h1 style="margin:0; font-size:26px; font-weight:800; color:#0f172a; letter-spacing:-0.5px;">
+          Items Waiting For You
+        </h1>
+      </td>
+    </tr>
+
+    <!-- SUBTEXT -->
+    <tr>
+      <td align="center" style="padding-bottom: 36px;">
+        <p style="margin:0; font-size:15px; color:#64748b; line-height:1.7; max-width:420px; text-align:center;">
+          Hi <strong style="color:#1e293b;">${name}</strong>, you left some great items in your QuickCart! Don't let them get away—they're still waiting for you to bring them home.
+        </p>
+      </td>
+    </tr>
+
+    <!-- CTA BUTTON -->
+    <tr>
+      <td align="center" style="padding-bottom: 36px;">
+        <a href="${cartUrl}" style="
+          display: inline-block;
+          background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+          color: #ffffff;
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          padding: 16px 40px;
+          border-radius: 12px;
+          box-shadow: 0 4px 14px rgba(245,158,11,0.35);
+        ">
+          Complete My Purchase
+        </a>
+      </td>
+    </tr>
+
+    <!-- INFO NOTICE -->
+    <tr>
+      <td align="center" style="padding-bottom: 32px;">
+        <table cellpadding="0" cellspacing="0" style="
+          background-color: #fffaf0;
+          border: 1px solid #ffedd5;
+          border-radius: 12px;
+          padding: 14px 20px;
+          max-width: 420px;
+        ">
+          <tr>
+            <td style="font-size:13px; color:#9a3412; text-align:center;">
+              ✨ &nbsp;Items in high demand are not reserved until checkout is completed. Grab yours while they're still in stock!
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- FALLBACK LINK -->
+    <tr>
+      <td align="center">
+        <p style="margin:0; font-size:12px; color:#94a3b8;">
+          Or copy and paste this URL into your browser:<br/>
+          <a href="${cartUrl}" style="color:#f59e0b; word-break:break-all;">${cartUrl}</a>
+        </p>
+      </td>
+    </tr>
+
+  </table>
+`);
+
+module.exports = { resetPasswordEmail, verifyEmailTemplate, abandonedCartEmail };

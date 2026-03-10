@@ -24,6 +24,9 @@ graph TB
             LOGSTASH["Logstash"]
             KIBANA["Kibana :5601"]
         end
+        subgraph Q["Message Queue"]
+            BULLMQ["BullMQ (Redis-backed)"]
+        end
     end
 
     subgraph External["☁️ External Services"]
@@ -40,6 +43,9 @@ graph TB
     EXPRESS -- "Nodemailer" --> SMTP
     EXPRESS -- "Razorpay SDK" --> RAZORPAY
     EXPRESS -- "REST API" --> LOGSTASH
+    EXPRESS -- "Job Producer" --> BULLMQ
+    BULLMQ -- "Job Consumer" --> WORKER["Main Worker"]
+    WORKER -- "Nodemailer" --> SMTP
     LOGSTASH -- "Indexing" --> ELASTIC
     ELASTIC -- "Visualize" --> KIBANA
     MONGO -- "Persisted Volume" --> DISK[("mongo_data/")]
@@ -108,6 +114,8 @@ graph LR
         Redis[("Redis (Cache)")]
         Elasticsearch[("Elasticsearch (Search Index)")]
         Logstash["Logstash (Hybrid JSON Engine)"]
+        BullMQ["BullMQ (Job Queue)"]
+        Worker["Main Worker (Background Tasks)"]
     end
 
     subgraph "External Services"
@@ -602,11 +610,11 @@ graph LR
 
 ---
 
-## 12. Abandoned Cart Tracking Flow
+## 12. Abandoned Cart Tracking Flow (BullMQ)
 
 ```mermaid
 flowchart TD
-    A([Cron Job: Runs every 5 mins]) --> B["Check DB for Abandoned Carts"]
+    A([BullMQ Repeatable Job: Runs every 5 mins]) --> B["Check DB for Abandoned Carts"]
     B --> C{"Cart > 5 mins old & items > 0 & abandonedEmailSent == false?"}
     C -- No --> D["Ignore"]
     C -- Yes --> E["Process Cart"]

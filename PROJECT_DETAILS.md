@@ -23,6 +23,8 @@ QuickCart is a modern, full-stack e-commerce application designed for a seamless
 - **JWT (JSON Web Tokens)**: Secure authentication and role-based access control.
 - **Multer**: For handling image and file uploads.
 - **Jest & Supertest**: Robust testing suite for backend API.
+- **BullMQ**: High-performance, Redis-backed job and message queue for reliable background processing.
+- **ioredis**: Robust, full-featured Redis client for Node.js, used for BullMQ and distributed rate limiting.
 - **Express Rate Limit**: Distributed tiered rate-limiting powered by Redis.
 - **Razorpay**: Node.js SDK for secure payment integration (Test Mode).
 
@@ -33,7 +35,7 @@ QuickCart/
 ├── backend/                # Express API & MongoDB Models
 │   ├── config/             # DB, Redis, Elastic configurations
 │   ├── controllers/        # Route logic & processing
-│   ├── cronJobs/           # Scheduled tasks (abandoned carts, inventory release)
+│   ├── cronJobs/           # [REMOVED] Migrated to BullMQ Workers
 │   ├── middleware/         # Auth, Role, Logger, Rate Limiting
 │   ├── models/             # Mongoose schemas (Product, Order, InventoryLock)
 │   ├── routes/             # API endpoint definitions
@@ -116,7 +118,7 @@ The project comes with pre-configured data to get you started:
 - **Inventory Locking System**: 
   - **Temporary Reservations**: items are held for 15 minutes when a user enters checkout, preventing overselling during high-traffic bursts.
   - **Atomic Updates**: Uses Mongoose `$expr` and `$subtract` for race-condition-free stock reservations.
-  - **Auto-Release**: A background cron job (`inventoryLockJob.js`) combined with MongoDB TTL indexes ensures expired holds are restored to stock.
+  - **Auto-Release**: A robust **BullMQ worker** (`mainWorker.js`) ensures expired holds are restored to stock, featuring automatic retries and persistence via Redis.
 - **API Security & Rate Limiting**: Distributed, Redis-backed rate limiters to deter brute-force attacks and bot spam, featuring decoupled tiers for global traffic, authentication, and order creation.
 - **Performance Tracking**: All API logs include **real-time response durations** and **HTTP status codes**, enabling precise monitoring and bottleneck identification via Kibana dashboards.
 - **Enhanced Admin Controls**:
@@ -143,7 +145,7 @@ The project comes with pre-configured data to get you started:
   - **Full history page** at `/notifications` with read/unread visual distinction.
   - **Automatic triggers**: Notifications created on order placement, status updates, payment changes, cancellations, and abandoned carts.
   - **Mark as read**: Individual or bulk "mark all read" support.
-- **Abandoned Cart Tracking**: Background worker (`node-cron`) that automatically detects carts inactive for 5 minutes (configurable), sends branded email reminders, triggers in-app notifications, and logs the automated action in System Activity Logs.
+- **Abandoned Cart Tracking**: Managed by **BullMQ**, this worker automatically detects carts inactive for 5 minutes (configurable), sends branded email reminders, triggers in-app notifications, and logs the action.
 - **AI-Driven Discovery Layer**:
   - **Product Recommendations**: Automatically discovers trending category leaders using Elasticsearch aggregations.
   - **Advanced Search**: High-performance **auto-complete** (suggestions) using `search_as_you_type` technology.
@@ -200,20 +202,22 @@ QuickCart includes a complete email-based authentication flow powered by **Nodem
 
 ### Email Templates
 
-Templates are defined in `backend/utils/emailTemplates.js` and share a common branded shell:
+Templates are defined in `backend/utils/emailTemplates.js` and share a common branded shell with responsive inline CSS:
 
-| Element | Style |
-|---|---|
-| Logo | Dark `#111827` pill — italic bold **Quick**Cart (`#60a5fa`) — matches the Navbar |
-| Card | White, rounded, with a subtle shadow |
-| Footer | Copyright + disclaimer in muted text |
-
-| Template | Function | Accent | CTA |
+| Template | Purpose | Icon | Accent Color |
 |---|---|---|---|
-| Verify Email | `verifyEmailTemplate(name, url)` | Blue-400 → Teal | Green button |
-| Reset Password | `resetPasswordEmail(name, url)` | Gray-900 → Blue-400 | Dark button with blue text |
+| **Verify Email** | Registration confirmation | ✉️ | Blue → Teal |
+| **Reset Password** | Security / Account recovery | 🔐 | Gray → Blue |
+| **Abandoned Cart**| User re-engagement | 🛒 | Orange → Pink |
 
-All templates use **inline CSS** for maximum compatibility across Gmail, Outlook, Apple Mail, etc. A plain-text fallback is always included.
+All templates match the **QuickCart Navbar** branding (Dark Gray + Blue accent) and include clear call-to-action buttons.
+
+### Recovery Architecture (BullMQ)
+
+Abandoned cart processing is decoupled into a resilient Worker system:
+1. **Email Phase**: Attempts delivery via Nodemailer.
+2. **Notification Phase**: Creates an in-app alert regardless of email success.
+3. **Logging Phase**: Records activity in System Logs for Admin monitoring.
 
 ### Frontend Pages
 
