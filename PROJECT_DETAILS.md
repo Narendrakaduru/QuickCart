@@ -33,21 +33,25 @@ QuickCart is a modern, full-stack e-commerce application designed for a seamless
 ```
 QuickCart/
 ├── backend/                # Express API & MongoDB Models
-│   ├── config/             # DB, Redis, Elastic configurations
+│   ├── config/             # DB, Redis, Elastic, BullMQ configurations
 │   ├── controllers/        # Route logic & processing
-│   ├── cronJobs/           # [REMOVED] Migrated to BullMQ Workers
 │   ├── middleware/         # Auth, Role, Logger, Rate Limiting
-│   ├── models/             # Mongoose schemas (Product, Order, InventoryLock)
+│   ├── models/             # Mongoose schemas (Product, Order, Log, etc.)
+│   ├── queues/             # BullMQ queue definitions
 │   ├── routes/             # API endpoint definitions
+│   ├── utils/              # Helper functions & email templates
+│   ├── workers/            # BullMQ background job processors
 │   └── uploads/            # Local storage for product images
 ├── frontend/               # React (Vite) Application
 │   ├── src/
-│   │   ├── components/     # Reusable UI elements
-│   │   ├── pages/          # Views (Home, Admin, Checkout)
-│   │   └── slices/         # Redux state management
+│   │   ├── components/     # Reusable UI elements (Navbar, Modals)
+│   │   ├── pages/          # Views (Home, Admin, Checkout, Orders)
+│   │   ├── slices/         # Redux Toolkit state management
+│   │   ├── store/          # Redux store configuration
+│   │   └── utils/          # Frontend utility functions
 ├── logstash/               # Logstash pipeline configuration
-├── mongodb_data/           # [LOCAL] Persisted MongoDB data files
-├── redis_data/             # [LOCAL] Persisted Redis cache files
+├── mongo_data/             # [LOCAL] Persisted MongoDB data files
+├── redis_data/             # [LOCAL] Persisted Redis cache & queue files
 ├── elastic_data/           # [LOCAL] Persisted Elasticsearch indices
 ├── docker-compose.yml      # Orchestration for the entire stack
 ├── architecture_diagrams.md# Detailed system flowcharts
@@ -231,18 +235,29 @@ All pages show success modals on completion and handle error states from the API
 
 ### Required Environment Variables
 
-```env
-SMTP_HOST=          # SMTP server host
-SMTP_PORT=          # SMTP port (465 for SSL)
-SMTP_EMAIL=         # SMTP username
-SMTP_PASSWORD=      # SMTP password
-FROM_NAME=QuickCart  # Sender display name
-FROM_EMAIL=         # Sender email address
-FRONTEND_URL=       # Frontend base URL for email links
-```
+To run the project correctly, ensure your `.env` file (in the `backend/` directory) contains the following variables. Category-specific defaults are noted where applicable.
 
-> [!NOTE]
-> In **development mode**, if SMTP sending fails, emails are logged to the server console instead of throwing an error — so you can still test the flow without a real mail server.
+| Category | Variable | Description | Default / Example |
+|---|---|---|---|
+| **App** | `NODE_ENV` | Environment mode | `development` |
+| | `PORT` | API server port | `5001` |
+| | `JWT_SECRET` | Secret key for JWT signing | `any_strong_string` |
+| | `JWT_EXPIRE` | Token expiration time | `30d` |
+| | `FRONTEND_URL`| Base URL for email links | `http://localhost:3000` |
+| **Database** | `MONGO_URI` | MongoDB connection string | `mongodb://mongodb:27017/quickcart` |
+| **Redis / Queue**| `REDIS_URI` | Connection for Cache & **BullMQ** | `redis://redis:6379` |
+| **Search (ELK)**| `ELASTIC_URL` | Elasticsearch endpoint | `http://elasticsearch:9200` |
+| **Email (SMTP)**| `SMTP_HOST` | Mail server host | `smtp.gmail.com` |
+| | `SMTP_PORT` | Mail server port | `465` (SSL) or `587` |
+| | `SMTP_EMAIL` | Sender account username | `example@gmail.com` |
+| | `SMTP_PASSWORD`| App-specific password | `xxxx xxxx xxxx xxxx` |
+| | `FROM_NAME` | Display name for emails | `QuickCart` |
+| | `FROM_EMAIL` | Verified sender address | `support@quickcart.com` |
+| **Payment** | `RAZORPAY_KEY_ID`| Razorpay test key | `rzp_test_...` |
+| | `RAZORPAY_KEY_SECRET`| Razorpay test secret| `...` |
+
+> [!IMPORTANT]
+> When running via **Docker Compose**, ensure `MONGO_URI`, `REDIS_URI`, and `ELASTIC_URL` use the service names (e.g., `mongodb`, `redis`, `elasticsearch`) as the host instead of `localhost`.
 
 ## 🔗 API Endpoints
 
