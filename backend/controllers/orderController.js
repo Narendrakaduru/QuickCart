@@ -4,6 +4,7 @@ const Coupon = require("../models/Coupon");
 const Notification = require("../models/Notification");
 const Product = require("../models/Product");
 const { clearProductCache } = require("./productController");
+const { logEvent } = require("../middleware/logger");
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -58,6 +59,14 @@ exports.addOrderItems = async (req, res) => {
     res.status(201).json({
       success: true,
       data: createdOrder,
+    });
+
+    // Track Activity: Order placed
+    logEvent({
+      action: "Order Placed",
+      description: `User placed order #${createdOrder._id.toString().slice(-8).toUpperCase()} for ₹${totalAmount}`,
+      req,
+      status: "success"
     });
   } catch (error) {
     console.error(`Add Order Items Error: ${error.message}`);
@@ -126,13 +135,27 @@ exports.getOrderById = async (req, res) => {
 // @access  Private/Admin
 exports.getAllOrders = async (req, res) => {
   try {
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const startIndex = (page - 1) * limit;
+
+    const total = await Order.countDocuments({});
+
     const orders = await Order.find({})
       .populate("user", "id name")
       .populate("items.product")
-      .sort("-createdAt");
+      .sort("-createdAt")
+      .skip(startIndex)
+      .limit(limit);
 
     res.status(200).json({
       success: true,
+      count: orders.length,
+      pagination: {
+        total,
+        page,
+        pages: Math.ceil(total / limit)
+      },
       data: orders,
     });
   } catch (error) {

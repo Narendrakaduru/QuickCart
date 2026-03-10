@@ -1,5 +1,6 @@
 const Cart = require('../models/Cart');
 const Product = require('../models/Product');
+const { logEvent } = require("../middleware/logger");
 
 // @desc    Get user cart
 // @route   GET /api/cart

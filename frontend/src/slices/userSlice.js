@@ -6,17 +6,19 @@ const API_URL = '/api/users';
 // Async thunks
 export const fetchUsers = createAsyncThunk(
   'users/fetchUsers',
-  async (_, thunkAPI) => {
+  async (params = {}, thunkAPI) => {
     try {
+      const { page = 1, limit = 10 } = params;
+      const url = `${API_URL}?page=${page}&limit=${limit}`;
       const token = localStorage.getItem('token');
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await axios.get(API_URL, config);
+      const response = await axios.get(url, config);
       console.log('Fetched Users:', response.data.data);
-      return response.data.data;
+      return response.data;
     } catch (error) {
       const message =
         (error.response &&
@@ -108,6 +110,11 @@ const initialState = {
   isError: false,
   isSuccess: false,
   isLoading: false,
+  pagination: {
+    total: 0,
+    page: 1,
+    pages: 1,
+  },
   message: '',
 };
 
@@ -130,7 +137,8 @@ export const userSlice = createSlice({
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.users = action.payload;
+        state.users = action.payload.data;
+        state.pagination = action.payload.pagination || state.pagination;
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.isLoading = false;

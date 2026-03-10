@@ -76,15 +76,17 @@ export const getOrderDetails = createAsyncThunk(
 // Get all orders (Admin)
 export const getAllOrdersAdmin = createAsyncThunk(
   "orders/getAllOrdersAdmin",
-  async (_, thunkAPI) => {
+  async (params = {}, thunkAPI) => {
     try {
+      const { page = 1, limit = 10 } = params;
+      const url = `${API_URL}?page=${page}&limit=${limit}`;
       const token = localStorage.getItem("token");
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await axios.get(API_URL, config);
+      const response = await axios.get(url, config);
       return response.data;
     } catch (error) {
       const message =
@@ -184,6 +186,11 @@ const orderSlice = createSlice({
     isSuccess: false,
     isLoading: false,
     isUpdating: false,
+    pagination: {
+      total: 0,
+      page: 1,
+      pages: 1,
+    },
     message: "",
   },
   reducers: {
@@ -240,6 +247,7 @@ const orderSlice = createSlice({
       .addCase(getAllOrdersAdmin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.orders = action.payload.data;
+        state.pagination = action.payload.pagination || state.pagination;
       })
       .addCase(getAllOrdersAdmin.rejected, (state, action) => {
         state.isLoading = false;

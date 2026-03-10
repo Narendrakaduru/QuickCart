@@ -211,7 +211,7 @@ const Home = () => {
   } = useSelector((state) => state.products);
 
   useEffect(() => {
-    dispatch(fetchProducts({}));
+    dispatch(fetchProducts({ limit: 100 }));
     dispatch(fetchRecommendations());
   }, [dispatch]);
 

@@ -112,10 +112,14 @@ The project comes with pre-configured data to get you started:
 
 - **User Authentication**: Secure Login/Register with JWT, **password visibility toggles**, **email verification**, and **forgot/reset password** flows.
 - **Role-Based Access**: Specialized dashboards for Admins, and Superadmins.
-- **System Activity Monitoring**: Advanced log viewer for **Superadmins** with centralized logging via **ELK Stack**. Includes detailed metadata (IP, Method, Path) and **search engine attribution** (logs identify if a query was handled by Redis, ES, or MongoDB).
+- **System Activity Monitoring**: Advanced log viewer integrated into the Admin Dashboard with centralized logging via **ELK Stack**. Includes detailed metadata (IP, Method, Path), **search engine attribution**, and activity-specific filters (Login, Cart, Orders, Coupons).
 - **API Security & Rate Limiting**: Distributed, Redis-backed rate limiters to deter brute-force attacks and bot spam, featuring decoupled tiers for global traffic, authentication, and order creation.
 - **Performance Tracking**: All API logs include **real-time response durations** and **HTTP status codes**, enabling precise monitoring and bottleneck identification via Kibana dashboards.
-- **Enhanced Admin Controls**: **Dynamic sorting** and searching across all administrative tables (Products, Orders, Users, Logs).
+- **Enhanced Admin Controls**:
+  - **Dynamic sorting** and searching across all administrative tables.
+  - **URL-based persistence**: Active tabs and pagination states are preserved in the URL.
+  - **Comprehensive Pagination**: Standardized pagination across Products, Orders, Users, Logs, and Coupons.
+  - **Optimized Layout**: Clean, full-width management tables with smooth **scroll-to-top** on page changes.
 - **Product Management & Caching**: Complete CRUD for products with image upload support and interactive carousels. Product catalog queries are heavily accelerated via **Redis Caching**, complete with automatic cache invalidation on edits.
 - **Coupon Management & Logic**:
   - Admins can create/edit/delete coupons via the dashboard.

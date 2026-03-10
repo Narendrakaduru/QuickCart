@@ -1,16 +1,31 @@
 const Coupon = require("../models/Coupon");
 const Log = require("../models/Log");
+const { logEvent } = require("../middleware/logger");
 
 // @desc    Get all coupons
 // @route   GET /api/coupons
 // @access  Private/Admin
 exports.getCoupons = async (req, res) => {
   try {
-    const coupons = await Coupon.find().sort("-createdAt");
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const startIndex = (page - 1) * limit;
+
+    const total = await Coupon.countDocuments({});
+
+    const coupons = await Coupon.find()
+      .sort("-createdAt")
+      .skip(startIndex)
+      .limit(limit);
 
     res.status(200).json({
       success: true,
       count: coupons.length,
+      pagination: {
+        total,
+        page,
+        pages: Math.ceil(total / limit),
+      },
       data: coupons,
     });
   } catch (error) {
@@ -189,6 +204,14 @@ exports.validateCoupon = async (req, res) => {
         discountType: coupon.discountType,
         discountValue: coupon.discountValue,
       },
+    });
+
+    // Track Activity: Coupon applied
+    logEvent({
+      action: "Coupon Applied",
+      description: `User applied coupon: ${coupon.code}`,
+      req,
+      status: "success"
     });
   } catch (error) {
     res.status(500).json({ success: false, error: "Server Error" });
