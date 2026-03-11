@@ -105,17 +105,81 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
+// Fetch recently viewed (Sync with backend on login)
+export const fetchRecentlyViewed = createAsyncThunk(
+  'users/fetchRecentlyViewed',
+  async (_, thunkAPI) => {
+    try {
+      const { getState } = thunkAPI;
+      const { auth: { token } } = getState();
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.get(`${API_URL}/recently-viewed`, config);
+      
+      // Update local storage to match database truth
+      if (response.data && response.data.data) {
+         localStorage.setItem('recentlyViewed', JSON.stringify(response.data.data));
+      }
+
+      return response.data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.error) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Sync single viewed product to backend
+export const syncRecentlyViewed = createAsyncThunk(
+  'users/syncRecentlyViewed',
+  async (productId, thunkAPI) => {
+    try {
+      const { getState } = thunkAPI;
+      const { auth: { token } } = getState();
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.post(`${API_URL}/recently-viewed`, { productId }, config);
+      return response.data;
+    } catch {
+       // Failing silently in background
+      return thunkAPI.rejectWithValue('Sync failed');
+    }
+  }
+);
+
 const initialState = {
   users: [],
+  user: null,
+  addresses: [],
+  addressStatus: 'idle',
+  addressError: null,
   isError: false,
   isSuccess: false,
   isLoading: false,
+  message: '',
   pagination: {
     total: 0,
     page: 1,
     pages: 1,
   },
-  message: '',
+  // Recently Viewed State - Hybrid storage strategy
+  recentlyViewed: JSON.parse(localStorage.getItem('recentlyViewed')) || [],
+  recentlyViewedStatus: 'idle',
 };
 
 export const userSlice = createSlice({
@@ -128,6 +192,24 @@ export const userSlice = createSlice({
       state.isSuccess = false;
       state.message = '';
     },
+    addRecentlyViewedLocal: (state, action) => {
+      const product = action.payload;
+      if (!product || !product._id) return;
+
+      // Filter out if already exists
+      let updatedHistory = state.recentlyViewed.filter(p => p._id !== product._id);
+      
+      // Unshift to front
+      updatedHistory.unshift(product);
+      
+      // Limit to 15 items locally
+      if (updatedHistory.length > 15) {
+        updatedHistory.pop();
+      }
+      
+      state.recentlyViewed = updatedHistory;
+      localStorage.setItem('recentlyViewed', JSON.stringify(updatedHistory));
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -185,9 +267,22 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      
+      // Fetch Recently Viewed
+      .addCase(fetchRecentlyViewed.pending, (state) => {
+        state.recentlyViewedStatus = 'loading';
+      })
+      .addCase(fetchRecentlyViewed.fulfilled, (state, action) => {
+        state.recentlyViewedStatus = 'succeeded';
+        state.recentlyViewed = action.payload.data;
+      })
+      .addCase(fetchRecentlyViewed.rejected, (state) => {
+        state.recentlyViewedStatus = 'failed';
+        // Keep local storage copy on failure
       });
   },
 });
 
-export const { reset } = userSlice.actions;
+export const { reset, addRecentlyViewedLocal } = userSlice.actions;
 export default userSlice.reducer;

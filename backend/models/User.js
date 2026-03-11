@@ -38,6 +38,12 @@ const UserSchema = new mongoose.Schema({
       ref: "Product",
     },
   ],
+  recentlyViewed: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "Product",
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

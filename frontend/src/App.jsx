@@ -8,6 +8,7 @@ import Footer from "./components/Footer";
 import { fetchCart } from "./slices/cartSlice";
 import { fetchWishlist } from "./slices/wishlistSlice";
 import { fetchUnreadCount } from "./slices/notificationSlice";
+import { fetchRecentlyViewed } from "./slices/userSlice";
 import Home from "./pages/Home";
 import ProductList from "./pages/ProductList";
 import ProductDetail from "./pages/ProductDetail";
@@ -34,6 +35,7 @@ function App() {
       dispatch(fetchCart());
       dispatch(fetchWishlist());
       dispatch(fetchUnreadCount());
+      dispatch(fetchRecentlyViewed());
     }
   }, [dispatch, user]);
 
