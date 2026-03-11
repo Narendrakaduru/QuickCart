@@ -7,7 +7,8 @@ const {
   deleteProduct,
   createProductReview,
   getSearchSuggestions,
-  getRecommendations
+  getRecommendations,
+  getSimilarProducts
 } = require('../controllers/productController');
 
 const { protect, authorize, optionalAuth } = require('../middleware/auth');
@@ -24,6 +25,7 @@ router
   .post(protect, authorize('admin', 'superadmin'), logAction("PRODUCT_CREATED", "New product created"), createProduct);
 
 router.route('/:id/reviews').post(protect, createProductReview);
+router.get('/:id/similar', optionalAuth, getSimilarProducts);
 
 router
   .route('/:id')

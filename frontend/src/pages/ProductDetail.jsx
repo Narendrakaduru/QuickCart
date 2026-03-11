@@ -8,6 +8,7 @@ import {
 } from "../slices/productSlice";
 import { updateCart } from "../slices/cartSlice";
 import { addRecentlyViewedLocal, syncRecentlyViewed } from "../slices/userSlice";
+import SimilarProducts from "../components/SimilarProducts";
 import {
   Share2,
   ShoppingCart,
@@ -444,6 +445,9 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
+      
+      {/* Similar Products recommended by Elasticsearch */}
+      <SimilarProducts productId={product._id} />
     </div>
   );
 };

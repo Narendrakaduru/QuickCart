@@ -172,6 +172,7 @@ erDiagram
     USER ||--o{ PRODUCT : "creates (admin)"
     USER ||--o{ COUPON : "creates (admin)"
     USER ||--o{ PRODUCT : "reviews"
+    USER ||--o{ PRODUCT : "recently views"
     USER ||--o{ NOTIFICATION : "receives"
 
     PRODUCT ||--o{ ORDER_ITEM : "appears in"
@@ -195,6 +196,7 @@ erDiagram
         string resetPasswordToken
         date resetPasswordExpires
         ObjectId[] wishlist FK
+        ObjectId[] recentlyViewed FK
         date createdAt
     }
 
@@ -608,11 +610,11 @@ graph TB
 ```mermaid
 graph LR
     STORE["Redux Store"] --> AUTH["auth: { user, token, loading, error }"]
-    STORE --> PROD["product: { products, product, loading }"]
+    STORE --> PROD["product: { products, product, similarProducts, loading }"]
     STORE --> CART["cart: { items, loading }"]
     STORE --> WL["wishlist: { items, loading }"]
     STORE --> ORD["order: { orders, locks, order, loading }"]
-    STORE --> USR["user: { users, loading }"]
+    STORE --> USR["user: { users, recentlyViewed, loading }"]
     STORE --> CPN["coupon: { coupons, loading }"]
     STORE --> LOG["log: { logs, loading }"]
     STORE --> ADDR["address: { addresses, loading }"]
