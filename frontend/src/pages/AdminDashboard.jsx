@@ -52,6 +52,8 @@ import {
   Star,
   Clock,
   Unlock,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import ProductModal from "../components/ProductModal";
 import UserModal from "../components/UserModal";
@@ -312,7 +314,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     if (user) {
       if (activeTab === "inventory") {
-        dispatch(fetchProducts({ page: currentPage, limit: 10 }));
+        dispatch(fetchProducts({ page: currentPage, limit: 10, adminMode: true }));
       } else if (activeTab === "users" && user.role === "superadmin") {
         dispatch(fetchUsers({ page: currentPage, limit: 10 }));
       } else if (activeTab === "orders") {
@@ -362,11 +364,24 @@ const AdminDashboard = () => {
       await dispatch(
         updateProduct({
           id: product._id,
-          productData: { ...product, isFeatured: !product.isFeatured },
+          productData: { isFeatured: !product.isFeatured },
         }),
       ).unwrap();
     } catch (err) {
       alert(err || "Failed to update featured status");
+    }
+  };
+
+  const handleTogglePublish = async (product) => {
+    try {
+      await dispatch(
+        updateProduct({
+          id: product._id,
+          productData: { isActive: !product.isActive },
+        }),
+      ).unwrap();
+    } catch (err) {
+      alert(err || "Failed to update publish status");
     }
   };
 
@@ -440,7 +455,7 @@ const AdminDashboard = () => {
   const handleOrderStatusUpdate = async (orderId, newStatus) => {
     await dispatch(updateOrderStatus({ id: orderId, status: newStatus }));
     if (newStatus === "delivered") {
-      dispatch(fetchProducts({ page: currentPage, limit: 10 }));
+      dispatch(fetchProducts({ page: currentPage, limit: 10, adminMode: true }));
     }
   };
 
@@ -577,6 +592,12 @@ const AdminDashboard = () => {
                     Product {renderSortIcon("title")}
                   </th>
                   <th
+                    onClick={() => handleSort("isActive")}
+                    className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
+                  >
+                    Status {renderSortIcon("isActive")}
+                  </th>
+                  <th
                     onClick={() => handleSort("user.name")}
                     className="p-4 font-bold cursor-pointer hover:bg-gray-100 transition"
                   >
@@ -609,14 +630,14 @@ const AdminDashboard = () => {
               <tbody className="divide-y divide-gray-100">
                 {productsLoading ? (
                   <tr>
-                    <td colSpan="5" className="p-8 text-center text-gray-400">
+                    <td colSpan="8" className="p-8 text-center text-gray-400">
                       Loading inventory...
                     </td>
                   </tr>
                 ) : productsError ? (
                   <tr>
                     <td
-                      colSpan="5"
+                      colSpan="8"
                       className="p-8 text-center text-red-500 font-bold"
                     >
                       {productsMessage}
@@ -637,7 +658,7 @@ const AdminDashboard = () => {
                       return (
                         <tr>
                           <td
-                            colSpan="6"
+                            colSpan="8"
                             className="p-8 text-center text-gray-400 font-medium"
                           >
                             No products found matching "{searchTerm}"
@@ -669,6 +690,17 @@ const AdminDashboard = () => {
                                 className="text-yellow-400 fill-yellow-400 inline-block flex-shrink-0"
                               />
                             )}
+                          </span>
+                        </td>
+                        <td className="p-4">
+                          <span
+                            className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${
+                              product.isActive
+                                ? "bg-green-100 text-green-700"
+                                : "bg-red-100 text-red-700"
+                            }`}
+                          >
+                            {product.isActive ? "Visible" : "Hidden"}
                           </span>
                         </td>
                         <td className="p-4">
@@ -717,6 +749,17 @@ const AdminDashboard = () => {
                                 product.isFeatured ? "fill-yellow-500" : ""
                               }
                             />
+                          </button>
+                          <button
+                            onClick={() => handleTogglePublish(product)}
+                            className={`mr-3 p-1 rounded transition ${product.isActive ? "text-green-500 hover:text-green-700 hover:bg-green-50" : "text-gray-300 hover:text-red-500 hover:bg-gray-50"}`}
+                            title={
+                              product.isActive
+                                ? "Hide from store"
+                                : "Make visible"
+                            }
+                          >
+                            {product.isActive ? <Eye size={18} /> : <EyeOff size={18} />}
                           </button>
                           <button
                             onClick={() => handleEditProduct(product)}
