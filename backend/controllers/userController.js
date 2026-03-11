@@ -138,3 +138,77 @@ exports.deleteUser = async (req, res) => {
       .json({ success: false, error: "Server Error: Could not delete user" });
   }
 };
+
+// @desc    Get user's recently viewed products
+// @route   GET /api/v1/users/recently-viewed
+// @access  Private
+exports.getRecentlyViewed = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).populate({
+      path: 'recentlyViewed',
+      select: 'title price discountPercentage images rating numReviews countInStock isActive',
+    });
+
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+
+    // Filter out inactive products from history
+    const activeProducts = user.recentlyViewed.filter(p => p && p.isActive);
+
+    res.status(200).json({
+      success: true,
+      data: activeProducts,
+    });
+  } catch (error) {
+    console.error(`Get Recently Viewed Error: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      error: 'Server Error: Could not fetch recently viewed products',
+    });
+  }
+};
+
+// @desc    Add product to recently viewed
+// @route   POST /api/v1/users/recently-viewed
+// @access  Private
+exports.addRecentlyViewed = async (req, res) => {
+  try {
+    const { productId } = req.body;
+
+    if (!productId) {
+      return res.status(400).json({ success: false, error: 'Product ID is required' });
+    }
+
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+
+    // Remove the product if it already exists in the array (to move it to top later)
+    user.recentlyViewed = user.recentlyViewed.filter(
+      (id) => id.toString() !== productId.toString()
+    );
+
+    // Unshift to the beginning of the array
+    user.recentlyViewed.unshift(productId);
+
+    // Limit to 15 items
+    if (user.recentlyViewed.length > 15) {
+      user.recentlyViewed.pop();
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Product added to recently viewed',
+    });
+  } catch (error) {
+    console.error(`Add Recently Viewed Error: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      error: 'Server Error: Could not update recently viewed products',
+    });
+  }
+};

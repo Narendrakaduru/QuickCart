@@ -7,6 +7,7 @@ import {
   reset,
 } from "../slices/productSlice";
 import { updateCart } from "../slices/cartSlice";
+import { addRecentlyViewedLocal, syncRecentlyViewed } from "../slices/userSlice";
 import {
   Share2,
   ShoppingCart,
@@ -37,8 +38,16 @@ const ProductDetail = () => {
   const [reviewPosted, setReviewPosted] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchProductDetails(id));
-  }, [dispatch, id]);
+    dispatch(fetchProductDetails(id)).then((res) => {
+      // Trigger recently viewed logic upon successful fetch
+      if (res.meta.requestStatus === "fulfilled" && res.payload) {
+        dispatch(addRecentlyViewedLocal(res.payload));
+        if (user) {
+          dispatch(syncRecentlyViewed(res.payload._id));
+        }
+      }
+    });
+  }, [dispatch, id, user]);
 
   const handleAddToCart = () => {
     if (!user) {

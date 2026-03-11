@@ -3,7 +3,9 @@ const {
   getUsers,
   createUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  getRecentlyViewed,
+  addRecentlyViewed
 } = require('../controllers/userController');
 
 const { protect, authorize } = require('../middleware/auth');
@@ -11,7 +13,12 @@ const { logAction } = require('../middleware/logger');
 
 const router = express.Router();
 
-// All routes here are restricted to superadmin
+// Routes for authenticated users
+router.route('/recently-viewed')
+  .get(protect, getRecentlyViewed)
+  .post(protect, addRecentlyViewed);
+
+// All routes below here are restricted to superadmin
 router.use(protect);
 router.use(authorize('superadmin'));
 

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchProducts, fetchRecommendations } from "../slices/productSlice";
 import ProductCard from "../components/ProductCard";
 import BannerCarousel from "../components/BannerCarousel";
+import RecentlyViewed from "../components/RecentlyViewed";
 import { ChevronRight, Star, TrendingUp, Zap } from "lucide-react";
 
 // Category color palette for recommendation badges
@@ -309,6 +310,11 @@ const Home = () => {
           products={products}
           category="Appliances"
         />
+        
+        {/* Recently Viewed */}
+        <div className="pt-8">
+          <RecentlyViewed />
+        </div>
       </div>
     </div>
   );
