@@ -261,13 +261,13 @@ To run the project correctly, ensure your `.env` file (in the `backend/` directo
 
 ## 🔗 API Endpoints
 
-- **Auth**: `/api/auth` (login, register, logout, verify email, forgot password, reset password)
-- **Users**: `/api/users` (profile, address management)
-- **Products**: `/api/products` (listing, search, details, recommendations, suggestions)
-- **Cart**: `/api/cart` (add, remove, update)
-- **Orders**: `/api/orders` (checkout, tracking, inventory locking, admin lock list)
-- **Payment**: `/api/payment` (Razorpay order creation, signature verification)
-- **Coupons**: `/api/coupons` (creation, validation, management)
-- **Notifications**: `/api/notifications` (list, unread count, mark read)
-- **Analytics**: `/api/analytics` (Elasticsearch aggregations for search data)
-- **Logs**: `/api/logs` (system activity monitoring - Superadmin only)
+- **Auth**: `/api/v1/auth` (login, register, logout, verify email, forgot password, reset password)
+- **Users**: `/api/v1/users` (profile, address management)
+- **Products**: `/api/v1/products` (listing, search, details, recommendations, suggestions)
+- **Cart**: `/api/v1/cart` (add, remove, update)
+- **Orders**: `/api/v1/orders` (checkout, tracking, inventory locking, admin lock list)
+- **Payment**: `/api/v1/payment` (Razorpay order creation, signature verification)
+- **Coupons**: `/api/v1/coupons` (creation, validation, management)
+- **Notifications**: `/api/v1/notifications` (list, unread count, mark read)
+- **Analytics**: `/api/v1/analytics` (Elasticsearch aggregations for search data)
+- **Logs**: `/api/v1/logs` (system activity monitoring - Superadmin only)

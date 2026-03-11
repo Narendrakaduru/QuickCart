@@ -22,7 +22,7 @@ export const fetchCoupons = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await axios.get(`/api/coupons?page=${page}&limit=${limit}`, config);
+      const response = await axios.get(`/api/v1/coupons?page=${page}&limit=${limit}`, config);
       return response.data;
     } catch (error) {
       const message =
@@ -46,7 +46,7 @@ export const createCoupon = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await axios.post('/api/coupons', couponData, config);
+      const response = await axios.post('/api/v1/coupons', couponData, config);
       return response.data;
     } catch (error) {
       const message =
@@ -70,7 +70,7 @@ export const updateCoupon = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await axios.put(`/api/coupons/${id}`, couponData, config);
+      const response = await axios.put(`/api/v1/coupons/${id}`, couponData, config);
       return response.data;
     } catch (error) {
       const message =
@@ -93,7 +93,7 @@ export const deleteCoupon = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await axios.delete(`/api/coupons/${id}`, config);
+      const response = await axios.delete(`/api/v1/coupons/${id}`, config);
       return { id, data: response.data };
     } catch (error) {
       const message =
@@ -117,7 +117,7 @@ export const validateCoupon = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await axios.post('/api/coupons/validate', { code, purchaseAmount }, config);
+      const response = await axios.post('/api/v1/coupons/validate', { code, purchaseAmount }, config);
       return response.data;
     } catch (error) {
       const message =

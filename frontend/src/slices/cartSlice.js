@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // Get user from localStorage based on JWT auth (mocking for simplicity)
-const API_URL = "/api/cart";
+const API_URL = "/api/v1/cart";
 
 // Fetch user cart
 export const fetchCart = createAsyncThunk(
