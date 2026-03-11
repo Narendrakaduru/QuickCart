@@ -8,7 +8,7 @@ export const fetchProducts = createAsyncThunk(
   'products/fetchProducts',
   async (params = {}, thunkAPI) => {
     try {
-      const { keyword = "", limit = 10, page = 1, ...rest } = params;
+      const { keyword = "", limit = 10, page = 1, adminMode = false, ...rest } = params;
       let url = `${API_URL}?limit=${limit}&page=${page}`;
       
       if (keyword) {
@@ -22,9 +22,14 @@ export const fetchProducts = createAsyncThunk(
         }
       });
 
-      // Send auth token if available (allows admins to see hidden products)
-      const token = localStorage.getItem('token');
-      const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+      // Only send auth token in admin mode (so backend can show hidden products)
+      const config = {};
+      if (adminMode) {
+        const token = localStorage.getItem('token');
+        if (token) {
+          config.headers = { Authorization: `Bearer ${token}` };
+        }
+      }
       const response = await axios.get(url, config);
       return response.data; // Return full response object including pagination
     } catch (error) {
