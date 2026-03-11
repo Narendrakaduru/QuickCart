@@ -520,3 +520,90 @@ exports.getRecommendations = async (req, res, next) => {
 
 exports.clearProductCache = clearProductCache;
 exports.syncToElastic = syncToElastic;
+
+// @desc    Get similar products
+// @route   GET /api/v1/products/:id/similar
+// @access  Public
+exports.getSimilarProducts = async (req, res, next) => {
+  try {
+    const productId = req.params.id;
+    const limit = parseInt(req.query.limit, 10) || 5;
+
+    // First try Elasticsearch
+    try {
+      if (elasticClient) {
+        // We need the product's category to use as an exact filter
+        const product = await Product.findById(productId).select('category');
+        
+        if (product) {
+          const body = {
+            size: limit,
+            query: {
+              bool: {
+                must: [
+                  {
+                    more_like_this: {
+                      fields: ['title', 'description', 'brand', 'category'],
+                      like: [
+                        {
+                          _index: 'products',
+                          _id: productId
+                        }
+                      ],
+                      min_term_freq: 1,
+                      max_query_terms: 20
+                    }
+                  }
+                ],
+                filter: [
+                  { term: { isActive: true } },
+                  { term: { "category.keyword": product.category } }
+                ],
+                must_not: [
+                  { term: { _id: productId } }
+                ]
+              }
+            }
+          };
+
+          const result = await elasticClient.search({
+            index: 'products',
+            body: body
+          });
+
+          if (result && result.hits && result.hits.hits.length > 0) {
+            const similarProducts = result.hits.hits.map(hit => ({
+              _id: hit._id,
+              ...hit._source
+            }));
+            
+            if (req.logMeta) req.logMeta.search_engine = "elasticsearch";
+            return res.status(200).json({ success: true, count: similarProducts.length, data: similarProducts });
+          }
+        }
+      }
+    } catch (elasticErr) {
+      console.error(`Elasticsearch getSimilarProducts error: ${elasticErr.message}`);
+      // Fallback to MongoDB
+    }
+
+    // MongoDB Fallback
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ success: false, error: 'Product not found' });
+    }
+
+    const similarProducts = await Product.find({
+      _id: { $ne: productId },
+      category: product.category,
+      isActive: true
+    }).limit(limit);
+
+    if (req.logMeta) req.logMeta.search_engine = "mongodb";
+    res.status(200).json({ success: true, count: similarProducts.length, data: similarProducts });
+
+  } catch (error) {
+    console.error(`Get Similar Products Error: ${error.message}`);
+    res.status(500).json({ success: false, error: 'Server Error: Could not fetch similar products' });
+  }
+};

@@ -142,6 +142,8 @@ The project comes with pre-configured data to get you started:
     - **Usage Counting**: Every successful order placement automatically increments the `usedCount` for the applied coupon.
     - **Real-time Checkout Integration**: Validation for availability, expiry, minimum purchase, and usage limits with instant price recalculation.
 - **Shopping Cart & Wishlist**: Persistent state management for user selections.
+- **Recently Viewed Products**: Hybrid browsing history tracking. Guest history is stored instantly in `localStorage`, while authenticated users have their history seamlessly synced to their MongoDB profile (capped at 15 items to maintain performance).
+- **Similar Products Recommendations**: Surfaces highly contextual alternative items on Product Detail pages. Powered by an Elasticsearch `more_like_this` algorithm analyzing title, description, and categories, with a seamless zero-downtime fallback to MongoDB category-matching.
 - **Order Tracking**: Real-time status updates and order history.
 - **In-App Notifications**:
   - **Bell icon** in the Navbar with animated **unread count badge**.

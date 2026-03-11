@@ -77,6 +77,24 @@ export const fetchRecommendations = createAsyncThunk(
   }
 );
 
+export const fetchSimilarProducts = createAsyncThunk(
+  'products/fetchSimilarProducts',
+  async (id, thunkAPI) => {
+    try {
+      const response = await axios.get(`${API_URL}/${id}/similar`);
+      return response.data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.error) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const fetchProductDetails = createAsyncThunk(
   'products/fetchProductDetails',
   async (id, thunkAPI) => {
@@ -212,6 +230,8 @@ const initialState = {
   isError: false,
   isSuccess: false,
   isLoading: false,
+  similarLoading: false,
+  similarProducts: [],
   recommendationsLoading: false,
   pagination: {
     total: 0,
@@ -248,6 +268,18 @@ export const productSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      // Similar Products
+      .addCase(fetchSimilarProducts.pending, (state) => {
+        state.similarLoading = true;
+      })
+      .addCase(fetchSimilarProducts.fulfilled, (state, action) => {
+        state.similarLoading = false;
+        state.similarProducts = action.payload.data;
+      })
+      .addCase(fetchSimilarProducts.rejected, (state) => {
+        state.similarLoading = false;
+        // failing silently to not disrupt UX
       })
       // Fetch Product Details
       .addCase(fetchProductDetails.pending, (state) => {
