@@ -87,6 +87,7 @@ app.use("/api/addresses", require("./routes/addressRoutes"));
 app.use("/api/logs", require("./routes/logRoutes"));
 app.use("/api/coupons", require("./routes/couponRoutes"));
 app.use("/api/notifications", require("./routes/notificationRoutes"));
+app.use("/api/analytics", require("./routes/analyticsRoutes"));
 app.use("/api/payment", require("./routes/paymentRoutes"));
 
 // Make uploads folder static

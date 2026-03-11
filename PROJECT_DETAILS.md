@@ -118,7 +118,7 @@ The project comes with pre-configured data to get you started:
 
 - **User Authentication**: Secure Login/Register with JWT, **password visibility toggles**, **email verification**, and **forgot/reset password** flows.
 - **Role-Based Access**: Specialized dashboards for Admins, and Superadmins.
-- **System Activity Monitoring**: Advanced log viewer integrated into the Admin Dashboard with centralized logging via **ELK Stack**. Includes detailed metadata (IP, Method, Path, **User Attribution**), **search engine attribution**, and activity-specific filters (Login, Cart, Orders, Coupons).
+- **System Activity Monitoring & Search Analytics**: Advanced log viewer integrated into the Admin Dashboard with centralized logging via **ELK Stack**. Includes an interactive **Search Analytics Dashboard** tracking top keywords, zero-result queries, and volume trends. Activity logs capture detailed metadata (IP, Method, Path, **User Attribution**), **search engine attribution**, and activity-specific filters.
 - **Inventory Locking System**: 
   - **Temporary Reservations**: items are held for 15 minutes when a user enters checkout, preventing overselling during high-traffic bursts.
   - **Atomic Updates**: Uses Mongoose `$expr` and `$subtract` for race-condition-free stock reservations.
@@ -132,7 +132,7 @@ The project comes with pre-configured data to get you started:
   - **Optimized Layout**: Clean, full-width management tables with smooth **scroll-to-top** on page changes.
   - **Real-time Reservations**: A dedicated "Reservations" tab to monitor active inventory holds.
   - **Stock Transparency**: A "Reserved" column in the Inventory tab shows total vs. held units at a glance.
-- **Product Management & Caching**: Complete CRUD for products with image upload support and interactive carousels. Product catalog queries are heavily accelerated via **Redis Caching**, complete with automatic cache invalidation on edits.
+- **Product Management & Caching**: Complete CRUD for products with image upload support, interactive carousels, and **Publish Status (Visible/Hidden)** logic enforced across all public endpoints (ES and MongoDB). Product catalog queries are heavily accelerated via **Redis Caching**, complete with automatic cache invalidation on edits.
 - **Coupon Management & Logic**:
   - Admins can create/edit/delete coupons via the dashboard.
   - Supports **Percentage** (%) and **Fixed** (₹) discounts.
@@ -269,4 +269,5 @@ To run the project correctly, ensure your `.env` file (in the `backend/` directo
 - **Payment**: `/api/payment` (Razorpay order creation, signature verification)
 - **Coupons**: `/api/coupons` (creation, validation, management)
 - **Notifications**: `/api/notifications` (list, unread count, mark read)
+- **Analytics**: `/api/analytics` (Elasticsearch aggregations for search data)
 - **Logs**: `/api/logs` (system activity monitoring - Superadmin only)

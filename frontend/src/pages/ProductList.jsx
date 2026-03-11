@@ -23,9 +23,12 @@ const ProductList = () => {
 
   useEffect(() => {
     const params = Object.fromEntries([...searchParams]);
+    // Remove 'search' from params since it's mapped to 'keyword' below
+    // Otherwise it leaks as a raw MongoDB filter and breaks results
+    const { search: _search, ...filterParams } = params;
     dispatch(
       fetchProducts({
-        ...params,
+        ...filterParams,
         keyword: searchParam,
         limit: 100,
       }),
