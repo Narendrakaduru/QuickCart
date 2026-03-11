@@ -80,6 +80,7 @@ graph LR
         R10["/api/coupons"]
         R11["/api/notifications"]
         R12["/api/payment"]
+        R13["/api/analytics"]
     end
 
     subgraph Controllers["Controller Layer"]
@@ -95,6 +96,7 @@ graph LR
         C10["couponController"]
         C11["notificationController"]
         C12["paymentController"]
+        C13["analyticsController"]
     end
 
     subgraph Models["Model Layer (Mongoose)"]
@@ -137,6 +139,8 @@ graph LR
     R9 --> C9
     R10 --> C10
     R11 --> C11
+    R12 --> C12
+    R13 --> C13
 
     C1 --> M1
     C2 --> M1
@@ -152,6 +156,7 @@ graph LR
     C11 --> M8
     C12 --> M3
     C12 --> Razorpay
+    C13 --> Elasticsearch
 ```
 
 ---
@@ -338,11 +343,12 @@ graph TB
         ADMIN --> PM["ProductModal"]
         ADMIN --> CM["CouponModal"]
         ADMIN --> UM["UserModal"]
+        ADMIN --> SA["SearchAnalytics"]
         PROF --> AM["AddressModal"]
         ADMIN --> CONFIRM["ConfirmModal"]
     end
 
-    subgraph Store["Redux Store (10 Slices)"]
+    subgraph Store["Redux Store (11 Slices)"]
         AUTH_S["authSlice"]
         PRODUCT_S["productSlice"]
         CART_S["cartSlice"]
@@ -353,6 +359,7 @@ graph TB
         LOG_S["logSlice"]
         ADDR_S["addressSlice"]
         NOTIF_S["notificationSlice"]
+        ANLY_S["analyticsSlice"]
     end
 
     Pages -- "dispatch / useSelector" --> Store
@@ -477,6 +484,10 @@ flowchart TD
     C --> H["📊 Logs Tab (Superadmin only)"]
     H --> H1["GET /api/logs"]
     H1 --> H2["View system activity, errors, logins"]
+
+    C --> J["📈 Analytics Tab (Superadmin only)"]
+    J --> J1["GET /api/analytics/search"]
+    J1 --> J2["View search trends and zero-result queries"]
 ```
 
 ---
@@ -606,6 +617,7 @@ graph LR
     STORE --> LOG["log: { logs, loading }"]
     STORE --> ADDR["address: { addresses, loading }"]
     STORE --> NOTIF["notifications: { notifications, unreadCount, loading }"]
+    STORE --> ANLY["analytics: { data, loading, error }"]
 ```
 
 ---

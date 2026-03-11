@@ -22,7 +22,10 @@ export const fetchProducts = createAsyncThunk(
         }
       });
 
-      const response = await axios.get(url);
+      // Send auth token if available (allows admins to see hidden products)
+      const token = localStorage.getItem('token');
+      const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+      const response = await axios.get(url, config);
       return response.data; // Return full response object including pagination
     } catch (error) {
       const message =

@@ -78,8 +78,8 @@ export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
       },
     };
     await axios.get('/api/auth/logout', config);
-  } catch (error) {
-    console.error('Logout failed:', error);
+  } catch {
+    // Silent fail for logout
   }
   localStorage.removeItem('user');
   localStorage.removeItem('token');

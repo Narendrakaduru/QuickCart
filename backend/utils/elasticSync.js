@@ -38,7 +38,8 @@ const syncProductsToElastic = async () => {
             rating: { type: 'float' },
             numReviews: { type: 'integer' },
             discountPercentage: { type: 'float' },
-            stockCount: { type: 'integer' }
+            stockCount: { type: 'integer' },
+            isActive: { type: 'boolean' }
           }
         }
       }
@@ -64,7 +65,8 @@ const syncProductsToElastic = async () => {
         rating: doc.rating,
         numReviews: doc.numReviews,
         discountPercentage: doc.discountPercentage,
-        stockCount: doc.stockCount
+        stockCount: doc.stockCount,
+        isActive: doc.isActive
       }
     ]);
 

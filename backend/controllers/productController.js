@@ -40,6 +40,7 @@ const syncToElastic = async (product, deleted = false) => {
           brand: product.brand,
           price: product.price,
           isFeatured: product.isFeatured,
+          isActive: product.isActive,
           images: product.images,
           rating: product.rating,
           numReviews: product.numReviews,
@@ -57,7 +58,6 @@ const syncToElastic = async (product, deleted = false) => {
 // @route   GET /api/products
 // @access  Public
 exports.getProducts = async (req, res, next) => {
-  console.log('DEBUG START: req.query:', JSON.stringify(req.query));
   try {
     if (redisClient.isReady) {
       const cacheKey = `products:${req.originalUrl}`;
@@ -86,7 +86,7 @@ exports.getProducts = async (req, res, next) => {
     });
 
     // Fields to exclude
-    const removeFields = ["select", "sort", "page", "limit", "keyword"];
+    const removeFields = ["select", "sort", "page", "limit", "keyword", "search"];
     removeFields.forEach((param) => delete reqQuery[param]);
 
     // Create query string
@@ -100,6 +100,11 @@ exports.getProducts = async (req, res, next) => {
 
     let mongoQuery = JSON.parse(queryStr);
 
+    // Only show active products in public queries (admins see all via the admin dashboard)
+    if (!req.user || (req.user.role !== 'admin' && req.user.role !== 'superadmin')) {
+      mongoQuery.isActive = true;
+    }
+
     // Handle comma-separated values for $in operator
     Object.keys(mongoQuery).forEach((key) => {
       if (mongoQuery[key].$in && typeof mongoQuery[key].$in === "string") {
@@ -110,23 +115,36 @@ exports.getProducts = async (req, res, next) => {
     // Handle Keyword Search with Elasticsearch
     if (req.query.keyword) {
       try {
+        const esQuery = {
+          bool: {
+            must: [
+              {
+                multi_match: {
+                  query: req.query.keyword,
+                  fields: ["title^3", "description", "category", "brand"],
+                  fuzziness: "AUTO:3,6",
+                  prefix_length: 0,
+                },
+              },
+            ],
+          },
+        };
+        // Filter out hidden products for non-admin users
+        if (!req.user || (req.user.role !== 'admin' && req.user.role !== 'superadmin')) {
+          esQuery.bool.filter = [{ term: { isActive: true } }];
+        }
         const result = await elasticClient.search({
           index: "products",
-          body: {
-            query: {
-              multi_match: {
-                query: req.query.keyword,
-                fields: ["title^3", "description", "category", "brand"],
-                fuzziness: "AUTO:3,6",
-                prefix_length: 0,
-              },
-            },
-          },
+          body: { query: esQuery },
         });
 
         const ids = result.hits.hits.map((hit) => hit._id);
         mongoQuery._id = { $in: ids };
-        if (req.logMeta) req.logMeta.search_engine = "elasticsearch";
+        if (req.logMeta) {
+          req.logMeta.search_engine = "elasticsearch";
+          req.logMeta.keyword = req.query.keyword;
+          req.logMeta.is_search = true;
+        }
       } catch (err) {
         console.error(
           "Elasticsearch search error, falling back to basic regex:",
@@ -166,8 +184,13 @@ exports.getProducts = async (req, res, next) => {
     // Executing query
     const products = await query.populate("user", "name email");
 
-    if (req.logMeta && !req.logMeta.search_engine) {
-      req.logMeta.search_engine = "mongodb";
+    if (req.logMeta) {
+      if (!req.logMeta.search_engine) req.logMeta.search_engine = "mongodb";
+      req.logMeta.results_count = products.length;
+      if (req.query.keyword) {
+        req.logMeta.keyword = req.query.keyword;
+        req.logMeta.is_search = true;
+      }
     }
 
     // Pagination result
@@ -404,6 +427,7 @@ exports.getSearchSuggestions = async (req, res, next) => {
                 },
               },
             ],
+            filter: [{ term: { isActive: true } }],
           },
         },
       },
@@ -415,7 +439,13 @@ exports.getSearchSuggestions = async (req, res, next) => {
       category: hit._source.category,
     }));
 
-    if (req.logMeta) req.logMeta.search_engine = "elasticsearch";
+    if (req.logMeta) {
+      req.logMeta.search_engine = "elasticsearch";
+      req.logMeta.keyword = keyword;
+      req.logMeta.is_search = true;
+      req.logMeta.search_type = "suggestion";
+      req.logMeta.results_count = suggestions.length;
+    }
 
     res.status(200).json({ success: true, data: suggestions });
   } catch (error) {
@@ -433,6 +463,11 @@ exports.getRecommendations = async (req, res, next) => {
       index: "products",
       body: {
         size: 0,
+        query: {
+          bool: {
+            filter: [{ term: { isActive: true } }],
+          },
+        },
         aggs: {
           trending_categories: {
             terms: {

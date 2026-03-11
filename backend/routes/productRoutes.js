@@ -20,7 +20,7 @@ router.get('/recommendations', getRecommendations);
 
 router
   .route('/')
-  .get(getProducts)
+  .get(optionalAuth, getProducts)
   .post(protect, authorize('admin', 'superadmin'), logAction("PRODUCT_CREATED", "New product created"), createProduct);
 
 router.route('/:id/reviews').post(protect, createProductReview);

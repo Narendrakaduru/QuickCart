@@ -57,6 +57,8 @@ import ProductModal from "../components/ProductModal";
 import UserModal from "../components/UserModal";
 import CouponModal from "../components/CouponModal";
 import ConfirmModal from "../components/ConfirmModal";
+import SearchAnalytics from "../components/SearchAnalytics";
+import { BarChart2 as ChartBar } from "lucide-react";
 
 const Pagination = ({ pagination, onPageChange }) => {
   if (!pagination || pagination.pages <= 1) return null;
@@ -513,6 +515,17 @@ const AdminDashboard = () => {
           >
             <Clock size={16} className="mr-2" /> Reservations
           </button>
+          {user.role === "superadmin" && (
+            <button
+              onClick={() => {
+                setActiveTab("analytics");
+                setSearchTerm("");
+              }}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition flex items-center ${activeTab === "analytics" ? "bg-blue-600 text-white shadow-sm" : "text-gray-600 hover:bg-gray-50"}`}
+            >
+              <ChartBar size={16} className="mr-2" /> Analytics
+            </button>
+          )}
         </div>
       </div>
 
@@ -1631,6 +1644,8 @@ const AdminDashboard = () => {
             </table>
           </div>
         </div>
+      ) : activeTab === "analytics" && user.role === "superadmin" ? (
+        <SearchAnalytics />
       ) : null}
 
       {/* Modals */}
