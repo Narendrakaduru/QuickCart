@@ -76,19 +76,25 @@ app.use((req, res, next) => {
 });
 
 // Mount routers
-app.use("/api/auth", require("./routes/authRoutes"));
-app.use("/api/users", require("./routes/userRoutes"));
-app.use("/api/products", require("./routes/productRoutes"));
-app.use("/api/cart", require("./routes/cartRoutes"));
-app.use("/api/wishlist", require("./routes/wishlistRoutes"));
-app.use("/api/orders", require("./routes/orderRoutes"));
-app.use("/api/upload", require("./routes/uploadRoutes"));
-app.use("/api/addresses", require("./routes/addressRoutes"));
-app.use("/api/logs", require("./routes/logRoutes"));
-app.use("/api/coupons", require("./routes/couponRoutes"));
-app.use("/api/notifications", require("./routes/notificationRoutes"));
-app.use("/api/analytics", require("./routes/analyticsRoutes"));
-app.use("/api/payment", require("./routes/paymentRoutes"));
+// Create v1 Api Router
+const apiRouter = express.Router();
+
+apiRouter.use("/auth", require("./routes/authRoutes"));
+apiRouter.use("/users", require("./routes/userRoutes"));
+apiRouter.use("/products", require("./routes/productRoutes"));
+apiRouter.use("/cart", require("./routes/cartRoutes"));
+apiRouter.use("/wishlist", require("./routes/wishlistRoutes"));
+apiRouter.use("/orders", require("./routes/orderRoutes"));
+apiRouter.use("/upload", require("./routes/uploadRoutes"));
+apiRouter.use("/addresses", require("./routes/addressRoutes"));
+apiRouter.use("/logs", require("./routes/logRoutes"));
+apiRouter.use("/coupons", require("./routes/couponRoutes"));
+apiRouter.use("/notifications", require("./routes/notificationRoutes"));
+apiRouter.use("/analytics", require("./routes/analyticsRoutes"));
+apiRouter.use("/payment", require("./routes/paymentRoutes"));
+
+// Mount the apiRouter
+app.use("/api/v1", apiRouter);
 
 // Make uploads folder static
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));

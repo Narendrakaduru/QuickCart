@@ -22,7 +22,7 @@ export const fetchLogs = createAsyncThunk(
         },
       };
 
-      let url = `/api/logs?page=${page}&limit=${limit}`;
+      let url = `/api/v1/logs?page=${page}&limit=${limit}`;
       if (action) url += `&action=${action}`;
       if (status) url += `&status=${status}`;
 

@@ -30,7 +30,7 @@ export const register = createAsyncThunk(
   'auth/register',
   async (userData, thunkAPI) => {
     try {
-      const response = await axios.post('/api/auth/register', userData);
+      const response = await axios.post('/api/v1/auth/register', userData);
       if (response.data && response.data.user) {
         localStorage.setItem('user', JSON.stringify(response.data.user));
         localStorage.setItem('token', response.data.token);
@@ -51,7 +51,7 @@ export const register = createAsyncThunk(
 // Login user
 export const login = createAsyncThunk('auth/login', async (userData, thunkAPI) => {
   try {
-    const response = await axios.post('/api/auth/login', userData);
+    const response = await axios.post('/api/v1/auth/login', userData);
     if (response.data) {
       localStorage.setItem('user', JSON.stringify(response.data.user));
       localStorage.setItem('token', response.data.token);
@@ -77,7 +77,7 @@ export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
         Authorization: `Bearer ${state.auth.token}`,
       },
     };
-    await axios.get('/api/auth/logout', config);
+    await axios.get('/api/v1/auth/logout', config);
   } catch {
     // Silent fail for logout
   }
@@ -90,7 +90,7 @@ export const verifyEmail = createAsyncThunk(
   'auth/verifyEmail',
   async (token, thunkAPI) => {
     try {
-      const response = await axios.get(`/api/auth/verifyemail/${token}`);
+      const response = await axios.get(`/api/v1/auth/verifyemail/${token}`);
       return response.data;
     } catch (error) {
       const message =
@@ -109,7 +109,7 @@ export const forgotPassword = createAsyncThunk(
   'auth/forgotPassword',
   async (email, thunkAPI) => {
     try {
-      const response = await axios.post('/api/auth/forgotpassword', { email });
+      const response = await axios.post('/api/v1/auth/forgotpassword', { email });
       return response.data;
     } catch (error) {
       const message =
@@ -128,7 +128,7 @@ export const resetPassword = createAsyncThunk(
   'auth/resetPassword',
   async ({ token, password }, thunkAPI) => {
     try {
-      const response = await axios.put(`/api/auth/resetpassword/${token}`, {
+      const response = await axios.put(`/api/v1/auth/resetpassword/${token}`, {
         password,
       });
       return response.data;

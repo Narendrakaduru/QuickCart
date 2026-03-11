@@ -196,7 +196,7 @@ const Checkout = () => {
         }
 
         // 2. Call our backend to create a Razorpay Order
-        const paymentOrderRes = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/payment/order`, {
+        const paymentOrderRes = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/v1/payment/order`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -221,7 +221,7 @@ const Checkout = () => {
             order_id: paymentOrderData.data.id,
             handler: async (response) => {
               // 3. Verify Payment
-              const verifyRes = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/payment/verify`, {
+              const verifyRes = await fetch(`${import.meta.env.VITE_API_URL || ""}/api/v1/payment/verify`, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",

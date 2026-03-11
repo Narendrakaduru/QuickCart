@@ -13,7 +13,7 @@ export const fetchSearchAnalytics = createAsyncThunk(
         params: { days }
       };
 
-      const { data } = await axios.get('/api/analytics/search', config);
+      const { data } = await axios.get('/api/v1/analytics/search', config);
       return data.data;
     } catch (error) {
       return rejectWithValue(

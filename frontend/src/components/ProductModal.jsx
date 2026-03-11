@@ -89,7 +89,7 @@ const ProductModal = ({ onClose, onSubmit, product, title: modalTitle }) => {
         },
       };
 
-      const { data } = await axios.post("/api/upload", fileFormData, config);
+      const { data } = await axios.post("/api/v1/upload", fileFormData, config);
 
       setFormData((prev) => ({
         ...prev,

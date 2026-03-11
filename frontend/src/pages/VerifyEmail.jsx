@@ -13,7 +13,7 @@ const VerifyEmail = () => {
 
 
     axios
-      .get(`/api/auth/verifyemail/${token}`)
+      .get(`/api/v1/auth/verifyemail/${token}`)
       .then((res) => {
         if (res.data && res.data.success) {
           setStatus('success');
